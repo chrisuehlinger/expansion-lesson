@@ -1,0 +1,19 @@
+/* line 1, /Users/Chris/Development/wrap-collision/css/style.scss */
+body {
+  margin: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 90vh; }
+
+/* line 11, /Users/Chris/Development/wrap-collision/css/style.scss */
+canvas {
+  border: 1px solid white; }
+
+/* line 15, /Users/Chris/Development/wrap-collision/css/style.scss */
+.node {
+  stroke-width: 1.5px; }
+
+/*# sourceMappingURL=style.css.map */
