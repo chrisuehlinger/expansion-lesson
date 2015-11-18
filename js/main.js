@@ -137,13 +137,17 @@ function collide(node) {
   return function (quad, x1, y1, x2, y2) {
     if (quad.point && (quad.point !== node)) {
       var x = node.x - quad.point.x,
-        y = node.y - quad.point.y,
+        y = node.y - quad.point.y;
+      
+      if(Math.abs(x) > width / 2) x = -(width - x);
+      if(Math.abs(y) > height / 2) y = -(height - y);
+      
         l = Math.sqrt(x * x + y * y),
         r = node.radius + quad.point.radius;
       if (l < r) {
         l = (l - r) / l * .1;
-        x = (x*l) % width;
-        y = (y*l) % height;
+        x = (x*l);
+        y = (y*l);
         node.x -= x;
         node.y -= y;
         node.collisions++;
