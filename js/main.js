@@ -6,14 +6,14 @@ function wrapAround(node) {
     node.x = width + node.x;
   else if (node.x > width)
     node.x -= width;
-  
+
   node.px = node.x;
 
   if (node.y < 0)
     node.y = height + node.y;
   else if (node.y > height)
     node.y -= height;
-  
+
   node.py = node.y;
 }
 
@@ -27,14 +27,14 @@ var temperature = d3.scale
 
 
 var nodes = d3.range(100)
-      .map(function(i) { 
-        return {
-          color: color(i),
-          collisions: 0,
-          radius: Math.random() * 3 + 13
-        }; 
-      }),
-    root = nodes[0];
+  .map(function (i) {
+    return {
+      color: color(i),
+      collisions: 0,
+      radius: Math.random() * 3 + 13
+    };
+  }),
+  root = nodes[0];
 
 root.x = width / 2;
 root.y = height / 2;
@@ -42,60 +42,66 @@ root.radius = 0;
 root.fixed = true;
 
 var force = d3.layout.force()
-    .gravity(0)
-    .charge(function(d, i) { return i ? 0 : -10;})
-    .nodes(nodes)
-    .size([width, height]);
+  .gravity(0)
+  .charge(function (d, i) {
+    return i ? 0 : -10;
+  })
+  .nodes(nodes)
+  .size([width, height]);
 
 force.start();
 
-!function addOne(){
-  nodes.push({color: color(nodes.length), collisions: 0, radius: Math.random() * 3 + 13});
+! function addOne() {
+  nodes.push({
+    color: color(nodes.length),
+    collisions: 0,
+    radius: Math.random() * 3 + 13
+  });
   force.nodes(nodes);
   force.start();
-  
-  if(nodes.length < 750)
-    setTimeout(addOne, 20);
-  else 
+
+//  if (nodes.length < 750)
+//    setTimeout(addOne, 20);
+//  else
     setTimeout(bigger, 50);
 }()
 
 function bigger() {
-  var scaleFactor = 1.005;
+  var scaleFactor = 1.01;
   width *= scaleFactor;
   height *= scaleFactor;
-  
+
   canvas
     .attr("width", width)
     .attr("height", height);
-  
-  nodes.forEach(function(node) {
+
+  nodes.forEach(function (node) {
     node.px = node.x *= scaleFactor;
     node.py = node.y *= scaleFactor;
   });
-  
+
   force
     .size([width, height])
     .start();
 
-  if(width < innerWidth && height < innerHeight)
+  if (width < innerWidth && height < innerHeight)
     setTimeout(bigger, 50);
 }
 
 
 
 var canvas = d3.select("body").append("canvas")
-    .attr("width", width)
-    .attr("height", height);
+  .attr("width", width)
+  .attr("height", height);
 
 var context = canvas.node().getContext("2d");
 force.on("tick", function (e) {
-  nodes.forEach(function(node){
+  nodes.forEach(function (node) {
     node.collisions = Math.min(node.collisions, 400);
     node.collisions *= 0.9;
   });
-  
-  nodes.forEach(wrapAround);
+
+//  nodes.forEach(wrapAround);
 
   var q = d3.geom.quadtree(nodes),
     i,
@@ -104,13 +110,32 @@ force.on("tick", function (e) {
 
   for (i = 1; i < n; ++i) q.visit(collide(nodes[i]));
 
+  renderNodes = [];
 
-//  nodes.forEach(wrapAround);
+  nodes.forEach(function (node) {
+    renderNodes.push(node);
+    if (node.x - node.radius < 0)
+      renderNodes.push({x: width + node.x, y: node.y, collisions: node.collisions, radius: node.radius});
+    
+    if (node.x + node.radius > width)
+      renderNodes.push({x: node.x - width, y: node.y, collisions: node.collisions, radius: node.radius});
 
+    if (node.y - node.radius < 0)
+      renderNodes.push({x: node.x, y: height + node.y, collisions: node.collisions, radius: node.radius});
+    
+    if (node.y + node.radius > height)
+      renderNodes.push({x: node.x, y: node.y - height, collisions: node.collisions, radius: node.radius});
+  });
+
+
+
+  //  nodes.forEach(wrapAround);
+  console.log(nodes.length, renderNodes.length);
   context.clearRect(0, 0, width, height);
-  
-  for (i = n-1; i >=0; --i) {
-    d = nodes[i];
+  n = renderNodes.length;
+  for (i = n - 1; i >= 0; --i) {
+    d = renderNodes[i];
+    i === n-1 && console.log(d);
     context.beginPath();
     context.strokeStyle = "white";
     context.fillStyle = temperature(d.collisions);
@@ -119,6 +144,7 @@ force.on("tick", function (e) {
     context.stroke();
     context.fill();
   }
+  nodes.forEach(wrapAround);
 });
 
 canvas.on("mousemove", function () {
@@ -138,16 +164,16 @@ function collide(node) {
     if (quad.point && (quad.point !== node)) {
       var x = node.x - quad.point.x,
         y = node.y - quad.point.y;
-      
-      if(Math.abs(x) > width / 2) x = -(width - x);
-      if(Math.abs(y) > height / 2) y = -(height - y);
-      
-        l = Math.sqrt(x * x + y * y),
+
+      if (Math.abs(x) > width / 2) x = x > 0 ? x - width : x + width;
+      if (Math.abs(y) > height / 2) y = y > 0 ? y - height: y + height;
+
+      l = Math.sqrt(x * x + y * y),
         r = node.radius + quad.point.radius;
       if (l < r) {
         l = (l - r) / l * .1;
-        x = (x*l);
-        y = (y*l);
+        x = (x * l);
+        y = (y * l);
         node.x -= x;
         node.y -= y;
         node.collisions++;
@@ -156,6 +182,9 @@ function collide(node) {
         quad.point.collisions++;
       }
     }
-    return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+    return (x1 > nx2 && x2 < width && nx1 > 0) 
+        || (x2 < nx1 && nx2 < width && x1 > 0)
+        || (y1 > ny2 && y2 < height && ny1 > 0) 
+        || (y2 < ny1 && ny2 < height && y1 > 0);
   };
 }
