@@ -1,13 +1,15 @@
 var width = innerWidth / 3,
   height = innerHeight / 3,
-  startingCount = 500,
-  endCount = 500,
+  startingCount = 1,
+  endCount = 300,
   expansionFactor = 1.01,
   additionDelay = 5,
   expansionDelay = 50,
   cooldownFactor = 0.9,
+  collisionForce = 0.05,
   useForceLayout = false,
-  useCollisions = false;
+  useCollisions = true,
+  outlineParticles = false;
 
 var shipSVG = new Blob(['<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" enable-background="new 0 0 100 100" xml:space="preserve"><g fill="white" stroke="black"><g><path d="M49.862,100c0.404,0,0.778-0.225,0.97-0.582c0.007-0.012,1.576-2.932,3.153-6.388c0.788-1.729,1.579-3.589,2.182-5.304    c0.299-0.859,0.556-1.68,0.737-2.439c0.183-0.762,0.297-1.459,0.298-2.107c0-2.492-0.921-4.708-2.445-6.232    c-1.28-1.285-3.012-2.074-4.895-2.071c-1.887-0.003-3.617,0.786-4.896,2.071c-1.523,1.524-2.448,3.74-2.449,6.231    c0.002,0.649,0.117,1.347,0.3,2.108c0.32,1.329,0.859,2.852,1.485,4.416c1.881,4.679,4.579,9.696,4.587,9.715    C49.082,99.775,49.458,100,49.862,100z"/></g><path d="M86.533,67.531c0,1.242-1.008,1.949-2.248,1.579l-10.338-3.507c-1.241-0.369-2.249-1.674-2.249-2.915V45.412   c0-1.241,1.008-1.947,2.249-1.579l10.338,5.725c1.447,0.78,2.248,1.674,2.248,2.915V67.531z"/><path d="M12.833,67.531c0,1.242,1.007,1.949,2.249,1.579l10.338-3.507c1.241-0.369,2.248-1.674,2.248-2.915V45.412   c0-1.241-1.007-1.947-2.248-1.579l-10.338,5.725c-1.448,0.78-2.249,1.674-2.249,2.915V67.531z"/><g><path d="M67.635,25.731c-0.042-1.168-0.32-2.379-0.881-3.838c-0.694-1.807-1.809-3.929-3.403-6.491    c-3.575-5.73-8.369-11.73-9.753-13.432L53.57,1.936l-0.028-0.035C52.578,0.73,50.984,0.019,49.281,0h-0.082    c-1.727,0-3.317,0.715-4.253,1.914c-0.128,0.164-3.181,4.073-6.246,8.708c-1.875,2.843-3.307,5.261-4.376,7.393    c-0.693,1.39-1.203,2.586-1.561,3.663c-0.488,1.461-0.704,2.683-0.677,3.842c0.01,0.389,0.045,0.772,0.094,1.156    c-0.017,0.194-0.03,0.389-0.03,0.587v36.419c0,3.767,3.055,6.822,6.821,6.822h21.777c3.769,0,6.821-3.056,6.824-6.822    l-0.003-36.37C67.626,26.792,67.648,26.264,67.635,25.731z M49.86,36.207c-4.896,0-8.867-3.97-8.867-8.867s3.97-8.867,8.867-8.867    c4.897,0,8.867,3.97,8.867,8.867S54.758,36.207,49.86,36.207z"/></g></g></svg>'], {
     type: "image/svg+xml;charset=utf-8"
@@ -93,7 +95,7 @@ var color = d3.scale.category20();
 var opacity = 1;
 var temperature = d3.scale
   .linear()
-  .domain([0, 150, 250, 350])
+  .domain([0, 100, 150, 200])
   .range(['black', 'red', 'orange', 'white']);
 
 var nodes = d3.range(startingCount)
@@ -103,7 +105,9 @@ var nodes = d3.range(startingCount)
       collisions: 0,
       radius: Math.random() * 5 + 15,
       x: Math.random() * width,
-      y: Math.random() * height
+      y: Math.random() * height,
+      vx: Math.random() - 0.5,
+      vy: Math.random() - 0.5
     };
   }),
   root = nodes[0];
@@ -130,7 +134,9 @@ useForceLayout && force
     collisions: 0,
     radius: Math.random() * 5 + 15,
     x: Math.random() * width,
-    y: Math.random() * height
+    y: Math.random() * height,
+    vx: Math.random() - 0.5,
+    vy: Math.random() - 0.5
   });
   useForceLayout && force.nodes(nodes).start();
 
@@ -163,7 +169,7 @@ function bigger() {
     .size([width, height])
     .start();
 
-  if (width < innerWidth && height < innerHeight)
+  if (width < 2*innerWidth && height < 2*innerHeight)
     setTimeout(bigger, expansionDelay);
 }
 
@@ -182,7 +188,7 @@ function tick(e) {
     node.collisions *= cooldownFactor;
   });
 
-  //  nodes.forEach(wrapAround);
+
 
   var q = d3.geom.quadtree(nodes),
     i,
@@ -191,6 +197,13 @@ function tick(e) {
 
   if (useCollisions)
     for (i = 1; i < n; ++i) q.visit(collide(nodes[i]));
+
+  nodes.forEach(function (node) {
+    node.x += node.vx / 60;
+    node.y += node.vy / 60;
+  });
+
+  nodes.forEach(wrapAround);
 
 }
 d3.timer(render);
@@ -261,7 +274,7 @@ function render() {
     context.fillStyle = temperature(d.collisions);
     context.moveTo(nodeX, nodeY);
     context.arc(nodeX, nodeY, d.radius, 0, 2 * Math.PI);
-//    context.stroke();
+    outlineParticles && context.stroke();
     context.fill();
   }
   nodes.forEach(wrapAround);
@@ -357,14 +370,14 @@ function collide(node) {
       var l = Math.sqrt(x * x + y * y),
         r = node.radius + quad.point.radius;
       if (l < r) {
-        l = (l - r) / l * .1;
+        l = (l - r) / l * collisionForce;
         x = (x * l);
         y = (y * l);
-        node.x -= x;
-        node.y -= y;
+        node.vx -= x;
+        node.vy -= y;
         node.collisions++;
-        quad.point.x += x;
-        quad.point.y += y;
+        quad.point.vx += x;
+        quad.point.vy += y;
         quad.point.collisions++;
       }
     }
