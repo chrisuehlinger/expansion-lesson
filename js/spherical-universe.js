@@ -1,23 +1,49 @@
-var width = 960,
-  height = 960,
-  cooldownFactor = 0.9,
-  expansionFactor = 1.01,
-  startCount = 50,
-  endCount = 300,
-  additionDelay = 50,
-  expansionDelay = 100,
-  currentExpansion = 1,
-  maxExpansion = 2;
-
-constants = {
+var constants = {
   speedOfLight: 10,
-  thrust: 1
+  thrust: 1,
+  width: innerWidth,
+  height: innerHeight,
+  startingCount: 100,
+  endCount: 100,
+  expansionFactor: 1.01,
+  additionDelay: 5,
+  expansionWait: 5000,
+  expansionDelay: 0,
+  maxExpansion: 2,
+  cooldownFactor: 0.9,
+  collisionForce: 0.1,
+  useForceLayout: true,
+  useCollisions: true,
+  outlineParticles: false
+};
+
+window.onload = function () {
+    var gui = new dat.GUI();
+    gui.add(constants, 'speedOfLight', 0, 50);
+    gui.add(constants, 'thrust', 0, 5);
+    gui.add(constants, 'width', 0, 500);
+    gui.add(constants, 'height', 0, 500);
+    gui.add(constants, 'startingCount', 0, 1000);
+    gui.add(constants, 'endCount', 0, 1000);
+    gui.add(constants, 'expansionFactor', 1, 1.5);
+    gui.add(constants, 'additionDelay', 0, 100);
+    gui.add(constants, 'expansionWait', 0, 10000);
+    gui.add(constants, 'expansionDelay', 0, 500);
+    gui.add(constants, 'cooldownFactor', 0, 1);
+    gui.add(constants, 'collisionForce', 0, 1);
+    gui.add(constants, 'useForceLayout');
+    gui.add(constants, 'useCollisions');
+    gui.add(constants, 'outlineParticles');
 };
 
 function createNode() {
   return {
     collisions: 0,
-    radius: Math.random() * 5 + 10
+    radius: Math.random() * 5 + 10,
+    x: Math.random() * 360,
+    y: Math.random() * 180,
+    vx: Math.random() - 0.5,
+    vy: Math.random() - 0.5
   };
 }
 
@@ -27,65 +53,44 @@ var temperature = d3.scale
   .domain([0, 33, 67, 100])
   .range(['black', 'red', 'orange', 'white']);
 
-var nodes = d3.range(startCount).map(createNode),
+var nodes = d3.range(constants.startingCount).map(createNode),
   root = nodes[0];
 
 root.radius = 3;
 root.fixed = true;
 
-var force = d3.layout.force()
+var force = d3.layout.force();
+
+constants.useForceLayout && force
   .gravity(0)
   .charge(function (d, i) {
     return i ? 0 : -0;
   })
   .nodes(nodes)
-  .size([360, 180]);
+  .size([360, 180])
+  .start();
 
-force.start();
+! function addOne() {
+  nodes.push(createNode());
+  
+  constants.useForceLayout && force.nodes(nodes).start();
 
-function collide(node) {
-  var r = node.radius + 16,
-    nx1 = node.x - r,
-    nx2 = node.x + r,
-    ny1 = node.y - r,
-    ny2 = node.y + r;
-  return function (quad, x1, y1, x2, y2) {
-    if (quad.point && (quad.point !== node)) {
-      var lat1 = (node.x - 180), lat2 = (quad.point.x - 180),
-          lon1 = (node.y - 90), lon2 = (quad.point.y - 90)
-      var R = 180 / Math.PI; // metres
-      var φ1 = lat1* Math.PI / 180;
-      var φ2 = lat2* Math.PI / 180;
-      var Δφ = (lat2 - lat1)* Math.PI / 180;
-      var Δλ = (lon2 - lon1)* Math.PI / 180;
+  if (nodes.length < constants.endCount)
+    setTimeout(addOne, constants.additionDelay);
+  else
+    setTimeout(bigger, constants.expansionWait);
+}()
 
-      var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-        Math.cos(φ1) * Math.cos(φ2) *
-        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+function bigger() {
+  currentExpansion *= constants.expansionFactor;
+  nodes.forEach(function (node) {
+    node.radius *= 1 / constants.expansionFactor;
+  });
 
-      var l = R * c,
-          r = node.radius + quad.point.radius;
-      
-//      var x = node.x - quad.point.x,
-//        y = node.y - quad.point.y;
-//
-//      if (Math.abs(x) > 180) x = x > 0 ? x - 360 : x + 360;
-//
-//      var l = Math.sqrt(x * x + y * y),
-//        r = node.radius + quad.point.radius;
-      if (l < r) {
-        l = (l - r) / l * 0.25;
-        node.x -= (lat2 - lat1) * l;
-        node.y -= (lon2 - lon1) * l;
-        node.collisions++;
-        quad.point.x += (lat2 - lat1) * l;
-        quad.point.y += (lon2 - lon1) * l;
-        quad.point.collisions++;
-      }
-    }
-    return (x1 > nx2 && x2 < 360 && nx1 > 0) || (x2 < nx1 && nx2 < 360 && x1 > 0) || y1 > ny2 || y2 < ny1;
-  };
+  projection.scale(currentProjectionScale * currentExpansion);
+
+  if (currentExpansion < constants.maxExpansion)
+    setTimeout(bigger, constants.expansionDelay);
 }
 
 var projection, currentProjectionScale;
@@ -94,7 +99,7 @@ var projection, currentProjectionScale;
 //projection = d3.geo.mollweide()
 //  .rotate([0, 0])
 //  .scale(currentProjectionScale) // we'll scale up to match viewport shortly.
-//  .translate([width / 2, height / 2]);
+//  .translate([constants.width / 2, constants.height / 2]);
 
 //currentProjectionScale = 240;
 //projection = d3.geo.orthographic()
@@ -107,12 +112,12 @@ projection = d3.geo.azimuthalEquidistant()
   .scale(currentProjectionScale)
   .rotate([74.0064, -40.7142])
   .clipAngle(180 - 1e-3)
-  .translate([width / 2, height / 2])
+  .translate([constants.width / 2, constants.height / 2])
   .precision(.1);
 
 var canvas = d3.select("body").append("canvas")
-  .attr("width", width)
-  .attr("height", height);
+  .attr("width", constants.width)
+  .attr("height", constants.height);
 
 var c = canvas.node().getContext("2d");
 
@@ -129,16 +134,16 @@ queue()
 
 canvas.on("mousemove", function () {
   var p1 = d3.mouse(this);
-  root.px = p1[0];
-  root.py = -p1[1] / 2;
-  force.resume();
+  root.px = root.x = p1[0];
+  root.py = root.y = -p1[1] / 2;
+  constants.useForceLayout && force.resume();
 });
 
 
 var ship = {
   position: {
-    x: width / 2,
-    y: height / 2
+    x: constants.width / 2,
+    y: constants.height / 2
   },
   velocity: {
     x: 0,
@@ -191,14 +196,15 @@ function ready(error, world, names) {
   force.on("tick", function (e) {
     nodes.forEach(function (node) {
       node.collisions = Math.min(node.collisions, 400);
-      node.collisions *= cooldownFactor;
+      node.collisions *= constants.cooldownFactor;
     });
     var q = d3.geom.quadtree(nodes),
       i,
       d,
       n = nodes.length;
 
-    for (i = 1; i < n; ++i) q.visit(collide(nodes[i]));
+    if(constants.useCollisions)
+      for (i = 1; i < n; ++i) q.visit(collide(nodes[i]));
 
     nodes.forEach(wrapAround);
 
@@ -263,9 +269,8 @@ function ready(error, world, names) {
     lastRenderTime = Date.now();
     projection.rotate([-(nodes[0].x - 180), -(nodes[0].y - 90)]);
 
-    c.clearRect(0, 0, width, height);
+    c.clearRect(0, 0, constants.width, constants.height);
 
-    c.fillStyle = "steelblue";
     var circle = d3.geo.circle();
     for (var j = nodes.length - 1; j >= 0; --j) {
       var d = nodes[j];
@@ -279,7 +284,7 @@ function ready(error, world, names) {
         c.fillStyle = temperature(d.collisions);
         c.fill();
         c.strokeStyle = 'white';
-        c.stroke();
+        constants.outlineParticles && c.stroke();
       } else {
         c.strokeStyle = 'green';
         c.stroke();
@@ -323,25 +328,47 @@ function ready(error, world, names) {
   //    console.log(countries[0]);
 }
 
-! function addOne() {
-  nodes.push(createNode());
-  force.nodes(nodes);
-  force.start();
+function collide(node) {
+  var r = node.radius + 16,
+    nx1 = node.x - r,
+    nx2 = node.x + r,
+    ny1 = node.y - r,
+    ny2 = node.y + r;
+  return function (quad, x1, y1, x2, y2) {
+    if (quad.point && (quad.point !== node) && !quad.point.fixed) {
+      var lat1 = (node.x - 180), lat2 = (quad.point.x - 180),
+          lon1 = (node.y - 90), lon2 = (quad.point.y - 90)
+      var R = 180 / Math.PI; // metres
+      var φ1 = lat1* Math.PI / 180;
+      var φ2 = lat2* Math.PI / 180;
+      var Δφ = (lat2 - lat1)* Math.PI / 180;
+      var Δλ = (lon2 - lon1)* Math.PI / 180;
 
-  if (nodes.length < endCount)
-    setTimeout(addOne, additionDelay);
-  else
-    setTimeout(bigger, expansionDelay);
-}()
+      var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-function bigger() {
-  currentExpansion *= expansionFactor;
-  nodes.forEach(function (node) {
-    node.radius *= 1 / expansionFactor;
-  });
-
-  projection.scale(currentProjectionScale * currentExpansion);
-
-  if (currentExpansion < maxExpansion)
-    setTimeout(bigger, expansionDelay);
+      var l = R * c,
+          r = node.radius + quad.point.radius;
+      
+//      var x = node.x - quad.point.x,
+//        y = node.y - quad.point.y;
+//
+//      if (Math.abs(x) > 180) x = x > 0 ? x - 360 : x + 360;
+//
+//      var l = Math.sqrt(x * x + y * y),
+//        r = node.radius + quad.point.radius;
+      if (l < r) {
+        l = (l - r) / l * constants.collisionForce;
+        node.x -= (lat2 - lat1) * l;
+        node.y -= (lon2 - lon1) * l;
+        node.collisions++;
+        quad.point.x += (lat2 - lat1) * l;
+        quad.point.y += (lon2 - lon1) * l;
+        quad.point.collisions++;
+      }
+    }
+    return (x1 > nx2 && x2 < 360 && nx1 > 0) || (x2 < nx1 && nx2 < 360 && x1 > 0) || y1 > ny2 || y2 < ny1;
+  };
 }
