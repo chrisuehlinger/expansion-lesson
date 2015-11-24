@@ -3,6 +3,8 @@ var constants = {
   thrust: 1,
   width: innerWidth / 4,
   height: innerHeight / 4,
+  maxWidth: innerWidth,
+  maxHeight: innerHeight,
   startingCount: 1,
   endCount: 300,
   expansionFactor: 1.01,
@@ -169,10 +171,6 @@ function bigger() {
   constants.width *= constants.expansionFactor;
   constants.height *= constants.expansionFactor;
 
-  canvas
-    .attr("width", constants.width)
-    .attr("height", constants.height);
-
   nodes.forEach(function (node) {
     node.x *= constants.expansionFactor;
     node.y *= constants.expansionFactor;
@@ -188,15 +186,15 @@ function bigger() {
     .size([constants.width, constants.height])
     .start();
 
-  if (constants.width < 3*innerWidth && constants.height < 3*innerHeight)
+  if (constants.width < constants.maxWidth && constants.height < constants.maxHeight)
     setTimeout(bigger, constants.expansionDelay);
 }
 
 
 
 var canvas = d3.select("body").append("canvas")
-  .attr("width", constants.width)
-  .attr("height", constants.height);
+  .attr("width", innerWidth)
+  .attr("height", innerHeight);
 
 var context = canvas.node().getContext("2d");
 constants.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
@@ -228,6 +226,10 @@ function tick(e) {
 d3.timer(render);
 
 function render() {
+  
+  context.save();
+  context.translate((innerWidth-constants.width)/2,(innerHeight - constants.height)/2);
+  
   var renderNodes = [];
 
   nodes.forEach(function (node) {
@@ -363,6 +365,13 @@ function render() {
   //  if (ship.position.y + 100 > constants.height) {
   //    renderShip(ship.position.x, ship.position.y - constants.height, ship.direction);
   //  }
+  
+  context.restore();
+//  context.translate((innerWidth-constants.width)/2,(innerHeight - constants.height)/2);
+  context.clearRect(0,0,(innerWidth-constants.width)/2, innerHeight);
+  context.clearRect((innerWidth+constants.width)/2,0,innerWidth, innerHeight);
+  context.clearRect(0,0,innerWidth, (innerHeight-constants.height)/2);
+  context.clearRect(0,(innerHeight+constants.height)/2,innerWidth, innerHeight);
 }
 
 canvas.on("mousemove", function () {
