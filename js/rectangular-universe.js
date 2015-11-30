@@ -3,8 +3,8 @@ var constants = {
   thrust: 1,
   width: innerWidth / 4,
   height: innerHeight / 4,
-  maxWidth: innerWidth,
-  maxHeight: innerHeight,
+  maxWidth: 2 * innerWidth,
+  maxHeight: 2 * innerHeight,
   startingCount: 1,
   endCount: 300,
   expansionFactor: 1.01,
@@ -19,22 +19,22 @@ var constants = {
 };
 
 window.onload = function () {
-    var gui = new dat.GUI();
-    gui.add(constants, 'speedOfLight', 0, 50);
-    gui.add(constants, 'thrust', 0, 5);
-    gui.add(constants, 'width', 0, 500);
-    gui.add(constants, 'height', 0, 500);
-    gui.add(constants, 'startingCount', 0, 1000);
-    gui.add(constants, 'endCount', 0, 1000);
-    gui.add(constants, 'expansionFactor', 1, 1.5);
-    gui.add(constants, 'additionDelay', 0, 100);
-    gui.add(constants, 'expansionWait', 0, 10000);
-    gui.add(constants, 'expansionDelay', 0, 500);
-    gui.add(constants, 'cooldownFactor', 0, 1);
-    gui.add(constants, 'collisionForce', 0, 1);
-    gui.add(constants, 'useForceLayout');
-    gui.add(constants, 'useCollisions');
-    gui.add(constants, 'outlineParticles');
+  var gui = new dat.GUI();
+  gui.add(constants, 'speedOfLight', 0, 50);
+  gui.add(constants, 'thrust', 0, 5);
+  gui.add(constants, 'width', 0, 500);
+  gui.add(constants, 'height', 0, 500);
+  gui.add(constants, 'startingCount', 0, 1000);
+  gui.add(constants, 'endCount', 0, 1000);
+  gui.add(constants, 'expansionFactor', 1, 1.5);
+  gui.add(constants, 'additionDelay', 0, 100);
+  gui.add(constants, 'expansionWait', 0, 10000);
+  gui.add(constants, 'expansionDelay', 0, 500);
+  gui.add(constants, 'cooldownFactor', 0, 1);
+  gui.add(constants, 'collisionForce', 0, 1);
+  gui.add(constants, 'useForceLayout');
+  gui.add(constants, 'useCollisions');
+  gui.add(constants, 'outlineParticles');
 };
 
 var opacity = 1;
@@ -63,42 +63,34 @@ var asteroidSVG = new Blob(['<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink
 asteroidImg.src = url;
 
 var ship = {
-  position: {
-    x: constants.width / 2,
-    y: constants.height / 2
-  },
-  velocity: {
-    x: 2,
-    y: -1
-  },
+  x: constants.width / 2,
+  y: constants.height / 2,
+  vx: 2,
+  vy: -1,
   direction: 0
 };
 
 var asteroid = {
-  position: {
-    x: constants.width / 4,
-    y: constants.height / 2
-  },
-  velocity: {
-    x: 0,
-    y: 0
-  },
+  x: constants.width / 4,
+  y: constants.height / 2,
+  vx: 0,
+  vy: 0,
   direction: 0
 };
 
 $(window).on('keypress', function (e) {
   //    console.log(e.which);
   if (e.which === 115) {
-    ship.velocity.y += constants.thrust;
+    ship.vy += constants.thrust;
   }
   if (e.which === 119) {
-    ship.velocity.y -= constants.thrust;
+    ship.vy -= constants.thrust;
   }
   if (e.which === 97) {
-    ship.velocity.x -= constants.thrust;
+    ship.vx -= constants.thrust;
   }
   if (e.which === 100) {
-    ship.velocity.x += constants.thrust;
+    ship.vx += constants.thrust;
   }
 });
 
@@ -176,11 +168,11 @@ function bigger() {
     node.y *= constants.expansionFactor;
   });
 
-  ship.position.x *= constants.expansionFactor;
-  ship.position.y *= constants.expansionFactor;
+  ship.x *= constants.expansionFactor;
+  ship.y *= constants.expansionFactor;
 
-  asteroid.position.x *= constants.expansionFactor;
-  asteroid.position.y *= constants.expansionFactor;
+  asteroid.x *= constants.expansionFactor;
+  asteroid.y *= constants.expansionFactor;
 
   force
     .size([constants.width, constants.height])
@@ -226,16 +218,16 @@ function tick(e) {
 d3.timer(render);
 
 function render() {
-  
+
   context.save();
-  context.translate((innerWidth-constants.width)/2,(innerHeight - constants.height)/2);
-  
+  context.translate((innerWidth - constants.width) / 2, (innerHeight - constants.height) / 2);
+
   var renderNodes = [];
 
   nodes.forEach(function (node) {
     renderNodes.push(node);
-    var nodeX = node.x; //(width / 2 + (node.x - ship.position.x)) % width;
-    var nodeY = node.y; //(height / 2 + (node.y - ship.position.y)) % height;
+    var nodeX = node.x; //(width / 2 + (node.x - ship.x)) % width;
+    var nodeY = node.y; //(height / 2 + (node.y - ship.y)) % height;
     //    if (nodeX - 2 * node.radius < 0)
     //      renderNodes.push({
     //        x: width + node.x,
@@ -270,26 +262,26 @@ function render() {
   });
 
 
-  ship.direction = Math.atan2(ship.velocity.y, ship.velocity.x);
-  ship.totalSpeed = Math.sqrt(Math.pow(ship.velocity.x, 2) + Math.pow(ship.velocity.y, 2));
+  ship.direction = Math.atan2(ship.vy, ship.vx);
+  ship.totalSpeed = Math.sqrt(Math.pow(ship.vx, 2) + Math.pow(ship.vy, 2));
   if (ship.totalSpeed > constants.speedOfLight) {
     ship.totalSpeed = constants.speedOfLight;
-    ship.velocity.x = Math.cos(ship.direction) * ship.totalSpeed;
-    ship.velocity.y = Math.sin(ship.direction) * ship.totalSpeed;
+    ship.vx = Math.cos(ship.direction) * ship.totalSpeed;
+    ship.vy = Math.sin(ship.direction) * ship.totalSpeed;
   }
 
-  ship.position.x += ship.velocity.x;
-  ship.position.y += ship.velocity.y;
+  ship.x += ship.vx;
+  ship.y += ship.vy;
 
-  wrapAround(ship.position);
+  wrapAround(ship);
 
   //  nodes.forEach(wrapAround);
   context.clearRect(0, 0, constants.width, constants.height);
   n = renderNodes.length;
   for (i = n - 1; i >= 0; --i) {
     d = renderNodes[i];
-    var nodeX = (constants.width + (d.x - ship.position.x)) % constants.width;
-    var nodeY = (constants.height + (d.y - ship.position.y)) % constants.height;
+    var nodeX = (constants.width + (d.x - ship.x)) % constants.width;
+    var nodeY = (constants.height + (d.y - ship.y)) % constants.height;
     context.beginPath();
     context.strokeStyle = "white";
     context.fillStyle = temperature(d.collisions);
@@ -312,10 +304,10 @@ function render() {
     context.restore();
   }
 
-  wrapAround(asteroid.position);
+  wrapAround(asteroid);
 
-  var asteroidX = (constants.width / 2 + (asteroid.position.x - ship.position.x)) % constants.width;
-  var asteroidY = (constants.height / 2 + (asteroid.position.y - ship.position.y)) % constants.height;
+  var asteroidX = (constants.width / 2 + (asteroid.x - ship.x)) % constants.width;
+  var asteroidY = (constants.height / 2 + (asteroid.y - ship.y)) % constants.height;
 
   function renderAsteroid(x, y, angle) {
     context.save();
@@ -348,30 +340,30 @@ function render() {
   }
 
   renderShip(constants.width / 2, constants.height / 2, ship.direction);
-  //  renderShip(ship.position.x, ship.position.y, ship.direction);
+  //  renderShip(ship.x, ship.y, ship.direction);
   //
-  //  if (ship.position.x - 100 < 0) {
-  //    renderShip(constants.width + ship.position.x, ship.position.y, ship.direction);
+  //  if (ship.x - 100 < 0) {
+  //    renderShip(constants.width + ship.x, ship.y, ship.direction);
   //  }
   //
-  //  if (ship.position.x + 100 > constants.width) {
-  //    renderShip(ship.position.x - constants.width, ship.position.y, ship.direction);
+  //  if (ship.x + 100 > constants.width) {
+  //    renderShip(ship.x - constants.width, ship.y, ship.direction);
   //  }
   //
-  //  if (ship.position.y - 100 < 0) {
-  //    renderShip(ship.position.x, constants.height + ship.position.y, ship.direction);
+  //  if (ship.y - 100 < 0) {
+  //    renderShip(ship.x, constants.height + ship.y, ship.direction);
   //  }
   //
-  //  if (ship.position.y + 100 > constants.height) {
-  //    renderShip(ship.position.x, ship.position.y - constants.height, ship.direction);
+  //  if (ship.y + 100 > constants.height) {
+  //    renderShip(ship.x, ship.y - constants.height, ship.direction);
   //  }
-  
+
   context.restore();
-//  context.translate((innerWidth-constants.width)/2,(innerHeight - constants.height)/2);
-  context.clearRect(0,0,(innerWidth-constants.width)/2, innerHeight);
-  context.clearRect((innerWidth+constants.width)/2,0,innerWidth, innerHeight);
-  context.clearRect(0,0,innerWidth, (innerHeight-constants.height)/2);
-  context.clearRect(0,(innerHeight+constants.height)/2,innerWidth, innerHeight);
+  //  context.translate((innerWidth-constants.width)/2,(innerHeight - constants.height)/2);
+  context.clearRect(0, 0, (innerWidth - constants.width) / 2, innerHeight);
+  context.clearRect((innerWidth + constants.width) / 2, 0, innerWidth, innerHeight);
+  context.clearRect(0, 0, innerWidth, (innerHeight - constants.height) / 2);
+  context.clearRect(0, (innerHeight + constants.height) / 2, innerWidth, innerHeight);
 }
 
 canvas.on("mousemove", function () {
