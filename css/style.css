@@ -1,4 +1,4 @@
-/* line 1, /Users/Chris/Development/wrap-collision/css/style.scss */
+/* line 1, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
 body {
   margin: 0;
   background: black;
@@ -8,11 +8,7 @@ body {
   width: 100%;
   height: 100vh; }
 
-/* line 11, /Users/Chris/Development/wrap-collision/css/style.scss */
-canvas {
-  border: 1px solid white; }
-
-/* line 15, /Users/Chris/Development/wrap-collision/css/style.scss */
+/* line 15, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
 .node {
   stroke-width: 1.5px; }
 
