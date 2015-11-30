@@ -5,17 +5,18 @@ var constants = {
   height: innerHeight / 4,
   maxWidth: 2 * innerWidth,
   maxHeight: 2 * innerHeight,
-  startingCount: 1,
+  startingCount: 10,
   endCount: 300,
   expansionFactor: 1.01,
-  additionDelay: 5,
+  additionDelay: 500000000000,
   expansionWait: 5000,
   expansionDelay: 0,
   cooldownFactor: 0.9,
   collisionForce: 0.1,
   useForceLayout: false,
   useCollisions: true,
-  outlineParticles: false
+  outlineParticles: true,
+  shipCentered: true
 };
 
 window.onload = function () {
@@ -24,7 +25,6 @@ window.onload = function () {
   gui.add(constants, 'thrust', 0, 5);
   gui.add(constants, 'width', 0, 500);
   gui.add(constants, 'height', 0, 500);
-  gui.add(constants, 'startingCount', 0, 1000);
   gui.add(constants, 'endCount', 0, 1000);
   gui.add(constants, 'expansionFactor', 1, 1.5);
   gui.add(constants, 'additionDelay', 0, 100);
@@ -32,11 +32,37 @@ window.onload = function () {
   gui.add(constants, 'expansionDelay', 0, 500);
   gui.add(constants, 'cooldownFactor', 0, 1);
   gui.add(constants, 'collisionForce', 0, 1);
-  gui.add(constants, 'useForceLayout');
   gui.add(constants, 'useCollisions');
   gui.add(constants, 'outlineParticles');
+  gui.add(constants, 'shipCentered');
 };
 
+var ship = {
+  x: constants.width / 2,
+  y: constants.height / 2,
+  vx: 1,
+  vy: 0,
+  direction: 0
+};
+
+var asteroid = {
+  x: constants.width / 4,
+  y: constants.height / 2,
+  vx: 0,
+  vy: 0,
+  direction: 0
+};
+
+function createNode() {
+    return {
+      collisions: 0,
+      radius: Math.random() * 5 + 15,
+      x: Math.random() * constants.width,
+      y: Math.random() * constants.height,
+      vx: 2 * Math.random() - 1,
+      vy: 2 * Math.random() - 1
+    };
+  }
 var opacity = 1;
 var temperature = d3.scale
   .linear()
@@ -61,22 +87,6 @@ var asteroidSVG = new Blob(['<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink
   asteroidImg = new Image;
 
 asteroidImg.src = url;
-
-var ship = {
-  x: constants.width / 2,
-  y: constants.height / 2,
-  vx: 2,
-  vy: -1,
-  direction: 0
-};
-
-var asteroid = {
-  x: constants.width / 4,
-  y: constants.height / 2,
-  vx: 0,
-  vy: 0,
-  direction: 0
-};
 
 $(window).on('keypress', function (e) {
   //    console.log(e.which);
@@ -110,19 +120,8 @@ function wrapAround(node) {
   node.py = node.y;
 }
 
-var color = d3.scale.category20();
-
 var nodes = d3.range(constants.startingCount)
-  .map(function () {
-    return {
-      collisions: 0,
-      radius: Math.random() * 5 + 15,
-      x: Math.random() * constants.width,
-      y: Math.random() * constants.height,
-      vx: Math.random() - 0.5,
-      vy: Math.random() - 0.5
-    };
-  }),
+  .map(createNode),
   root = nodes[0];
 
 root.x = constants.width / 2;
@@ -142,15 +141,7 @@ constants.useForceLayout && force
   .start();
 
 ! function addOne() {
-  nodes.push({
-    color: color(nodes.length),
-    collisions: 0,
-    radius: Math.random() * 5 + 15,
-    x: Math.random() * constants.width,
-    y: Math.random() * constants.height,
-    vx: Math.random() - 0.5,
-    vy: Math.random() - 0.5
-  });
+  nodes.push(createNode());
   constants.useForceLayout && force.nodes(nodes).start();
 
   if (nodes.length < constants.endCount)
@@ -196,9 +187,7 @@ function tick(e) {
     node.collisions = Math.min(node.collisions, 400);
     node.collisions *= constants.cooldownFactor;
   });
-
-
-
+  
   var q = d3.geom.quadtree(nodes),
     i,
     d,
@@ -224,41 +213,75 @@ function render() {
 
   var renderNodes = [];
 
+  nodes.forEach(wrapAround);
   nodes.forEach(function (node) {
     renderNodes.push(node);
-    var nodeX = node.x; //(width / 2 + (node.x - ship.x)) % width;
-    var nodeY = node.y; //(height / 2 + (node.y - ship.y)) % height;
-    //    if (nodeX - 2 * node.radius < 0)
-    //      renderNodes.push({
-    //        x: width + node.x,
-    //        y: node.y,
-    //        collisions: node.collisions,
-    //        radius: node.radius
-    //      });
-    //
-    //    if (nodeX + 2 * node.radius > width)
-    //      renderNodes.push({
-    //        x: node.x - width,
-    //        y: node.y,
-    //        collisions: node.collisions,
-    //        radius: node.radius
-    //      });
-    //
-    //    if (nodeY - 2 * node.radius < 0)
-    //      renderNodes.push({
-    //        x: node.x,
-    //        y: height + node.y,
-    //        collisions: node.collisions,
-    //        radius: node.radius
-    //      });
-    //
-    //    if (nodeY + 2 * node.radius > height)
-    //      renderNodes.push({
-    //        x: node.x,
-    //        y: node.y - height,
-    //        collisions: node.collisions,
-    //        radius: node.radius
-    //      });
+    var nodeX = constants.shipCentered ? (constants.width / 2 + (node.x - ship.x)) : node.x;
+    var nodeY = constants.shipCentered ? (constants.height / 2 + (node.y - ship.y)) : node.y;
+    if (nodeX - 2 * node.radius < 0)
+      renderNodes.push({
+        x: constants.width + node.x,
+        y: node.y,
+        collisions: node.collisions,
+        radius: node.radius
+      });
+
+    if (nodeX + 2 * node.radius > constants.width)
+      renderNodes.push({
+        x: node.x - constants.width,
+        y: node.y,
+        collisions: node.collisions,
+        radius: node.radius
+      });
+
+    if (nodeY - 2 * node.radius < 0)
+      renderNodes.push({
+        x: node.x,
+        y: constants.height + node.y,
+        collisions: node.collisions,
+        radius: node.radius
+      });
+
+    if (nodeY + 2 * node.radius > constants.height)
+      renderNodes.push({
+        x: node.x,
+        y: node.y - constants.height,
+        collisions: node.collisions,
+        radius: node.radius
+      });
+
+    //Corners
+    if (nodeX - 2 * node.radius < 0 && nodeY - 2 * node.radius < 0)
+      renderNodes.push({
+        x: constants.width + node.x,
+        y: constants.height + node.y,
+        collisions: node.collisions,
+        radius: node.radius
+      });
+
+    if (nodeX - 2 * node.radius < 0 && nodeY + 2 * node.radius > constants.height)
+      renderNodes.push({
+        x: constants.width + node.x,
+        y: node.y - constants.height,
+        collisions: node.collisions,
+        radius: node.radius
+      });
+
+    if (nodeX + 2 * node.radius > constants.width && nodeY - 2 * node.radius < 0)
+      renderNodes.push({
+        x: node.x - constants.width,
+        y: node.y + constants.height,
+        collisions: node.collisions,
+        radius: node.radius
+      });
+
+    if (nodeX + 2 * node.radius > constants.width && nodeY + 2 * node.radius > constants.height)
+      renderNodes.push({
+        x: node.x - constants.width,
+        y: node.y - constants.height,
+        collisions: node.collisions,
+        radius: node.radius
+      });
   });
 
 
@@ -278,10 +301,11 @@ function render() {
   //  nodes.forEach(wrapAround);
   context.clearRect(0, 0, constants.width, constants.height);
   n = renderNodes.length;
+  console.log(n);
   for (i = n - 1; i >= 0; --i) {
     d = renderNodes[i];
-    var nodeX = (constants.width + (d.x - ship.x)) % constants.width;
-    var nodeY = (constants.height + (d.y - ship.y)) % constants.height;
+    var nodeX = constants.shipCentered ? (constants.width / 2 + (d.x - ship.x)) : d.x;
+    var nodeY = constants.shipCentered ? (constants.height / 2 + (d.y - ship.y)) : d.y;
     context.beginPath();
     context.strokeStyle = "white";
     context.fillStyle = temperature(d.collisions);
@@ -290,7 +314,6 @@ function render() {
     constants.outlineParticles && context.stroke();
     context.fill();
   }
-  nodes.forEach(wrapAround);
 
   function renderShip(x, y, angle) {
     context.save();
@@ -306,8 +329,8 @@ function render() {
 
   wrapAround(asteroid);
 
-  var asteroidX = (constants.width / 2 + (asteroid.x - ship.x)) % constants.width;
-  var asteroidY = (constants.height / 2 + (asteroid.y - ship.y)) % constants.height;
+  var asteroidX = constants.shipCentered ? (constants.width / 2 + (asteroid.x - ship.x)) : asteroid.x;
+  var asteroidY = constants.shipCentered ? (constants.height / 2 + (asteroid.y - ship.y)) : asteroid.y;
 
   function renderAsteroid(x, y, angle) {
     context.save();
@@ -321,7 +344,6 @@ function render() {
     context.restore();
   }
   renderAsteroid(asteroidX, asteroidY, 0);
-
 
   if (asteroidX - 100 < 0) {
     renderAsteroid(constants.width + asteroidX, asteroidY, 0);
@@ -339,24 +361,61 @@ function render() {
     renderAsteroid(asteroidX, asteroidY - constants.height, 0);
   }
 
-  renderShip(constants.width / 2, constants.height / 2, ship.direction);
-  //  renderShip(ship.x, ship.y, ship.direction);
-  //
-  //  if (ship.x - 100 < 0) {
-  //    renderShip(constants.width + ship.x, ship.y, ship.direction);
-  //  }
-  //
-  //  if (ship.x + 100 > constants.width) {
-  //    renderShip(ship.x - constants.width, ship.y, ship.direction);
-  //  }
-  //
-  //  if (ship.y - 100 < 0) {
-  //    renderShip(ship.x, constants.height + ship.y, ship.direction);
-  //  }
-  //
-  //  if (ship.y + 100 > constants.height) {
-  //    renderShip(ship.x, ship.y - constants.height, ship.direction);
-  //  }
+  // Corners
+  if (asteroidX - 100 < 0 && asteroidY - 125 < 0) {
+    renderAsteroid(constants.width + asteroidX, constants.height + asteroidY, 0);
+  }
+
+  if (asteroidX - 100 < 0 && asteroidY + 125 > constants.height) {
+    renderAsteroid(constants.width + asteroidX, asteroidY - constants.height, 0);
+  }
+
+  if (asteroidX + 100 > constants.width && asteroidY - 125 < 0) {
+    renderAsteroid(asteroidX - constants.width, constants.height + asteroidY, 0);
+  }
+
+  if (asteroidX + 100 > constants.width && asteroidY + 125 > constants.height) {
+    renderAsteroid(asteroidX - constants.width, asteroidY - constants.height, 0);
+  }
+
+  if (constants.shipCentered) {
+    renderShip(constants.width / 2, constants.height / 2, ship.direction);
+  } else {
+    renderShip(ship.x, ship.y, ship.direction);
+
+    if (ship.x - 100 < 0) {
+      renderShip(constants.width + ship.x, ship.y, ship.direction);
+    }
+
+    if (ship.x + 100 > constants.width) {
+      renderShip(ship.x - constants.width, ship.y, ship.direction);
+    }
+
+    if (ship.y - 100 < 0) {
+      renderShip(ship.x, constants.height + ship.y, ship.direction);
+    }
+
+    if (ship.y + 100 > constants.height) {
+      renderShip(ship.x, ship.y - constants.height, ship.direction);
+    }
+
+    // Corners
+    if (ship.x - 100 < 0 && ship.y - 125 < 0) {
+      renderAsteroid(constants.width + ship.x, constants.height + ship.y, 0);
+    }
+
+    if (ship.x - 100 < 0 && ship.y + 125 > constants.height) {
+      renderAsteroid(constants.width + ship.x, ship.y - constants.height, 0);
+    }
+
+    if (ship.x + 100 > constants.width && ship.y - 125 < 0) {
+      renderAsteroid(ship.x - constants.width, constants.height + ship.y, 0);
+    }
+
+    if (ship.x + 100 > constants.width && ship.y + 125 > constants.height) {
+      renderAsteroid(ship.x - constants.width, ship.y - constants.height, 0);
+    }
+  }
 
   context.restore();
   //  context.translate((innerWidth-constants.width)/2,(innerHeight - constants.height)/2);
