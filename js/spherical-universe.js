@@ -65,7 +65,7 @@ function SphericalUniverse(canvasSelector, options) {
       options.useForceLayout && force.nodes(nodes).start();
 
 
-      setTimeout(addOne, options.additionDelay);
+      setTimeout(this.addOne, options.additionDelay);
     } else {
       this.filledCallback && setTimeout(this.filledCallback);
     }
@@ -458,4 +458,4 @@ function SphericalUniverse(canvasSelector, options) {
   }
 
   return this;
-}
+};

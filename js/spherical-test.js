@@ -3,10 +3,10 @@ var options = {
   thrust: 5,
   width: innerWidth,
   height: innerHeight,
-  startingCount: 100,
-  endCount: 100,
+  startingCount: 50,
+  endCount: 150,
   expansionFactor: 1.01,
-  additionDelay: 5,
+  additionDelay: 0,
   expansionWait: 5000,
   expansionDelay: 0,
   maxExpansion: 5,
@@ -48,7 +48,7 @@ var canvasSelector = '#sphereUniverse';
 var u = new SphericalUniverse(canvasSelector, options);
 
 u.filledCallback = function(){
-  u.expand();
+  setTimeout(u.expand, 5000);
 }
 
 u.addOne();
