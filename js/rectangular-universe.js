@@ -109,6 +109,9 @@ function RectangularUniverse(canvasSelector, options) {
     .start();
 
   this.addOne = function () {
+    if(!inView)
+      return setTimeout(this.addOne, options.additionDelay);
+      
     if (nodes.length < options.endCount) {
       nodes.push(createNode());
       options.useForceLayout && force.nodes(nodes).start();
@@ -119,6 +122,9 @@ function RectangularUniverse(canvasSelector, options) {
   }.bind(this);
 
   this.expand = function () {
+    if(!inView)
+      return setTimeout(this.expand, options.expansionDelay);
+    
     if (options.width < options.maxWidth && options.height < options.maxHeight) {
       options.width *= options.expansionFactor;
       options.height *= options.expansionFactor;
@@ -150,6 +156,8 @@ function RectangularUniverse(canvasSelector, options) {
     .attr("height", options.canvasHeight);
 
   $(window).on('keypress', function (e) {
+    if(!inView)
+      return;
     //    console.log(e.which);
     if (e.which === 115) {
       ship.totalSpeed -= options.thrust;
@@ -164,11 +172,31 @@ function RectangularUniverse(canvasSelector, options) {
       ship.direction += 3 * options.thrust * Math.PI / 180;
     }
   });
+  
+  var inView = false;
+  setTimeout(function(){
+    var windowTop = $(window).scrollTop(),
+        windowBottom = windowTop + $(window).height(),
+      canvasTop = $(canvasSelector).offset().top,
+      canvasBottom = canvasTop + options.canvasHeight;
+    
+    inView = canvasTop < windowBottom && canvasBottom > windowTop;
+    $(window).scroll(function (event) {
+      var windowTop = $(window).scrollTop(),
+          windowBottom = windowTop + window.innerHeight;
+
+
+      inView = canvasTop < windowBottom && canvasBottom > windowTop;
+    });
+  });
 
   var context = canvas.node().getContext("2d");
   options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
 
   function tick(e) {
+    if(!inView)
+      return;
+    
     nodes.forEach(function (node) {
       node.collisions = Math.min(node.collisions, 400);
       node.collisions *= options.cooldownFactor;
@@ -290,7 +318,7 @@ function RectangularUniverse(canvasSelector, options) {
     //  nodes.forEach(wrapAround);
     context.clearRect(0, 0, options.width, options.height);
     n = renderNodes.length;
-    console.log(n);
+//    console.log(n);
     for (i = n - 1; i >= 0; --i) {
       d = renderNodes[i];
       var nodeX = options.shipCentered ? (options.width / 2 + (d.x - ship.x)) : d.x;

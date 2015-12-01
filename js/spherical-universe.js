@@ -14,7 +14,6 @@ if (Number.prototype.toDegrees === undefined) {
 }
 
 function SphericalUniverse(canvasSelector, options) {
-
   var randomLat = d3.random.normal(0, 40)
 
   function createNode() {
@@ -59,11 +58,13 @@ function SphericalUniverse(canvasSelector, options) {
     .start();
 
   this.addOne = function () {
+    if (!inView)
+      return setTimeout(this.addOne, options.additionDelay);
+
     if (nodes.length < options.endCount) {
       nodes.push(createNode());
 
       options.useForceLayout && force.nodes(nodes).start();
-
 
       setTimeout(this.addOne, options.additionDelay);
     } else {
@@ -72,6 +73,9 @@ function SphericalUniverse(canvasSelector, options) {
   }.bind(this);
 
   this.expand = function () {
+    if (!inView)
+      return setTimeout(this.expand, options.expansionDelay);
+
     if (currentExpansion < options.maxExpansion) {
       currentExpansion *= options.expansionFactor;
       nodes.forEach(function (node) {
@@ -101,9 +105,27 @@ function SphericalUniverse(canvasSelector, options) {
     .projection(projection)
     .context(c);
 
+  var inView = false;
+  setTimeout(function(){
+    var windowTop = $(window).scrollTop(),
+        windowBottom = windowTop + $(window).height(),
+      canvasTop = $(canvasSelector).offset().top,
+      canvasBottom = canvasTop + options.height;
+    
+    inView = canvasTop < windowBottom && canvasBottom > windowTop;
+    $(window).scroll(function (event) {
+      var windowTop = $(window).scrollTop(),
+          windowBottom = windowTop + window.innerHeight;
 
+
+      inView = canvasTop < windowBottom && canvasBottom > windowTop;
+    });
+  });
 
   $(window).on('keypress', function (e) {
+    if(!inView)
+      return;
+    
     //console.log(e.which);
     if (e.which === 119) {
       ship.totalSpeed *= 1.1;
@@ -178,7 +200,7 @@ function SphericalUniverse(canvasSelector, options) {
   options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
 
   function tick() {
-    if (options.paused)
+    if (!inView || options.paused)
       return;
 
     nodes.forEach(function (node) {
