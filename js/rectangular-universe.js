@@ -1,4 +1,4 @@
-var constants = {
+var options = {
   speedOfLight: 10,
   thrust: 1,
   width: innerWidth / 4,
@@ -21,33 +21,33 @@ var constants = {
 
 window.onload = function () {
   var gui = new dat.GUI();
-  gui.add(constants, 'speedOfLight', 0, 50);
-  gui.add(constants, 'thrust', 0, 5);
-  gui.add(constants, 'width', 0, 500);
-  gui.add(constants, 'height', 0, 500);
-  gui.add(constants, 'endCount', 0, 1000);
-  gui.add(constants, 'expansionFactor', 1, 1.5);
-  gui.add(constants, 'additionDelay', 0, 100);
-  gui.add(constants, 'expansionWait', 0, 10000);
-  gui.add(constants, 'expansionDelay', 0, 500);
-  gui.add(constants, 'cooldownFactor', 0, 1);
-  gui.add(constants, 'collisionForce', 0, 1);
-  gui.add(constants, 'useCollisions');
-  gui.add(constants, 'outlineParticles');
-  gui.add(constants, 'shipCentered');
+  gui.add(options, 'speedOfLight', 0, 50);
+  gui.add(options, 'thrust', 0, 5);
+  gui.add(options, 'width', 0, 500);
+  gui.add(options, 'height', 0, 500);
+  gui.add(options, 'endCount', 0, 1000);
+  gui.add(options, 'expansionFactor', 1, 1.5);
+  gui.add(options, 'additionDelay', 0, 100);
+  gui.add(options, 'expansionWait', 0, 10000);
+  gui.add(options, 'expansionDelay', 0, 500);
+  gui.add(options, 'cooldownFactor', 0, 1);
+  gui.add(options, 'collisionForce', 0, 1);
+  gui.add(options, 'useCollisions');
+  gui.add(options, 'outlineParticles');
+  gui.add(options, 'shipCentered');
 };
 
 var ship = {
-  x: constants.width / 2,
-  y: constants.height / 2,
+  x: options.width / 2,
+  y: options.height / 2,
   vx: 1,
   vy: 0,
   direction: 0
 };
 
 var asteroid = {
-  x: constants.width / 4,
-  y: constants.height / 2,
+  x: options.width / 4,
+  y: options.height / 2,
   vx: 0,
   vy: 0,
   direction: 0
@@ -57,8 +57,8 @@ function createNode() {
     return {
       collisions: 0,
       radius: Math.random() * 5 + 15,
-      x: Math.random() * constants.width,
-      y: Math.random() * constants.height,
+      x: Math.random() * options.width,
+      y: Math.random() * options.height,
       vx: 2 * Math.random() - 1,
       vy: 2 * Math.random() - 1
     };
@@ -91,86 +91,86 @@ asteroidImg.src = url;
 $(window).on('keypress', function (e) {
   //    console.log(e.which);
   if (e.which === 115) {
-    ship.vy += constants.thrust;
+    ship.vy += options.thrust;
   }
   if (e.which === 119) {
-    ship.vy -= constants.thrust;
+    ship.vy -= options.thrust;
   }
   if (e.which === 97) {
-    ship.vx -= constants.thrust;
+    ship.vx -= options.thrust;
   }
   if (e.which === 100) {
-    ship.vx += constants.thrust;
+    ship.vx += options.thrust;
   }
 });
 
 function wrapAround(node) {
   if (node.x < 0)
-    node.x = constants.width + node.x;
-  else if (node.x > constants.width)
-    node.x -= constants.width;
+    node.x = options.width + node.x;
+  else if (node.x > options.width)
+    node.x -= options.width;
 
   node.px = node.x;
 
   if (node.y < 0)
-    node.y = constants.height + node.y;
-  else if (node.y > constants.height)
-    node.y -= constants.height;
+    node.y = options.height + node.y;
+  else if (node.y > options.height)
+    node.y -= options.height;
 
   node.py = node.y;
 }
 
-var nodes = d3.range(constants.startingCount)
+var nodes = d3.range(options.startingCount)
   .map(createNode),
   root = nodes[0];
 
-root.x = constants.width / 2;
-root.y = constants.height / 2;
+root.x = options.width / 2;
+root.y = options.height / 2;
 root.radius = 0;
 root.fixed = true;
 
 var force = d3.layout.force();
 
-constants.useForceLayout && force
+options.useForceLayout && force
   .gravity(0)
   .charge(function (d, i) {
     return i ? 0 : -1;
   })
   .nodes(nodes)
-  .size([constants.width, constants.height])
+  .size([options.width, options.height])
   .start();
 
 ! function addOne() {
   nodes.push(createNode());
-  constants.useForceLayout && force.nodes(nodes).start();
+  options.useForceLayout && force.nodes(nodes).start();
 
-  if (nodes.length < constants.endCount)
-    setTimeout(addOne, constants.additionDelay);
+  if (nodes.length < options.endCount)
+    setTimeout(addOne, options.additionDelay);
   else
-    setTimeout(bigger, constants.expansionWait);
+    setTimeout(bigger, options.expansionWait);
 }()
 
 function bigger() {
-  constants.width *= constants.expansionFactor;
-  constants.height *= constants.expansionFactor;
+  options.width *= options.expansionFactor;
+  options.height *= options.expansionFactor;
 
   nodes.forEach(function (node) {
-    node.x *= constants.expansionFactor;
-    node.y *= constants.expansionFactor;
+    node.x *= options.expansionFactor;
+    node.y *= options.expansionFactor;
   });
 
-  ship.x *= constants.expansionFactor;
-  ship.y *= constants.expansionFactor;
+  ship.x *= options.expansionFactor;
+  ship.y *= options.expansionFactor;
 
-  asteroid.x *= constants.expansionFactor;
-  asteroid.y *= constants.expansionFactor;
+  asteroid.x *= options.expansionFactor;
+  asteroid.y *= options.expansionFactor;
 
   force
-    .size([constants.width, constants.height])
+    .size([options.width, options.height])
     .start();
 
-  if (constants.width < constants.maxWidth && constants.height < constants.maxHeight)
-    setTimeout(bigger, constants.expansionDelay);
+  if (options.width < options.maxWidth && options.height < options.maxHeight)
+    setTimeout(bigger, options.expansionDelay);
 }
 
 
@@ -180,12 +180,12 @@ var canvas = d3.select("body").append("canvas")
   .attr("height", innerHeight);
 
 var context = canvas.node().getContext("2d");
-constants.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
+options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
 
 function tick(e) {
   nodes.forEach(function (node) {
     node.collisions = Math.min(node.collisions, 400);
-    node.collisions *= constants.cooldownFactor;
+    node.collisions *= options.cooldownFactor;
   });
   
   var q = d3.geom.quadtree(nodes),
@@ -193,7 +193,7 @@ function tick(e) {
     d,
     n = nodes.length;
 
-  if (constants.useCollisions)
+  if (options.useCollisions)
     for (i = 1; i < n; ++i) q.visit(collide(nodes[i]));
 
   nodes.forEach(function (node) {
@@ -209,26 +209,26 @@ d3.timer(render);
 function render() {
 
   context.save();
-  context.translate((innerWidth - constants.width) / 2, (innerHeight - constants.height) / 2);
+  context.translate((innerWidth - options.width) / 2, (innerHeight - options.height) / 2);
 
   var renderNodes = [];
 
   nodes.forEach(wrapAround);
   nodes.forEach(function (node) {
     renderNodes.push(node);
-    var nodeX = constants.shipCentered ? (constants.width / 2 + (node.x - ship.x)) : node.x;
-    var nodeY = constants.shipCentered ? (constants.height / 2 + (node.y - ship.y)) : node.y;
+    var nodeX = options.shipCentered ? (options.width / 2 + (node.x - ship.x)) : node.x;
+    var nodeY = options.shipCentered ? (options.height / 2 + (node.y - ship.y)) : node.y;
     if (nodeX - 2 * node.radius < 0)
       renderNodes.push({
-        x: constants.width + node.x,
+        x: options.width + node.x,
         y: node.y,
         collisions: node.collisions,
         radius: node.radius
       });
 
-    if (nodeX + 2 * node.radius > constants.width)
+    if (nodeX + 2 * node.radius > options.width)
       renderNodes.push({
-        x: node.x - constants.width,
+        x: node.x - options.width,
         y: node.y,
         collisions: node.collisions,
         radius: node.radius
@@ -237,15 +237,15 @@ function render() {
     if (nodeY - 2 * node.radius < 0)
       renderNodes.push({
         x: node.x,
-        y: constants.height + node.y,
+        y: options.height + node.y,
         collisions: node.collisions,
         radius: node.radius
       });
 
-    if (nodeY + 2 * node.radius > constants.height)
+    if (nodeY + 2 * node.radius > options.height)
       renderNodes.push({
         x: node.x,
-        y: node.y - constants.height,
+        y: node.y - options.height,
         collisions: node.collisions,
         radius: node.radius
       });
@@ -253,32 +253,32 @@ function render() {
     //Corners
     if (nodeX - 2 * node.radius < 0 && nodeY - 2 * node.radius < 0)
       renderNodes.push({
-        x: constants.width + node.x,
-        y: constants.height + node.y,
+        x: options.width + node.x,
+        y: options.height + node.y,
         collisions: node.collisions,
         radius: node.radius
       });
 
-    if (nodeX - 2 * node.radius < 0 && nodeY + 2 * node.radius > constants.height)
+    if (nodeX - 2 * node.radius < 0 && nodeY + 2 * node.radius > options.height)
       renderNodes.push({
-        x: constants.width + node.x,
-        y: node.y - constants.height,
+        x: options.width + node.x,
+        y: node.y - options.height,
         collisions: node.collisions,
         radius: node.radius
       });
 
-    if (nodeX + 2 * node.radius > constants.width && nodeY - 2 * node.radius < 0)
+    if (nodeX + 2 * node.radius > options.width && nodeY - 2 * node.radius < 0)
       renderNodes.push({
-        x: node.x - constants.width,
-        y: node.y + constants.height,
+        x: node.x - options.width,
+        y: node.y + options.height,
         collisions: node.collisions,
         radius: node.radius
       });
 
-    if (nodeX + 2 * node.radius > constants.width && nodeY + 2 * node.radius > constants.height)
+    if (nodeX + 2 * node.radius > options.width && nodeY + 2 * node.radius > options.height)
       renderNodes.push({
-        x: node.x - constants.width,
-        y: node.y - constants.height,
+        x: node.x - options.width,
+        y: node.y - options.height,
         collisions: node.collisions,
         radius: node.radius
       });
@@ -287,8 +287,8 @@ function render() {
 
   ship.direction = Math.atan2(ship.vy, ship.vx);
   ship.totalSpeed = Math.sqrt(Math.pow(ship.vx, 2) + Math.pow(ship.vy, 2));
-  if (ship.totalSpeed > constants.speedOfLight) {
-    ship.totalSpeed = constants.speedOfLight;
+  if (ship.totalSpeed > options.speedOfLight) {
+    ship.totalSpeed = options.speedOfLight;
     ship.vx = Math.cos(ship.direction) * ship.totalSpeed;
     ship.vy = Math.sin(ship.direction) * ship.totalSpeed;
   }
@@ -299,19 +299,19 @@ function render() {
   wrapAround(ship);
 
   //  nodes.forEach(wrapAround);
-  context.clearRect(0, 0, constants.width, constants.height);
+  context.clearRect(0, 0, options.width, options.height);
   n = renderNodes.length;
   console.log(n);
   for (i = n - 1; i >= 0; --i) {
     d = renderNodes[i];
-    var nodeX = constants.shipCentered ? (constants.width / 2 + (d.x - ship.x)) : d.x;
-    var nodeY = constants.shipCentered ? (constants.height / 2 + (d.y - ship.y)) : d.y;
+    var nodeX = options.shipCentered ? (options.width / 2 + (d.x - ship.x)) : d.x;
+    var nodeY = options.shipCentered ? (options.height / 2 + (d.y - ship.y)) : d.y;
     context.beginPath();
     context.strokeStyle = "white";
     context.fillStyle = temperature(d.collisions);
     context.moveTo(nodeX, nodeY);
     context.arc(nodeX, nodeY, d.radius, 0, 2 * Math.PI);
-    constants.outlineParticles && context.stroke();
+    options.outlineParticles && context.stroke();
     context.fill();
   }
 
@@ -329,8 +329,8 @@ function render() {
 
   wrapAround(asteroid);
 
-  var asteroidX = constants.shipCentered ? (constants.width / 2 + (asteroid.x - ship.x)) : asteroid.x;
-  var asteroidY = constants.shipCentered ? (constants.height / 2 + (asteroid.y - ship.y)) : asteroid.y;
+  var asteroidX = options.shipCentered ? (options.width / 2 + (asteroid.x - ship.x)) : asteroid.x;
+  var asteroidY = options.shipCentered ? (options.height / 2 + (asteroid.y - ship.y)) : asteroid.y;
 
   function renderAsteroid(x, y, angle) {
     context.save();
@@ -346,83 +346,83 @@ function render() {
   renderAsteroid(asteroidX, asteroidY, 0);
 
   if (asteroidX - 100 < 0) {
-    renderAsteroid(constants.width + asteroidX, asteroidY, 0);
+    renderAsteroid(options.width + asteroidX, asteroidY, 0);
   }
 
-  if (asteroidX + 100 > constants.width) {
-    renderAsteroid(asteroidX - constants.width, asteroidY, 0);
+  if (asteroidX + 100 > options.width) {
+    renderAsteroid(asteroidX - options.width, asteroidY, 0);
   }
 
   if (asteroidY - 125 < 0) {
-    renderAsteroid(asteroidX, constants.height + asteroidY, 0);
+    renderAsteroid(asteroidX, options.height + asteroidY, 0);
   }
 
-  if (asteroidY + 125 > constants.height) {
-    renderAsteroid(asteroidX, asteroidY - constants.height, 0);
+  if (asteroidY + 125 > options.height) {
+    renderAsteroid(asteroidX, asteroidY - options.height, 0);
   }
 
   // Corners
   if (asteroidX - 100 < 0 && asteroidY - 125 < 0) {
-    renderAsteroid(constants.width + asteroidX, constants.height + asteroidY, 0);
+    renderAsteroid(options.width + asteroidX, options.height + asteroidY, 0);
   }
 
-  if (asteroidX - 100 < 0 && asteroidY + 125 > constants.height) {
-    renderAsteroid(constants.width + asteroidX, asteroidY - constants.height, 0);
+  if (asteroidX - 100 < 0 && asteroidY + 125 > options.height) {
+    renderAsteroid(options.width + asteroidX, asteroidY - options.height, 0);
   }
 
-  if (asteroidX + 100 > constants.width && asteroidY - 125 < 0) {
-    renderAsteroid(asteroidX - constants.width, constants.height + asteroidY, 0);
+  if (asteroidX + 100 > options.width && asteroidY - 125 < 0) {
+    renderAsteroid(asteroidX - options.width, options.height + asteroidY, 0);
   }
 
-  if (asteroidX + 100 > constants.width && asteroidY + 125 > constants.height) {
-    renderAsteroid(asteroidX - constants.width, asteroidY - constants.height, 0);
+  if (asteroidX + 100 > options.width && asteroidY + 125 > options.height) {
+    renderAsteroid(asteroidX - options.width, asteroidY - options.height, 0);
   }
 
-  if (constants.shipCentered) {
-    renderShip(constants.width / 2, constants.height / 2, ship.direction);
+  if (options.shipCentered) {
+    renderShip(options.width / 2, options.height / 2, ship.direction);
   } else {
     renderShip(ship.x, ship.y, ship.direction);
 
     if (ship.x - 100 < 0) {
-      renderShip(constants.width + ship.x, ship.y, ship.direction);
+      renderShip(options.width + ship.x, ship.y, ship.direction);
     }
 
-    if (ship.x + 100 > constants.width) {
-      renderShip(ship.x - constants.width, ship.y, ship.direction);
+    if (ship.x + 100 > options.width) {
+      renderShip(ship.x - options.width, ship.y, ship.direction);
     }
 
     if (ship.y - 100 < 0) {
-      renderShip(ship.x, constants.height + ship.y, ship.direction);
+      renderShip(ship.x, options.height + ship.y, ship.direction);
     }
 
-    if (ship.y + 100 > constants.height) {
-      renderShip(ship.x, ship.y - constants.height, ship.direction);
+    if (ship.y + 100 > options.height) {
+      renderShip(ship.x, ship.y - options.height, ship.direction);
     }
 
     // Corners
     if (ship.x - 100 < 0 && ship.y - 125 < 0) {
-      renderAsteroid(constants.width + ship.x, constants.height + ship.y, 0);
+      renderAsteroid(options.width + ship.x, options.height + ship.y, 0);
     }
 
-    if (ship.x - 100 < 0 && ship.y + 125 > constants.height) {
-      renderAsteroid(constants.width + ship.x, ship.y - constants.height, 0);
+    if (ship.x - 100 < 0 && ship.y + 125 > options.height) {
+      renderAsteroid(options.width + ship.x, ship.y - options.height, 0);
     }
 
-    if (ship.x + 100 > constants.width && ship.y - 125 < 0) {
-      renderAsteroid(ship.x - constants.width, constants.height + ship.y, 0);
+    if (ship.x + 100 > options.width && ship.y - 125 < 0) {
+      renderAsteroid(ship.x - options.width, options.height + ship.y, 0);
     }
 
-    if (ship.x + 100 > constants.width && ship.y + 125 > constants.height) {
-      renderAsteroid(ship.x - constants.width, ship.y - constants.height, 0);
+    if (ship.x + 100 > options.width && ship.y + 125 > options.height) {
+      renderAsteroid(ship.x - options.width, ship.y - options.height, 0);
     }
   }
 
   context.restore();
-  //  context.translate((innerWidth-constants.width)/2,(innerHeight - constants.height)/2);
-  context.clearRect(0, 0, (innerWidth - constants.width) / 2, innerHeight);
-  context.clearRect((innerWidth + constants.width) / 2, 0, innerWidth, innerHeight);
-  context.clearRect(0, 0, innerWidth, (innerHeight - constants.height) / 2);
-  context.clearRect(0, (innerHeight + constants.height) / 2, innerWidth, innerHeight);
+  //  context.translate((innerWidth-options.width)/2,(innerHeight - options.height)/2);
+  context.clearRect(0, 0, (innerWidth - options.width) / 2, innerHeight);
+  context.clearRect((innerWidth + options.width) / 2, 0, innerWidth, innerHeight);
+  context.clearRect(0, 0, innerWidth, (innerHeight - options.height) / 2);
+  context.clearRect(0, (innerHeight + options.height) / 2, innerWidth, innerHeight);
 }
 
 canvas.on("mousemove", function () {
@@ -443,13 +443,13 @@ function collide(node) {
       var x = node.x - quad.point.x,
         y = node.y - quad.point.y;
 
-      if (Math.abs(x) > constants.width / 2) x = x > 0 ? x - constants.width : x + constants.width;
-      if (Math.abs(y) > constants.height / 2) y = y > 0 ? y - constants.height : y + constants.height;
+      if (Math.abs(x) > options.width / 2) x = x > 0 ? x - options.width : x + options.width;
+      if (Math.abs(y) > options.height / 2) y = y > 0 ? y - options.height : y + options.height;
 
       var l = Math.sqrt(x * x + y * y),
         r = node.radius + quad.point.radius;
       if (l < r) {
-        l = (l - r) / l * constants.collisionForce;
+        l = (l - r) / l * options.collisionForce;
         x = (x * l);
         y = (y * l);
         node.vx -= x;
@@ -460,6 +460,6 @@ function collide(node) {
         quad.point.collisions++;
       }
     }
-    return (x1 > nx2 && x2 < constants.width && nx1 > 0) || (x2 < nx1 && nx2 < constants.width && x1 > 0) || (y1 > ny2 && y2 < constants.height && ny1 > 0) || (y2 < ny1 && ny2 < constants.height && y1 > 0);
+    return (x1 > nx2 && x2 < options.width && nx1 > 0) || (x2 < nx1 && nx2 < options.width && x1 > 0) || (y1 > ny2 && y2 < options.height && ny1 > 0) || (y2 < ny1 && ny2 < options.height && y1 > 0);
   };
 }

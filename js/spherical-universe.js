@@ -13,7 +13,7 @@ if (Number.prototype.toDegrees === undefined) {
   };
 }
 
-var constants = {
+var options = {
   speedOfLight: 200,
   thrust: 5,
   width: innerWidth,
@@ -39,23 +39,23 @@ var constants = {
 window.onload = function () {
   var gui = new dat.GUI();
   gui.close();
-  gui.add(constants, 'speedOfLight', 0, 100);
-  gui.add(constants, 'thrust', 0, 5);
-  gui.add(constants, 'endCount', 0, 1000);
-  gui.add(constants, 'expansionFactor', 1, 1.5);
-  gui.add(constants, 'additionDelay', 0, 100);
-  gui.add(constants, 'expansionWait', 0, 10000);
-  gui.add(constants, 'expansionDelay', 0, 500);
-  gui.add(constants, 'maxExpansion', 0, 10);
-  gui.add(constants, 'cooldownFactor', 0, 1);
-  gui.add(constants, 'collisionForce', 0, 1);
-  gui.add(constants, 'useForceLayout');
-  gui.add(constants, 'useCollisions');
-  gui.add(constants, 'outlineParticles');
-  gui.add(constants, 'renderGraticules');
-  gui.add(constants, 'renderPlanet');
-  gui.add(constants, 'paused');
-  gui.add(constants, 'projection', ['Azimuthal Equidistant', 'Mercator', 'Mollweide', 'Globe']);
+  gui.add(options, 'speedOfLight', 0, 100);
+  gui.add(options, 'thrust', 0, 5);
+  gui.add(options, 'endCount', 0, 1000);
+  gui.add(options, 'expansionFactor', 1, 1.5);
+  gui.add(options, 'additionDelay', 0, 100);
+  gui.add(options, 'expansionWait', 0, 10000);
+  gui.add(options, 'expansionDelay', 0, 500);
+  gui.add(options, 'maxExpansion', 0, 10);
+  gui.add(options, 'cooldownFactor', 0, 1);
+  gui.add(options, 'collisionForce', 0, 1);
+  gui.add(options, 'useForceLayout');
+  gui.add(options, 'useCollisions');
+  gui.add(options, 'outlineParticles');
+  gui.add(options, 'renderGraticules');
+  gui.add(options, 'renderPlanet');
+  gui.add(options, 'paused');
+  gui.add(options, 'projection', ['Azimuthal Equidistant', 'Mercator', 'Mollweide', 'Globe']);
 };
 
 var randomLat = d3.random.normal(0, 40)
@@ -87,12 +87,12 @@ var temperature = d3.scale
   .domain([0, 10, 20, 30])
   .range(['black', 'red', 'orange', 'white']);
 
-var nodes = d3.range(constants.startingCount).map(createNode),
+var nodes = d3.range(options.startingCount).map(createNode),
   root = nodes[0];
 
 var force = d3.layout.force();
 
-constants.useForceLayout && force
+options.useForceLayout && force
   .gravity(0)
   .charge(function (d, i) {
     return i ? 0 : -0;
@@ -104,24 +104,24 @@ constants.useForceLayout && force
 ! function addOne() {
   nodes.push(createNode());
 
-  constants.useForceLayout && force.nodes(nodes).start();
+  options.useForceLayout && force.nodes(nodes).start();
 
-  if (nodes.length < constants.endCount)
-    setTimeout(addOne, constants.additionDelay);
+  if (nodes.length < options.endCount)
+    setTimeout(addOne, options.additionDelay);
   else
-    setTimeout(bigger, constants.expansionWait);
+    setTimeout(bigger, options.expansionWait);
 }()
 
 function bigger() {
-  currentExpansion *= constants.expansionFactor;
+  currentExpansion *= options.expansionFactor;
   nodes.forEach(function (node) {
-    node.radius *= 1 / constants.expansionFactor;
+    node.radius *= 1 / options.expansionFactor;
   });
 
 //  projection.scale(currentProjectionScale * currentExpansion);
 
-  if (currentExpansion < constants.maxExpansion)
-    setTimeout(bigger, constants.expansionDelay);
+  if (currentExpansion < options.maxExpansion)
+    setTimeout(bigger, options.expansionDelay);
 }
 
 var projection, currentProjectionScale;
@@ -129,12 +129,12 @@ currentProjectionScale = 75;
 projection = d3.geo.azimuthalEquidistant()
   .scale(currentProjectionScale)
   .clipAngle(180 - 1e-3)
-  .translate([constants.width / 2, constants.height / 2])
+  .translate([options.width / 2, options.height / 2])
   .precision(.1);
 
 var canvas = d3.select("body").append("canvas")
-  .attr("width", constants.width)
-  .attr("height", constants.height);
+  .attr("width", options.width)
+  .attr("height", options.height);
 
 var c = canvas.node().getContext("2d");
 
@@ -150,21 +150,21 @@ $(window).on('keypress', function (e) {
   //console.log(e.which);
   if (e.which === 119) {
     ship.totalSpeed *= 1.1;
-    if (ship.totalSpeed > constants.speedOfLight) {
-      ship.totalSpeed = constants.speedOfLight;
+    if (ship.totalSpeed > options.speedOfLight) {
+      ship.totalSpeed = options.speedOfLight;
     }
   }
   if (e.which === 115) {
     ship.totalSpeed *= 0.9;
-    if (ship.totalSpeed > constants.speedOfLight) {
-      ship.totalSpeed = constants.speedOfLight;
+    if (ship.totalSpeed > options.speedOfLight) {
+      ship.totalSpeed = options.speedOfLight;
     }
   }
   if (e.which === 97) {
-    ship.direction -= 1 * constants.thrust * Math.PI / 180;
+    ship.direction -= 1 * options.thrust * Math.PI / 180;
   }
   if (e.which === 100) {
-    ship.direction += 1 * constants.thrust * Math.PI / 180;
+    ship.direction += 1 * options.thrust * Math.PI / 180;
   }
 });
 
@@ -218,29 +218,29 @@ function ready(error, world, names) {
   });
 }
 
-constants.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
+options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
 
 function tick() {
-  if (constants.paused)
+  if (options.paused)
     return;
 
   nodes.forEach(function (node) {
     node.collisions = Math.min(node.collisions, 400);
-    node.collisions *= constants.cooldownFactor;
+    node.collisions *= options.cooldownFactor;
   });
   var q = d3.geom.quadtree(nodes, -180, -90, 180, 90),
     i,
     d,
     n = nodes.length;
 
-  if (constants.useCollisions)
+  if (options.useCollisions)
     for (i = 0; i < n; ++i) q.visit(collide(nodes[i]));
 
 
   //    q.visit(collide(ship));
 
-  if (ship.totalSpeed > constants.speedOfLight) {
-    ship.totalSpeed = constants.speedOfLight;
+  if (ship.totalSpeed > options.speedOfLight) {
+    ship.totalSpeed = options.speedOfLight;
   }
 
   var lon = ship.x * Math.PI / 180;
@@ -267,8 +267,8 @@ function tick() {
 
   nodes.forEach(function (node) {
 //    console.log(node.direction);
-    if (node.totalSpeed > constants.speedOfLight) {
-      node.totalSpeed = constants.speedOfLight;
+    if (node.totalSpeed > options.speedOfLight) {
+      node.totalSpeed = options.speedOfLight;
     }
 
     var lon = node.x * Math.PI / 180;
@@ -299,28 +299,28 @@ function tick() {
 //d3.timer(render);
 
 function render() {
-  if (constants.paused)
+  if (options.paused)
     return;
   //    console.log(ship.direction * 180 / Math.PI);
 
-  switch (constants.projection) {
+  switch (options.projection) {
   case 'Mollweide':
     currentProjectionScale = 100;
     projection = d3.geo.mollweide()
       .scale(currentProjectionScale * currentExpansion) // we'll scale up to match viewport shortly.
-      .translate([constants.width / 2, constants.height / 2]);
+      .translate([options.width / 2, options.height / 2]);
     break;
   case 'Mercator':
     currentProjectionScale = 150;
     projection = d3.geo.mercator()
       .rotate([0,0])
       .scale(currentProjectionScale) // we'll scale up to match viewport shortly.
-      .translate([constants.width / 2, constants.height / 2]);
+      .translate([options.width / 2, options.height / 2]);
     break;
   case 'Globe':
     currentProjectionScale = 240;
     projection = d3.geo.orthographic()
-      .translate([constants.width / 2, constants.height / 2])
+      .translate([options.width / 2, options.height / 2])
       .scale(currentProjectionScale * currentExpansion)
       .clipAngle(90);
       break;
@@ -330,20 +330,20 @@ function render() {
     projection = d3.geo.azimuthalEquidistant()
       .scale(currentProjectionScale * currentExpansion)
       .clipAngle(180 - 1e-3)
-      .translate([constants.width / 2, constants.height / 2])
+      .translate([options.width / 2, options.height / 2])
       .precision(.1);
   }
 
 
   c.save();
-  c.clearRect(0, 0, constants.width, constants.height);
-  if(constants.projection ==='Azimuthal Equidistant' || constants.projection === 'Globe'){
-    c.translate(constants.width / 2, constants.height / 2);
+  c.clearRect(0, 0, options.width, options.height);
+  if(options.projection ==='Azimuthal Equidistant' || options.projection === 'Globe'){
+    c.translate(options.width / 2, options.height / 2);
     c.rotate(-ship.direction);
-    c.translate(-constants.width / 2, -constants.height / 2);
+    c.translate(-options.width / 2, -options.height / 2);
   }
 
-  constants.projection !== 'Mercator' && projection.rotate([-ship.x, -ship.y]);
+  options.projection !== 'Mercator' && projection.rotate([-ship.x, -ship.y]);
 
   path.projection(projection);
   var circle = d3.geo.circle();
@@ -361,19 +361,19 @@ function render() {
       c.fillStyle = temperature(d.collisions);
       c.fill();
       c.strokeStyle = 'white';
-      constants.outlineParticles && c.stroke();
+      options.outlineParticles && c.stroke();
     }
   }
   //  c.restore();
 
 
-  if (constants.renderPlanet && countries) {
+  if (options.renderPlanet && countries) {
     c.fillStyle = "#bbb", c.beginPath(), path(land), c.fill();
     c.strokeStyle = "#fff", c.lineWidth = .5, c.beginPath(), path(borders), c.stroke();
     c.strokeStyle = "#000", c.lineWidth = 2, c.beginPath(), path(globe), c.stroke();
   }
 
-  if (constants.renderGraticules) {
+  if (options.renderGraticules) {
     // Latitudes
     c.strokeStyle = '#fff';
     circle.origin([0, -90]);
@@ -438,7 +438,7 @@ function collide(node) {
 
       if (l < r) {
         //        console.log(Math.floor(l), r);
-        //        l = (l - r) / l * constants.collisionForce;
+        //        l = (l - r) / l * options.collisionForce;
 
 
         //                node.x += Δλ.toDegrees() * l;
