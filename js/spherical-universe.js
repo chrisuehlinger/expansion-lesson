@@ -88,12 +88,6 @@ function SphericalUniverse(canvasSelector, options) {
   }.bind(this);
 
   var projection, currentProjectionScale;
-  currentProjectionScale = 75;
-  projection = d3.geo.azimuthalEquidistant()
-    .scale(currentProjectionScale)
-    .clipAngle(180 - 1e-3)
-    .translate([options.width / 2, options.height / 2])
-    .precision(.1);
 
   var canvas = d3.select(canvasSelector)
     .attr("width", options.width)

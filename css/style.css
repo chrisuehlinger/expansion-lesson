@@ -1,38 +1,54 @@
-/* line 1, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+@import url(https://fonts.googleapis.com/css?family=Lato:400,100,300);
+/* line 3, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
 body {
+  font-family: 'Lato', Helvetica, Arial, sans-serif;
+  font-weight: 300;
   margin: 0;
   background: black;
   display: flex;
   justify-content: center;
   align-items: center; }
-  /* line 8, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+  /* line 12, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
   body.test {
     width: 100%;
     height: 100vh; }
 
-/* line 15, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+/* line 19, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
 canvas {
   border: 1px solid white; }
 
-/* line 19, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+/* line 23, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
 .node {
   stroke-width: 1.5px; }
 
-/* line 23, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+/* line 27, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
 article {
   color: white; }
-  /* line 25, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+  /* line 29, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
   article h1 {
-    text-align: center; }
-  /* line 28, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+    text-align: center;
+    font-weight: 100; }
+  /* line 33, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
   article section {
     margin: 0 auto;
-    max-width: 500px; }
+    max-width: 500px;
+    line-height: 1.5; }
 
-/* line 34, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+/* line 40, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
 img {
   display: block;
   margin: 0 auto;
   max-width: 90%; }
+
+/* line 46, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+a, a:link, a:active, a:visited {
+  color: dodgerblue; }
+
+/* line 49, /Users/Chris/Development/expansion/wrap-collision/css/style.scss */
+.draft-indicator {
+  color: red;
+  font-family: monospace;
+  font-size: 1.5em;
+  font-weight: bold; }
 
 /*# sourceMappingURL=style.css.map */

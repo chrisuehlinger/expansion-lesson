@@ -12,43 +12,71 @@
 
 <body>
   <article>
-    <h1>Expansion, Or: Time Isn't A Flat Circle, But Space Might Be</h1>
+    <h1>Expansion, Or: Time Isn't A Flat Circle, But Space Might Be 
+      <span class="draft-indicator">[FIRST DRAFT]</span></h1>
     <section>
-    <p>This is a really rough draft. I have an outline for what the prose will be in the final version, this draft is focused on the demos themselves.</p>
-    <p>Explanations of the early universe usually involve diagrams like this:</p>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Dark_Energy.jpg">
-    
-    <p>These diagrams can be somewhat helpful, but they often raise a lot of questions about space and the universe:</p>
-
-    <ul>
-      <li>What's beyond the edge?</li>
-      <li>What is space expanding into?</li>
-    </ul>
+      <h2 class="draft-indicator">Draft Notes:</h2>
       
+      <p>If you're reading this, it's probably because I think you're smarter than me and I need some help.</p>
+      <p>The purpose of this article/essay/lesson is to help laypeople get a better handle on what the early universe was like. I'm trying to zero-in on concepts that really confuse people when trying to learn about math/astrophysics/particle physics, and make them more evident through the use of interactive simulations and explorable explanations.</p>
+      <p>Here are some areas where I know I need help, any constructive feedback is appreciated:</p>
+      <ul>
+        <li><strong>Terminology</strong> - There are some things I'm describing in here, and I don't know what they're called. If there's a concept screaming out to you that I don't address by name, let me know. </li>
+        <li><strong>Mechanics</strong> - I've put a lot of work into making sure the mechanics of these simulations are accurate. If I'm explaining something totally wrong or I've designed a simulation in a bad way, let me know.</li>
+        <li><strong>User Experience</strong> - If you come across any ways I could make these simulations easier to present or easier to control, let me know.</li>
+      </ul>
+      <p>Known existing issues:</p>
+      <ul>
+        <li>The rectangular universe does not map to any real 3D topology (It's sort of a torus, but the inner and outer radii are the same). This is fine.</li>
+        <li>Collisions in the spherical universe don't cause particles to change direction or velocity. Better Spherical collision detection schemes are welcome.</li>
+        <li>The</li>
+        <li>Safari is a mess, don't even.</li>
+      </ul>
+      
+      <p>Please send feedback to <a href="mailto:chris.uehlinger@gmail.com">chris.uehlinger@gmail.com</a>. I'll have a credits section at the end of the final version for anyone who's able to help. Thanks!</p>
+    <hr/>
+    </section>
+    <section>
+      <p>Explanations of the early universe usually involve diagrams like this:</p>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Dark_Energy.jpg">
+
+      <p>These diagrams can be somewhat helpful, but they often raise a lot of questions about space and the universe:</p>
+
+      <ul>
+        <li>What's beyond the edge?</li>
+        <li>What is space expanding into?</li>
+      </ul>
+
       <p>Let's explore what the early universe was like. We'll start with a small universe and a space ship. The spacetime in this universe is <strong>globally curved</strong>, meaning it wraps around on itself. Try flying around: if you cross the "right edge" you come back in through the "left edge".</p>
-      <p>(The controls are: W - speed up, S - slow down,  A - turn left, D - turn right)</p>
-      </section>
+      <p>The controls are: </p>
+      <ul>
+        <li>W - speed up</li>
+        <li>S - slow down</li>
+        <li>A - turn left</li>
+        <li>D - turn right</li>
+      </ul>
+    </section>
     <canvas id="emptyUniverse"></canvas>
-    
+
     <section>
       <p>There's one problem with this universe, it actually seems to have an "edge" and a "center". In reality, the universe is has no center: The "center" is everywhere--No place in the universe is "more central" than any other place. This can be confusing, but what it really means is that our universe looks more like this:</p>
     </section>
-    
+
     <canvas id="centeredUniverse"></canvas>
-    
+
     <section>
       <p>Fly around for a bit, then try and tell me where the "center" is. It's easy to lose track, and in the end, it doesn't really matter. The surface of a ball has no "center", and neither does 3D space.</p>
-      
+
       <p>Now that we've gotten used to what it would be like to live in a "100 meter universe", let's make it a little bit bigger. Here's an example of a small universe that expands. Try and figure out which direction it expands in.</p>
     </section>
-    
+
     <canvas id="expandingEmptyUniverse"></canvas>
-    
+
     <section>
       <p>The answer: no direction. Play around with this universe, and you'll come to realize that nothing is moving in a particular direction. Space is just appearing between your ship and the asteroid. This is a frustrating thing to read about, but somewhat easier to grasp if you can see it happening.</p>
-      
+
       <p>Let's put some particles into this universe. A few things about these particles:</p>
-      
+
       <ul>
         <li>They are atoms of Hydrogen. (We could talk about antimatter and bosons, since this is the early universe, but I want to keep things simple)</li>
         <li>They are substantially larger than normal atoms of Hydrogen (Just to make them easier to keep track of)</li>
@@ -74,9 +102,13 @@
     <section>
       <p>If we were in a "circular" 3D universe, it would actually be a 4D hypersphere. We can't really see what this would look like. To our eyes the universe would appear like some sort of funhouse mirror, with far away objects distorting before getting close again. It wouldn't be <em>exactly</em> like <a href="https://youtu.be/zRP82omMX0g?t=31s">being inside a spherical mirror</a>, but the effect would be similarly twisted and bizarre.</p>
       <p>We may actually live in a curved universe, but if we do, it's humungous. It's so mind-bendingly large that we can't see any of these weird curvature effects play out in the sky around us.</p>
-      <p>The things we learned about expansion and space still apply. <a href="spherical-universe.html">Click here</a> to see a Spherical Universe full of hot particles that expands and cools, just like the rectangular universe above. Notice that as the universe gets bigger and bigger, the curvature becomes less noticable.</p>
+      <p>The things we learned about expansion and space still apply. Let's look at a circular universe and see what happens as we fill it up with particles, then let it expand and cool.</p>
     </section>
-<!--    <canvas id="expandingSphereUniverse"></canvas>-->
+    <canvas id="expandingSphereUniverse"></canvas>
+    <section>
+      <p><a href="spherical-universe.html">Here's a fullscreen version of that demo.</a> Notice that as the universe gets bigger and bigger, the curvature becomes less noticable. It starts to become harder to tell the shape of the universe when we can't see as much of it.</p>
+      <p>There is currently debate over whether our universe is flat or curved.<span class="draft-indicator">[MORE TO COME HERE]</span></p>
+    </section>
   </article>
 
 

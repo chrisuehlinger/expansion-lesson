@@ -182,33 +182,33 @@ var flatCircleOptions = {
 
 var flatCircleUniverse = new SphericalUniverse('#flatCircleUniverse', flatCircleOptions);
 
-//var expandingSphereOptions = {
-//  speedOfLight: 200,
-//  thrust: 5,
-//  width: innerWidth,
-//  height: 400,
-//  startingCount: 100,
-//  endCount: 100,
-//  expansionFactor: 1.01,
-//  additionDelay: 5,
-//  expansionWait: 5000,
-//  expansionDelay: 0,
-//  maxExpansion: 5,
-//  cooldownFactor: 0.9,
-//  collisionForce: 0.1,
-//  useForceLayout: false,
-//  useCollisions: true,
-//  outlineParticles: false,
-//  renderGraticules: false,
-//  renderPlanet: false,
-//  paused: false,
-//  projection: 'Azimuthal Equidistant'
-//};
-//
-//var expandingSphereUniverse = new SphericalUniverse('#expandingSphereUniverse', expandingSphereOptions);
-//
-//expandingSphereUniverse.filledCallback = function(){
-//  setTimeout(expandingSphereUniverse.expand, 0);
-//};
-//
-//expandingSphereUniverse.addOne();
+var expandingSphereOptions = {
+  speedOfLight: 200,
+  thrust: 5,
+  width: innerWidth,
+  height: 600,
+  startingCount: 50,
+  endCount: 100,
+  expansionFactor: 1.01,
+  additionDelay: 5,
+  expansionWait: 5000,
+  expansionDelay: 0,
+  maxExpansion: 5,
+  cooldownFactor: 0.9,
+  collisionForce: 0.1,
+  useForceLayout: false,
+  useCollisions: true,
+  outlineParticles: false,
+  renderGraticules: false,
+  renderPlanet: false,
+  paused: false,
+  projection: 'Azimuthal Equidistant'
+};
+
+var expandingSphereUniverse = new SphericalUniverse('#expandingSphereUniverse', expandingSphereOptions);
+
+expandingSphereUniverse.filledCallback = function(){
+  setTimeout(expandingSphereUniverse.expand, 5000);
+};
+
+expandingSphereUniverse.addOne();

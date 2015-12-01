@@ -1,4 +1,8 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:400,100,300);
+
 body {
+  font-family: 'Lato', Helvetica, Arial, sans-serif;
+  font-weight: 300;
   margin: 0;
   background: black;
   display: flex;
@@ -24,10 +28,12 @@ article {
   color: white;
   h1{
     text-align: center;
+    font-weight: 100;
   }
   section {
     margin: 0 auto;
   max-width: 500px;
+    line-height: 1.5;
   }
 }
 
@@ -36,3 +42,13 @@ img {
   margin: 0 auto;
   max-width: 90%;
 }
+
+a, a:link, a:active, a:visited {
+  color: dodgerblue;
+}
+    .draft-indicator {
+      color: red;
+      font-family: monospace;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
