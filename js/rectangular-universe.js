@@ -31,7 +31,8 @@ function RectangularUniverse(canvasSelector, options) {
     y: options.height / 2,
     vx: 0,
     vy: 0,
-    direction: 0
+    direction: 0,
+    totalSpeed: 0,
   };
 
   var asteroid = {
@@ -151,16 +152,16 @@ function RectangularUniverse(canvasSelector, options) {
   $(window).on('keypress', function (e) {
     //    console.log(e.which);
     if (e.which === 115) {
-      ship.vy += options.thrust;
+      ship.totalSpeed -= options.thrust;
     }
     if (e.which === 119) {
-      ship.vy -= options.thrust;
+      ship.totalSpeed += options.thrust;
     }
     if (e.which === 97) {
-      ship.vx -= options.thrust;
+      ship.direction -= 3 * options.thrust * Math.PI / 180;
     }
     if (e.which === 100) {
-      ship.vx += options.thrust;
+      ship.direction += 3 * options.thrust * Math.PI / 180;
     }
   });
 
@@ -188,8 +189,25 @@ function RectangularUniverse(canvasSelector, options) {
 
     nodes.forEach(wrapAround);
 
+
+//    ship.direction = Math.atan2(ship.vy, ship.vx);
+//    ship.totalSpeed = Math.sqrt(Math.pow(ship.vx, 2) + Math.pow(ship.vy, 2));
+    if (ship.totalSpeed > options.speedOfLight) {
+      ship.totalSpeed = options.speedOfLight;
+    } else if (ship.totalSpeed < 0) {
+      ship.totalSpeed = 0;
+    }
+    ship.vx = Math.cos(ship.direction) * ship.totalSpeed;
+    ship.vy = Math.sin(ship.direction) * ship.totalSpeed;
+
+    ship.x += ship.vx;
+    ship.y += ship.vy;
+
+    wrapAround(ship);
+    render();
+
   }
-  d3.timer(render);
+  //d3.timer(render);
 
   function render() {
 
@@ -268,20 +286,6 @@ function RectangularUniverse(canvasSelector, options) {
           radius: node.radius
         });
     });
-
-
-    ship.direction = Math.atan2(ship.vy, ship.vx);
-    ship.totalSpeed = Math.sqrt(Math.pow(ship.vx, 2) + Math.pow(ship.vy, 2));
-    if (ship.totalSpeed > options.speedOfLight) {
-      ship.totalSpeed = options.speedOfLight;
-      ship.vx = Math.cos(ship.direction) * ship.totalSpeed;
-      ship.vy = Math.sin(ship.direction) * ship.totalSpeed;
-    }
-
-    ship.x += ship.vx;
-    ship.y += ship.vy;
-
-    wrapAround(ship);
 
     //  nodes.forEach(wrapAround);
     context.clearRect(0, 0, options.width, options.height);
