@@ -37,6 +37,7 @@
     <hr/>
     </section>
     <section>
+      <h2>Introduction</h2>
       <p>Explanations of the early universe usually involve diagrams like this:</p>
       <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Dark_Energy.jpg">
 
@@ -46,8 +47,11 @@
         <li>What's beyond the edge?</li>
         <li>What is space expanding into?</li>
       </ul>
-
-      <p>Let's explore what the early universe was like. We'll start with a small universe and a space ship. The spacetime in this universe is <strong>globally curved</strong>, meaning it wraps around on itself. Try flying around: if you cross the "right edge" you come back in through the "left edge".</p>
+      
+      <p>Astrophysics is complicated stuff, and sometimes words, pictures and even videos struggle to explain these concepts in a cohesive way. We're going to try something else: Let's explore what the early universe was like.</p>
+      
+      <h2>A 100 square meter universe</h2>
+      <p>We'll start with a small universe and a space ship. The spacetime in this universe is <strong>globally curved</strong>, meaning it wraps around on itself. Try flying around: if you cross the "right edge" you come back in through the "left edge".</p>
       <p>The controls are: </p>
       <ul>
         <li>W - speed up</li>
@@ -74,7 +78,9 @@
 
     <section>
       <p>The answer: no direction. Play around with this universe, and you'll come to realize that nothing is moving in a particular direction. Space is just appearing between your ship and the asteroid. This is a frustrating thing to read about, but somewhat easier to grasp if you can see it happening.</p>
-
+    </section>
+    <section>
+      <h2>The Cooling Universe</h2>
       <p>Let's put some particles into this universe. A few things about these particles:</p>
 
       <ul>
@@ -92,6 +98,11 @@
     <canvas id="filledUniverse"></canvas>
     <section>
       <p>A quick note before going forward: The universe didn't expand <em>because</em> is was hot and dense, we're just lucky that it did.</p>
+      <p>So now that we've looked at a small universe, and we've learned about how expansion allowed the universe to cool, let's put it all together and look at a replaying of the big bang itself!</p>
+    </section>
+    <canvas id="bigBangUniverse"></canvas>
+    <section>
+      <h2>A Spherical Universe</h2>
       <p>Now that we've seen how expansion allowed the universe to cool, it's time I let you know: I've been lying this whole time. The universe is not shaped like a rectangle: it's more circular. Our 2D toy universe should really be a 2D surface folded around a sphere. Here's a sphere:</p>
     </section>
     <canvas id="globeUniverse"></canvas>
@@ -107,7 +118,21 @@
     <canvas id="expandingSphereUniverse"></canvas>
     <section>
       <p><a href="spherical-universe.html">Here's a fullscreen version of that demo.</a> Notice that as the universe gets bigger and bigger, the curvature becomes less noticable. It starts to become harder to tell the shape of the universe when we can't see as much of it.</p>
-      <p>There is currently debate over whether our universe is flat or curved.<span class="draft-indicator">[MORE TO COME HERE]</span></p>
+    </section>
+    <section>
+      <h2>An Infinite Universe</h2>
+      <p>There is currently debate over whether our universe is flat or curved. NASA recently published a paper with calculations showing that the universe is almost definitely flat.</p>
+      <p>Ugh. So why did we spend all this time learning about "rectangular universes" and "spherical universes" if none of what we were learning was real? Well, there are a bunch of things that we've learned that will still be true in a flat universe:</p>
+      <ul>
+        <li>The universe has no center or edge.</li>
+        <li>The universe starts from a point of infinite density.</li>
+        <li>When space expands, it doesn't expand in any particular direction.</li>
+      </ul>
+      <p>There's one catch you may have noticed: The universe starts from a point of <em>infinite density</em>, but not necessarily a point of <em>infinite smallness</em>. It's possible that the universe could start as an infinite amount of matter in an infinite amount of space, but still be infinitely squished. Let's see what that might look like:</p>
+    </section>
+    <canvas id="infiniteUniverse"></canvas>
+    <section>
+      <p>You can go as far as you want in this simulation, but you'll never find an end or wrap around. Just like in the closed universes discussed above, the particles in the early universe have nowhere to go. Only this time, instead of the particles on the "left side" bumping up against the particles on the "right side", the particles on the "left side" of our field of view are bumping up against more particles just outside our view. Those particles are bumping up against more particlesto <em>their</em> left, and more, and more, and more, forever.</p>
     </section>
   </article>
 
