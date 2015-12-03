@@ -1,3 +1,18 @@
+/** Extend Number object with method to convert numeric degrees to radians */
+if (Number.prototype.toRadians === undefined) {
+  Number.prototype.toRadians = function () {
+    return this * Math.PI / 180;
+  };
+}
+
+
+/** Extend Number object with method to convert radians to numeric (signed) degrees */
+if (Number.prototype.toDegrees === undefined) {
+  Number.prototype.toDegrees = function () {
+    return this * 180 / Math.PI;
+  };
+}
+
 function RectangularUniverse(canvasSelector, options) {
 
   //  var defaults = {
@@ -109,9 +124,9 @@ function RectangularUniverse(canvasSelector, options) {
     .start();
 
   this.addOne = function () {
-    if(!inView)
+    if (!inView)
       return setTimeout(this.addOne, options.additionDelay);
-      
+
     if (nodes.length < options.endCount) {
       nodes.push(createNode());
       options.useForceLayout && force.nodes(nodes).start();
@@ -122,9 +137,9 @@ function RectangularUniverse(canvasSelector, options) {
   }.bind(this);
 
   this.expand = function () {
-    if(!inView)
+    if (!inView)
       return setTimeout(this.expand, options.expansionDelay);
-    
+
     if (options.width < options.maxWidth && options.height < options.maxHeight) {
       options.width *= options.expansionFactor;
       options.height *= options.expansionFactor;
@@ -155,8 +170,81 @@ function RectangularUniverse(canvasSelector, options) {
     .attr("width", options.canvasWidth)
     .attr("height", options.canvasHeight);
 
+  var isMousedown = false,
+    mousePosition = {
+      x: 0,
+      y: 0
+    };
+  $(canvasSelector).on('mousedown', function (e) {
+    isMousedown = true;
+    mousePosition = {
+      x: e.offsetX,
+      y: e.offsetY
+    };
+    $(this)
+      .on('mousemove', function (e) {
+        mousePosition = {
+          x: e.offsetX,
+          y: e.offsetY
+        };
+
+      })
+      .on('mouseup touchend', function (e) {
+        $(this).off('mousemove mouseup');
+        isMousedown = false;
+      });
+
+  });
+
+
+  $(canvasSelector).on('touchstart', function (e) {
+    isMousedown = true;
+    console.log(e);
+    e.preventDefault();
+    mousePosition = {
+      x: e.originalEvent.changedTouches[0].pageX,
+      y: e.originalEvent.changedTouches[0].pageY - canvasTop
+    };
+    $(this)
+      .on('touchmove', function (e) {
+        mousePosition = {
+          x: e.originalEvent.changedTouches[0].pageX,
+          y: e.originalEvent.changedTouches[0].pageY - canvasTop
+        };
+
+      })
+      .on('touchend touchcancel', function (e) {
+        $(this).off('touchmove touchend touchcancel');
+        isMousedown = false;
+      });
+
+  });
+
+  function moveTowards(x, y) {
+    console.log(x, y);
+    var dx, dy;
+    if (options.shipCentered) {
+      dx = x - options.canvasWidth / 2;
+      dy = y - options.canvasHeight / 2;
+    } else {
+      dx = x - (ship.x + Math.max(0,(options.canvasWidth - options.width) / 2));
+      dy = y - (ship.y + Math.max(0, (options.canvasHeight - options.height) / 2));
+    }
+
+    dx /= options.canvasWidth;
+    dy /= options.canvasHeight;
+    
+    var vx = ship.totalSpeed * Math.cos(ship.direction),
+      vy = ship.totalSpeed * Math.sin(ship.direction),
+      newVx = vx + dx,
+      newVy = vy + dy;
+
+    ship.totalSpeed = Math.sqrt(newVx * newVx + newVy * newVy);
+    ship.direction = Math.atan2(newVy, newVx);
+  }
+
   $(window).on('keypress', function (e) {
-    if(!inView)
+    if (!inView)
       return;
     //    console.log(e.which);
     if (e.which === 115) {
@@ -172,18 +260,19 @@ function RectangularUniverse(canvasSelector, options) {
       ship.direction += 3 * options.thrust * Math.PI / 180;
     }
   });
-  
-  var inView = false;
-  setTimeout(function(){
+
+  var canvasTop, canvasBottom, inView = false;
+  setTimeout(function () {
     var windowTop = $(window).scrollTop(),
-        windowBottom = windowTop + $(window).height(),
-      canvasTop = $(canvasSelector).offset().top,
-      canvasBottom = canvasTop + options.canvasHeight;
-    
+      windowBottom = windowTop + $(window).height();
+
+    canvasTop = $(canvasSelector).offset().top;
+    canvasBottom = canvasTop + options.canvasHeight;
+
     inView = canvasTop < windowBottom && canvasBottom > windowTop;
     $(window).scroll(function (event) {
       var windowTop = $(window).scrollTop(),
-          windowBottom = windowTop + window.innerHeight;
+        windowBottom = windowTop + window.innerHeight;
 
 
       inView = canvasTop < windowBottom && canvasBottom > windowTop;
@@ -194,9 +283,9 @@ function RectangularUniverse(canvasSelector, options) {
   options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
 
   function tick(e) {
-    if(!inView)
+    if (!inView)
       return;
-    
+
     nodes.forEach(function (node) {
       node.collisions = Math.min(node.collisions, 400);
       node.collisions *= options.cooldownFactor;
@@ -217,9 +306,13 @@ function RectangularUniverse(canvasSelector, options) {
 
     nodes.forEach(wrapAround);
 
+    if (isMousedown) {
+      moveTowards(mousePosition.x, mousePosition.y);
+    }
 
-//    ship.direction = Math.atan2(ship.vy, ship.vx);
-//    ship.totalSpeed = Math.sqrt(Math.pow(ship.vx, 2) + Math.pow(ship.vy, 2));
+    ship.direction = (((ship.direction.toDegrees() + 540) % 360) - 180).toRadians()
+      //    ship.direction = Math.atan2(ship.vy, ship.vx);
+      //    ship.totalSpeed = Math.sqrt(Math.pow(ship.vx, 2) + Math.pow(ship.vy, 2));
     if (ship.totalSpeed > options.speedOfLight) {
       ship.totalSpeed = options.speedOfLight;
     } else if (ship.totalSpeed < 0) {
@@ -318,7 +411,7 @@ function RectangularUniverse(canvasSelector, options) {
     //  nodes.forEach(wrapAround);
     context.clearRect(0, 0, options.width, options.height);
     n = renderNodes.length;
-//    console.log(n);
+    //    console.log(n);
     for (i = n - 1; i >= 0; --i) {
       d = renderNodes[i];
       var nodeX = options.shipCentered ? (options.width / 2 + (d.x - ship.x)) : d.x;
@@ -440,20 +533,19 @@ function RectangularUniverse(canvasSelector, options) {
     context.clearRect((options.canvasWidth + options.width) / 2, 0, options.canvasWidth, options.canvasHeight);
     context.clearRect(0, 0, options.canvasWidth, (options.canvasHeight - options.height) / 2);
     context.clearRect(0, (options.canvasHeight + options.height) / 2, options.canvasWidth, options.canvasHeight);
-    
+
     context.strokeStyle = "white";
     context.strokeRect(
-      (options.canvasWidth - options.width) / 2, 
-      (options.canvasHeight - options.height) / 2, 
+      (options.canvasWidth - options.width) / 2, (options.canvasHeight - options.height) / 2,
       options.width, options.height);
   }
 
-//  canvas.on("mousemove", function () {
-//    var p1 = d3.mouse(this);
-//    root.px = p1[0];
-//    root.py = p1[1];
-//    force.resume();
-//  });
+  //  canvas.on("mousemove", function () {
+  //    var p1 = d3.mouse(this);
+  //    root.px = p1[0];
+  //    root.py = p1[1];
+  //    force.resume();
+  //  });
 
   function collide(node) {
     var r = node.radius + 16,
