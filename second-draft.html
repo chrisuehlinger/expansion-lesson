@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Expansion - Rectangular Universe</title>
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="test">
+  <canvas id="rectUniverse"></canvas>
+  <script src="bower_components/lodash/lodash.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/d3/d3.js"></script>
+  <script src="//d3js.org/topojson.v1.min.js"></script>
+  <script src="//d3js.org/d3.geo.projection.v0.min.js"></script>
+  <script src="bower_components/dat-gui/build/dat.gui.js"></script>
+  <script src="js/rectangular-universe.js"></script>
+  <script src="js/spherical-universe.js"></script>
+  <script src="//rawgit.com/mrdoob/stats.js/master/build/stats.min.js"></script>
+  <script src="bower_components/headjs/dist/1.0.0/head.js"></script>
+  <script src="bower_components/reveal.js/js/reveal.js"></script>
+  <script>
+    var interval = setInterval(function () {
+      if (typeof Stats == 'function') {
+        clearInterval(interval);
+        var stats = new Stats();
+        stats.domElement.style.position = 'fixed';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        stats.domElement.style.zIndex = '10000';
+        document.body.appendChild(stats.domElement);
+        setInterval(function () {
+          stats.update();
+        }, 1000 / 60);
+      }
+    }, 100);
+  </script>
+</body>
+
+</html>

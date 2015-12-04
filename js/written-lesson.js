@@ -183,7 +183,8 @@ var globeOptions = {
   renderGraticules: true,
   renderPlanet: false,
   paused: false,
-  projection: 'Globe'
+  projection: 'Globe',
+  shipCentered: true
 };
 
 var globeUniverse = new SphericalUniverse('#globeUniverse', globeOptions);
@@ -208,7 +209,8 @@ var flatCircleOptions = {
   renderGraticules: true,
   renderPlanet: false,
   paused: false,
-  projection: 'Azimuthal Equidistant'
+  projection: 'Azimuthal Equidistant',
+  shipCentered: true
 };
 
 var flatCircleUniverse = new SphericalUniverse('#flatCircleUniverse', flatCircleOptions);
@@ -233,7 +235,8 @@ var expandingSphereOptions = {
   renderGraticules: false,
   renderPlanet: false,
   paused: false,
-  projection: 'Azimuthal Equidistant'
+  projection: 'Azimuthal Equidistant',
+  shipCentered: true
 };
 
 var expandingSphereUniverse = new SphericalUniverse('#expandingSphereUniverse', expandingSphereOptions);

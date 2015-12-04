@@ -19,6 +19,7 @@
     "lodash": "~3.10.1"
   },
   "dependencies": {
-    "dat-gui": "~0.5.1"
+    "dat-gui": "~0.5.1",
+    "reveal.js": "~3.2.0"
   }
 }

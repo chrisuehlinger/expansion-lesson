@@ -3,7 +3,7 @@ var options = {
   thrust: 5,
   width: innerWidth,
   height: innerHeight,
-  startingCount: 50,
+  startingCount: 0,
   endCount: 150,
   expansionFactor: 1.01,
   additionDelay: 0,
@@ -15,10 +15,11 @@ var options = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: false,
-  renderGraticules: false,
+  renderGraticules: true,
   renderPlanet: false,
   paused: false,
-  projection: 'Azimuthal Equidistant'
+  projection: 'Globe',//'Azimuthal Equidistant',
+  shipCentered: true
 };
 
 window.onload = function () {
@@ -51,4 +52,4 @@ u.filledCallback = function(){
   setTimeout(u.expand, 5000);
 }
 
-u.addOne();
+//u.addOne();

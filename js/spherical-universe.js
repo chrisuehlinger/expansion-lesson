@@ -99,27 +99,77 @@ function SphericalUniverse(canvasSelector, options) {
     .projection(projection)
     .context(c);
 
-  var inView = false;
-  setTimeout(function(){
+  var canvasTop, canvasBottom, inView = false;
+  setTimeout(function () {
     var windowTop = $(window).scrollTop(),
-        windowBottom = windowTop + $(window).height(),
-      canvasTop = $(canvasSelector).offset().top,
-      canvasBottom = canvasTop + options.height;
-    
+      windowBottom = windowTop + $(window).height();
+
+    canvasTop = $(canvasSelector).offset().top;
+    canvasBottom = canvasTop + options.height;
+
     inView = canvasTop < windowBottom && canvasBottom > windowTop;
     $(window).scroll(function (event) {
       var windowTop = $(window).scrollTop(),
-          windowBottom = windowTop + window.innerHeight;
+        windowBottom = windowTop + window.innerHeight;
 
 
       inView = canvasTop < windowBottom && canvasBottom > windowTop;
     });
   });
+  var isMousedown = false,
+    mousePosition = {
+      x: 0,
+      y: 0
+    };
+  $(canvasSelector).on('mousedown', function (e) {
+    isMousedown = true;
+    mousePosition = {
+      x: e.offsetX,
+      y: e.offsetY
+    };
+    $(this)
+      .on('mousemove', function (e) {
+        mousePosition = {
+          x: e.offsetX,
+          y: e.offsetY
+        };
+
+      })
+      .on('mouseup touchend', function (e) {
+        $(this).off('mousemove mouseup');
+        isMousedown = false;
+      });
+
+  });
+
+
+  $(canvasSelector).on('touchstart', function (e) {
+    isMousedown = true;
+    console.log(e);
+    e.preventDefault();
+    mousePosition = {
+      x: e.originalEvent.changedTouches[0].pageX,
+      y: e.originalEvent.changedTouches[0].pageY - canvasTop
+    };
+    $(this)
+      .on('touchmove', function (e) {
+        mousePosition = {
+          x: e.originalEvent.changedTouches[0].pageX,
+          y: e.originalEvent.changedTouches[0].pageY - canvasTop
+        };
+
+      })
+      .on('touchend touchcancel', function (e) {
+        $(this).off('touchmove touchend touchcancel');
+        isMousedown = false;
+      });
+
+  });
 
   $(window).on('keypress', function (e) {
-    if(!inView)
+    if (!inView)
       return;
-    
+
     //console.log(e.which);
     if (e.which === 119) {
       ship.totalSpeed *= 1.1;
@@ -140,6 +190,32 @@ function SphericalUniverse(canvasSelector, options) {
       ship.direction += 1 * options.thrust * Math.PI / 180;
     }
   });
+  
+  function moveTowards(x, y) {
+//    console.log(x, y);
+    var dx, dy;
+    if (options.shipCentered) {
+      dx = x - options.width / 2;
+      dy = y - options.height / 2;
+    } else {
+      dx = x - ship.x;
+      dy = y - ship.y;
+    }
+
+    dx /= options.width;
+    dy /= options.height;
+    
+//    console.log(dx,dy);
+    
+    var vx = ship.totalSpeed * Math.cos(ship.direction),
+      vy = ship.totalSpeed * Math.sin(ship.direction),
+      newVx = vx + dx,
+      newVy = vy + dy;
+
+    ship.totalSpeed = Math.sqrt(newVx * newVx + newVy * newVy);
+    ship.direction = Math.atan2(newVy, newVx);
+//    console.log(ship.direction);
+  }
 
   function wrapAround(node) {
     if (node.x < -180) {
@@ -210,7 +286,9 @@ function SphericalUniverse(canvasSelector, options) {
       for (i = 0; i < n; ++i) q.visit(collide(nodes[i]));
 
 
-    //    q.visit(collide(ship));
+    if (isMousedown) {
+      moveTowards(mousePosition.x, mousePosition.y);
+    }
 
     if (ship.totalSpeed > options.speedOfLight) {
       ship.totalSpeed = options.speedOfLight;
