@@ -547,13 +547,6 @@ function RectangularUniverse(canvasSelector, options) {
       options.width, options.height);
   }
 
-  //  canvas.on("mousemove", function () {
-  //    var p1 = d3.mouse(this);
-  //    root.px = p1[0];
-  //    root.py = p1[1];
-  //    force.resume();
-  //  });
-
   function collide(node) {
     var r = node.radius + 16,
       nx1 = node.x - r,
