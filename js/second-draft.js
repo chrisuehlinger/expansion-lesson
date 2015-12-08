@@ -211,7 +211,11 @@ var expandingEmptyOptions = {
 
 var expandingEmptyUniverse = new RectangularUniverse('#expandingEmptyUniverse', expandingEmptyOptions);
 
-setTimeout(expandingEmptyUniverse.expand, 5000);
+expandingEmptyUniverse.filledCallback = function(){
+  setTimeout(expandingEmptyUniverse.expand, 5000);
+}
+
+expandingEmptyUniverse.addOne();
 
 var sparseOptions = {
   speedOfLight: 10,
