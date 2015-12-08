@@ -462,14 +462,14 @@ function SphericalUniverse(canvasSelector, options) {
       }
     }
 
-    circle.origin([ship.x, ship.y]);
-    circle.angle(3);
-    c.strokeStyle = 'blue';
-    c.fillStyle = 'blue';
-    c.beginPath();
-    path(circle());
-    c.stroke();
-    c.fill();
+//    circle.origin([ship.x, ship.y]);
+//    circle.angle(3);
+//    c.strokeStyle = 'blue';
+//    c.fillStyle = 'blue';
+//    c.beginPath();
+//    path(circle());
+//    c.stroke();
+//    c.fill();
     
     
     c.restore();
