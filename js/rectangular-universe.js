@@ -183,7 +183,7 @@ function RectangularUniverse(canvasSelector, options) {
         };
 
       })
-      .on('mouseup touchend', function (e) {
+      .on('mouseup', function (e) {
         $(this).off('mousemove mouseup');
         isMousedown = false;
       });
