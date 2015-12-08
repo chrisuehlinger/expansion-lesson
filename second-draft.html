@@ -7,11 +7,134 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <!-- Place favicon.ico in the root directory -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel=stylesheet href="bower_components/reveal.js/css/reveal.css" />
+  <link rel=stylesheet href="bower_components/reveal.js/css/theme/black.css" />
 </head>
 
 <body class="test">
-  <canvas id="rectUniverse"></canvas>
+
+
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h1>Expansion, Or:</h1>
+        <h2>Time Isn't A Flat Circle, But Space Might Be</h2>
+      </section>
+      <section>
+        <h2>Introduction</h2>
+        <p>Explanations of the early universe usually involve diagrams like this:</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/Dark_Energy.jpg">
+
+      </section>
+      <section>
+        <p>These diagrams can be somewhat helpful, but they often raise a lot of questions about space and the universe:</p>
+
+        <ul>
+          <li>What's beyond the edge?</li>
+          <li>What is space expanding into?</li>
+        </ul>
+      </section>
+      <section>
+        <p>Astrophysics is complicated stuff, and sometimes words, pictures and even videos struggle to explain these concepts in a cohesive way. We're going to try something else: Let's explore what the early universe was like.</p>
+      </section>
+      <section id="emptyUniverseSlide">
+        <h2>A 100 square meter universe</h2>
+        <canvas id="emptyUniverse"></canvas>
+        <p>We'll start with a small universe and a space ship. The spacetime in this universe is <strong>globally curved</strong>, meaning it wraps around on itself. Try flying around: if you cross the "right edge" you come back in through the "left edge".</p>
+      </section>
+      <section>
+        <p>There's one problem with this universe, it actually seems to have an "edge" and a "center". In reality, the universe is has no center: The "center" is everywhere--No place in the universe is "more central" than any other place. This can be confusing, but what it really means is that our universe looks more like this:</p>
+      </section>
+
+
+      <section id="centeredUniverseSlide">
+        <canvas id="centeredUniverse"></canvas>
+        <p>Fly around for a bit, then try and tell me where the "center" is. It's easy to lose track, and in the end, it doesn't really matter. The surface of a ball has no "center", and neither does 3D space.</p>
+      </section>
+      <section>
+        <p>Now that we've gotten used to what it would be like to live in a "100 meter universe", let's make it a little bit bigger. Here's an example of a small universe that expands. Try and figure out which direction it expands in.</p>
+      </section>
+
+      <section id="expandingEmptyUniverseSlide">
+        <canvas id="expandingEmptyUniverse"></canvas>
+        <p class="fragment fade-in">The answer: no direction. Play around with this universe, and you'll come to realize that nothing is moving in a particular direction. Space is just appearing between your ship and the asteroid. This is a frustrating thing to read about, but somewhat easier to grasp if you can see it happening.</p>
+      </section>
+
+      <section>
+        <h2>The Cooling Universe</h2>
+        <p>Let's put some particles into this universe. A few things about these particles:</p>
+
+        <ul>
+          <li>They are atoms of Hydrogen. (We could talk about antimatter and bosons, since this is the early universe, but I want to keep things simple)</li>
+          <li>They are substantially larger than normal atoms of Hydrogen (Just to make them easier to keep track of)</li>
+          <li>When they collide with each other a lot, they start to warm up and glow. If they have a chance to cool down, they become invisible.</li>
+          <li>Our ship is going to be built out of some weird material that can withstand intense heat and simple does not interact with normal matter.</li>
+        </ul>
+      </section>
+      <section id="sparseUniverseSlide">
+        <canvas id="sparseUniverse"></canvas>
+      </section>
+      <section>
+        <p>Drive around this universe, it's a lot like the empty one we were in before. Notice that when the particles go off the right edge, they collide with particles from the left side of the universe. They're doing alright now, but what if we added more... and more... and more... what would happen?</p>
+        <p>The particles will become really hot, and there won't be any thermostats in the universe to cool them down! Fortunately, the universe can expand. As it does, the particles will hit each other less, and will cool down.</p>
+      </section>
+      <section id="filledUniverseSlide">
+        <canvas id="filledUniverse"></canvas>
+      </section>
+      <section>
+        <p>A quick note before going forward: The universe didn't expand <em>because</em> is was hot and dense, we're just lucky that it did.</p>
+        <p>So now that we've looked at a small universe, and we've learned about how expansion allowed the universe to cool, let's put it all together and look at a replaying of the big bang itself!</p>
+      </section>
+      <section id="bigBangUniverseSlide">
+        <canvas id="bigBangUniverse"></canvas>
+      </section>
+      <section>
+        <h2>A Spherical Universe</h2>
+        <p>Now that we've seen how expansion allowed the universe to cool, it's time I let you know: I've been lying this whole time. The universe is not shaped like a rectangle: it's more circular. Our 2D toy universe should really be a 2D surface folded around a sphere. Here's a sphere:</p>
+      </section>
+      <section id="globeUniverseSlide">
+        <canvas id="globeUniverse"></canvas>
+      </section>
+      <section>
+        <p>Now, as supernatural 3D beings we can see the spherical nature of our 2D space ship's world. The travelers in the ship would see something much weirder:</p>
+      </section>
+      <section id="flatCircleUniverseSlide">
+        <canvas id="flatCircleUniverse"></canvas>
+      </section>
+      <section>
+        <p>If we were in a "circular" 3D universe, it would actually be a 4D hypersphere. We can't really see what this would look like. To our eyes the universe would appear like some sort of funhouse mirror, with far away objects distorting before getting close again. It wouldn't be <em>exactly</em> like <a href="https://youtu.be/zRP82omMX0g?t=31s">being inside a spherical mirror</a>, but the effect would be similarly twisted and bizarre.</p>
+        <p>We may actually live in a curved universe, but if we do, it's humungous. It's so mind-bendingly large that we can't see any of these weird curvature effects play out in the sky around us.</p>
+        <p>The things we learned about expansion and space still apply. Let's look at a circular universe and see what happens as we fill it up with particles, then let it expand and cool.</p>
+      </section>
+      <section id="expandingSphereUniverseSlide">
+        <canvas id="expandingSphereUniverse"></canvas>
+      </section>
+      <section>
+        <p>Notice that as the universe gets bigger and bigger, the curvature becomes less noticable. It starts to become harder to tell the shape of the universe when we can't see as much of it.</p>
+      </section>
+      <section>
+        <h2>An Infinite Universe</h2>
+        <p>There is currently debate over whether our universe is flat or curved. NASA recently published a paper with calculations showing that the universe is almost definitely flat.</p>
+        <p>Ugh. So why did we spend all this time learning about "rectangular universes" and "spherical universes" if none of what we were learning was real? Well, there are a bunch of things that we've learned that will still be true in a flat universe:</p>
+        <ul>
+          <li>The universe has no center or edge.</li>
+          <li>The universe starts from a point of infinite density.</li>
+          <li>When space expands, it doesn't expand in any particular direction.</li>
+        </ul>
+        <p>There's one catch you may have noticed: The universe starts from a point of <em>infinite density</em>, but not necessarily a point of <em>infinite smallness</em>. It's possible that the universe could start as an infinite amount of matter in an infinite amount of space, but still be infinitely squished. Let's see what that might look like:</p>
+      </section>
+      <section id="infiniteUniverseSlide">
+        <canvas id="infiniteUniverse"></canvas>
+      </section>
+      <section>
+        <p>You can go as far as you want in this simulation, but you'll never find an end or wrap around. Just like in the closed universes discussed above, the particles in the early universe have nowhere to go. Only this time, instead of the particles on the "left side" bumping up against the particles on the "right side", the particles on the "left side" of our field of view are bumping up against more particles just outside our view. Those particles are bumping up against more particlesto <em>their</em> left, and more, and more, and more, forever.</p>
+      </section>
+    </div>
+  </div>
+
+
+
+
   <script src="bower_components/lodash/lodash.js"></script>
   <script src="bower_components/jquery/dist/jquery.js"></script>
   <script src="bower_components/d3/d3.js"></script>
@@ -23,6 +146,7 @@
   <script src="//rawgit.com/mrdoob/stats.js/master/build/stats.min.js"></script>
   <script src="bower_components/headjs/dist/1.0.0/head.js"></script>
   <script src="bower_components/reveal.js/js/reveal.js"></script>
+  <script src="js/second-draft.js"></script>
   <script>
     var interval = setInterval(function () {
       if (typeof Stats == 'function') {

@@ -124,7 +124,7 @@ function RectangularUniverse(canvasSelector, options) {
     .start();
 
   this.addOne = function () {
-    if (!inView)
+    if (!inView || options.paused)
       return setTimeout(this.addOne, options.additionDelay);
 
     if (nodes.length < options.endCount) {
@@ -137,7 +137,7 @@ function RectangularUniverse(canvasSelector, options) {
   }.bind(this);
 
   this.expand = function () {
-    if (!inView)
+    if (!inView || options.paused)
       return setTimeout(this.expand, options.expansionDelay);
 
     if (options.width < options.maxWidth && options.height < options.maxHeight) {
@@ -243,23 +243,31 @@ function RectangularUniverse(canvasSelector, options) {
     ship.direction = Math.atan2(newVy, newVx);
   }
 
-  $(window).on('keypress', function (e) {
-    if (!inView)
+  $(document).on('keydown', function (e) {
+    if (!inView || options.paused)
       return;
-    //    console.log(e.which);
-    if (e.which === 115) {
+        console.log(e.keyCode);
+    if (e.keyCode === 83) {
       ship.totalSpeed -= options.thrust;
     }
-    if (e.which === 119) {
+    if (e.keyCode === 87) {
       ship.totalSpeed += options.thrust;
     }
-    if (e.which === 97) {
+    if (e.keyCode === 65) {
       ship.direction -= 3 * options.thrust * Math.PI / 180;
     }
-    if (e.which === 100) {
+    if (e.keyCode === 68) {
       ship.direction += 3 * options.thrust * Math.PI / 180;
     }
   });
+  
+  this.pause = function(){
+    options.paused = true;
+  }
+  
+  this.unpause = function(){
+    options.paused = false;
+  }
 
   var canvasTop, canvasBottom, inView = false;
   setTimeout(function () {
@@ -283,7 +291,7 @@ function RectangularUniverse(canvasSelector, options) {
   options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
 
   function tick(e) {
-    if (!inView)
+    if (!inView || options.paused)
       return;
 
     nodes.forEach(function (node) {
@@ -300,6 +308,10 @@ function RectangularUniverse(canvasSelector, options) {
       for (i = 0; i < n; ++i) q.visit(collide(nodes[i]));
 
     nodes.forEach(function (node) {
+      if(node.vx > options.speedOfLight*60) node.vx = options.speedOfLight*60;
+      if(node.vx < -options.speedOfLight*60) node.vx = -options.speedOfLight*60;
+      if(node.vy > options.speedOfLight*60) node.vy = options.speedOfLight*60;
+      if(node.vy < -options.speedOfLight*60) node.vy = -options.speedOfLight*60;
       node.x += node.vx / 60;
       node.y += node.vy / 60;
     });
@@ -409,7 +421,8 @@ function RectangularUniverse(canvasSelector, options) {
     });
 
     //  nodes.forEach(wrapAround);
-    context.clearRect(0, 0, options.width, options.height);
+    context.fillStyle = 'black';
+    context.fillRect(0, 0, options.width, options.height);
     n = renderNodes.length;
     //    console.log(n);
     for (i = n - 1; i >= 0; --i) {
