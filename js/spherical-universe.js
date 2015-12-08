@@ -58,7 +58,7 @@ function SphericalUniverse(canvasSelector, options) {
     .start();
 
   this.addOne = function () {
-    if (!inView)
+    if (!inView || options.paused)
       return setTimeout(this.addOne, options.additionDelay);
 
     if (nodes.length < options.endCount) {
@@ -73,7 +73,7 @@ function SphericalUniverse(canvasSelector, options) {
   }.bind(this);
 
   this.expand = function () {
-    if (!inView)
+    if (!inView || options.paused)
       return setTimeout(this.expand, options.expansionDelay);
 
     if (currentExpansion < options.maxExpansion) {
@@ -166,55 +166,52 @@ function SphericalUniverse(canvasSelector, options) {
 
   });
 
-  $(window).on('keypress', function (e) {
-    if (!inView)
+  $(document).on('keydown', function (e) {
+    if (!inView || options.paused)
       return;
 
     //console.log(e.which);
-    if (e.which === 119) {
+    if (e.keyCode === 87) {
       ship.totalSpeed *= 1.1;
       if (ship.totalSpeed > options.speedOfLight) {
         ship.totalSpeed = options.speedOfLight;
       }
     }
-    if (e.which === 115) {
+    if (e.keyCode === 83) {
       ship.totalSpeed *= 0.9;
       if (ship.totalSpeed > options.speedOfLight) {
         ship.totalSpeed = options.speedOfLight;
       }
     }
-    if (e.which === 97) {
+    if (e.keyCode === 65) {
       ship.direction -= 1 * options.thrust * Math.PI / 180;
     }
-    if (e.which === 100) {
+    if (e.keyCode === 68) {
       ship.direction += 1 * options.thrust * Math.PI / 180;
     }
   });
   
+  this.pause = function(){
+    options.paused = true;
+  }
+  
+  this.unpause = function(){
+    options.paused = false;
+  }
+  
   function moveTowards(x, y) {
-//    console.log(x, y);
     var dx, dy;
     if (options.shipCentered) {
-      dx = x - options.width / 2;
-      dy = y - options.height / 2;
+      dx = (options.width / 2 - x) / (options.width / 2);
+      dy = (options.height / 2 - y) / (options.height / 2);
+      
+      ship.direction = (ship.direction.toDegrees() - dx * options.thrust).toRadians();
+      ship.totalSpeed *= (1 + dy/10);
     } else {
       dx = x - ship.x;
       dy = y - ship.y;
+      // TODO: Implement this if there are any spherical universes that are not ship-centered
     }
-
-    dx /= options.width;
-    dy /= options.height;
-    
-//    console.log(dx,dy);
-    
-    var vx = ship.totalSpeed * Math.cos(ship.direction),
-      vy = ship.totalSpeed * Math.sin(ship.direction),
-      newVx = vx + dx,
-      newVy = vy + dy;
-
-    ship.totalSpeed = Math.sqrt(newVx * newVx + newVy * newVy);
-    ship.direction = Math.atan2(newVy, newVx);
-//    console.log(ship.direction);
   }
 
   function wrapAround(node) {
@@ -239,33 +236,34 @@ function SphericalUniverse(canvasSelector, options) {
     }
   }
 
+    var globe, land, countries, borders;
   //queue()
   //  .defer(d3.json, "data/world-110m.json")
   //  .defer(d3.tsv, "data/world-country-names.tsv")
   //  .await(ready);
 
-  var globe, land, countries, borders;
 
-  function ready(error, world, names) {
-    if (error) throw error;
 
-    globe = {
-      type: "Sphere"
-    };
-    land = topojson.feature(world, world.objects.land);
-    countries = topojson.feature(world, world.objects.countries).features;
-    borders = topojson.mesh(world, world.objects.countries, function (a, b) {
-      return a !== b;
-    });
-
-    countries = countries.filter(function (d) {
-      return names.some(function (n) {
-        if (d.id == n.id) return d.name = n.name;
-      });
-    }).sort(function (a, b) {
-      return a.name.localeCompare(b.name);
-    });
-  }
+//  function ready(error, world, names) {
+//    if (error) throw error;
+//
+//    globe = {
+//      type: "Sphere"
+//    };
+//    land = topojson.feature(world, world.objects.land);
+//    countries = topojson.feature(world, world.objects.countries).features;
+//    borders = topojson.mesh(world, world.objects.countries, function (a, b) {
+//      return a !== b;
+//    });
+//
+//    countries = countries.filter(function (d) {
+//      return names.some(function (n) {
+//        if (d.id == n.id) return d.name = n.name;
+//      });
+//    }).sort(function (a, b) {
+//      return a.name.localeCompare(b.name);
+//    });
+//  }
 
   options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
 
@@ -289,6 +287,11 @@ function SphericalUniverse(canvasSelector, options) {
     if (isMousedown) {
       moveTowards(mousePosition.x, mousePosition.y);
     }
+    
+//    if (ship.totalSpeed < 0) {
+//      ship.totalSpeed *= -1;
+//      ship.direction = ((ship.direction.toDegrees() + 180) % 360).toRadians();
+//    }
 
     if (ship.totalSpeed > options.speedOfLight) {
       ship.totalSpeed = options.speedOfLight;
@@ -307,9 +310,9 @@ function SphericalUniverse(canvasSelector, options) {
 
     var bearingDegrees = Math.atan2(Math.sin(lon - λ2) * Math.cos(lat),
       Math.cos(φ2) * Math.sin(lat) - Math.sin(φ2) * Math.cos(lat) * Math.cos(lon - λ2)
-    ) * 180 / Math.PI;
-
-    ship.direction = ((bearingDegrees + 180) % 360) * Math.PI / 180;
+    ).toDegrees();
+      
+    ship.direction = ((bearingDegrees + 180) % 360).toRadians();
     ship.x = λ2 * 180 / Math.PI;
     ship.y = φ2 * 180 / Math.PI;
 
@@ -350,7 +353,7 @@ function SphericalUniverse(canvasSelector, options) {
   //d3.timer(render);
 
   function render() {
-    if (options.paused)
+    if (!inView || options.paused)
       return;
     //    console.log(ship.direction * 180 / Math.PI);
 
@@ -387,7 +390,8 @@ function SphericalUniverse(canvasSelector, options) {
 
 
     c.save();
-    c.clearRect(0, 0, options.width, options.height);
+    c.fillStyle = "black";
+    c.fillRect(0, 0, options.width, options.height);
     if (options.projection === 'Azimuthal Equidistant' || options.projection === 'Globe') {
       c.translate(options.width / 2, options.height / 2);
       c.rotate(-ship.direction);
