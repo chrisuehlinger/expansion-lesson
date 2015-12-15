@@ -18,7 +18,14 @@ var emptyOptions = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: true,
-  shipCentered: false
+  shipCentered: false,
+  asteroids: [{
+    x: innerWidth / 8,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  }]
 };
 
 var emptyUniverse = new RectangularUniverse('#emptyUniverse', emptyOptions);
@@ -43,7 +50,14 @@ var centeredOptions = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: true,
-  shipCentered: true
+  shipCentered: true,
+  asteroids: [{
+    x: innerWidth / 8,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  }]
 };
 
 var centeredUniverse = new RectangularUniverse('#centeredUniverse', centeredOptions);
@@ -68,7 +82,14 @@ var expandingEmptyOptions = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: false,
-  shipCentered: true
+  shipCentered: true,
+  asteroids: [{
+    x: innerWidth / 8,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  }]
 };
 
 var expandingEmptyUniverse = new RectangularUniverse('#expandingEmptyUniverse', expandingEmptyOptions);
@@ -96,7 +117,14 @@ var sparseOptions = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: true,
-  shipCentered: true
+  shipCentered: true,
+  asteroids: [{
+    x: innerWidth / 8,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  }]
 };
 
 var sparseUniverse = new RectangularUniverse('#sparseUniverse', sparseOptions);
@@ -121,7 +149,14 @@ var filledOptions = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: false,
-  shipCentered: true
+  shipCentered: true,
+  asteroids: [{
+    x: innerWidth / 8,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  }]
 };
 
 var filledUniverse = new RectangularUniverse('#filledUniverse', filledOptions);
@@ -152,7 +187,8 @@ var bigBangOptions = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: false,
-  shipCentered: true
+  shipCentered: true,
+  asteroids: []
 };
 
 var bigBangUniverse = new RectangularUniverse('#bigBangUniverse', bigBangOptions);
@@ -267,7 +303,8 @@ var infiniteOptions = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: false,
-  shipCentered: true
+  shipCentered: true,
+  asteroids: []
 };
 
 var infiniteUniverse = new RectangularUniverse('#infiniteUniverse', infiniteOptions);

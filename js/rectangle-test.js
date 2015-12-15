@@ -18,7 +18,20 @@ var options = {
   useForceLayout: false,
   useCollisions: true,
   outlineParticles: true,
-  shipCentered: true
+  shipCentered: true,
+  asteroids: [{
+    x: innerWidth / 8,
+    y: innerHeight / 4,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  }, {
+      x: innerWidth/ 3,
+      y: innerHeight / 3,
+      vx: 0,
+      vy: 0,
+      direction: 0
+    }]
 };
 
 window.onload = function () {
@@ -43,7 +56,7 @@ var canvasSelector = '#rectUniverse';
 
 var u = new RectangularUniverse(canvasSelector, options);
 
-u.filledCallback = function(){
+u.filledCallback = function () {
   u.expand();
 }
 
