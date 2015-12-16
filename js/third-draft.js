@@ -119,18 +119,29 @@ Reveal.initialize({
 
 });
 
+var $refreshButton;
+function onRevealReady(e) {
+  $('aside.controls').append('<button class="refresh-button">R</button>');
+  $refreshButton = $('.refresh-button');
+  handleSlideEvent(e);
+}
+
 function handleSlideEvent(e) {
-  console.log(e);
+  $refreshButton.off('click');
   for (var slide in slideDirectory) {
     if (slide === e.currentSlide.id) {
-      slideDirectory[slide].init();
+      var currentSlide = slideDirectory[slide];
+      currentSlide.init();
+      $refreshButton.on('click', function (e) {
+        currentSlide.init();
+      });
     } else {
       slideDirectory[slide].pause();
     }
   }
 }
 
-Reveal.addEventListener('ready', handleSlideEvent);
+Reveal.addEventListener('ready', onRevealReady);
 Reveal.addEventListener('slidechanged', handleSlideEvent);
 
 var emptyOptions = {
