@@ -53,16 +53,34 @@ function RectangularUniverse(canvasSelector, options) {
   //  
   //  options = _.default(options, defaults);
 
+  var ship, nodes, canvas = d3.select(canvasSelector)
+    .attr("width", options.canvasWidth)
+    .attr("height", options.canvasHeight);
 
-  var ship = {
-    x: options.width / 2,
-    y: options.height / 2,
-    vx: 0,
-    vy: 0,
-    direction: 0,
-    totalSpeed: 0,
-    totalDistanceTraveled: 0
-  };
+  var initialWidth = options.width,
+    initialHeight = options.height,
+    initialAsteroids = _.cloneDeep(options.asteroids);
+  this.init = function () {
+    options.width = initialWidth;
+    options.height = initialHeight;
+    options.asteroids = _.cloneDeep(initialAsteroids);
+    ship = {
+      x: options.width / 2,
+      y: options.height / 2,
+      vx: 0,
+      vy: 0,
+      direction: 0,
+      totalSpeed: 0,
+      totalDistanceTraveled: 0
+    };
+
+    nodes = d3.range(options.startingCount)
+      .map(createNode);
+
+    this.initCallback && this.initCallback();
+    options.paused = false;
+  }
+  options.paused = true;
 
   function createNode() {
     return {
@@ -82,17 +100,17 @@ function RectangularUniverse(canvasSelector, options) {
 
   function wrapAround(node) {
     var didWrap = false;
-    
-    if (node.x < 0){
+
+    if (node.x < 0) {
       didWrap = true;
       node.x = options.width + node.x;
-    } else if (node.x > options.width){
+    } else if (node.x > options.width) {
       didWrap = true;
       node.x -= options.width;
     }
     node.px = node.x;
 
-    if (node.y < 0){
+    if (node.y < 0) {
       didWrap = true;
       node.y = options.height + node.y;
     } else if (node.y > options.height) {
@@ -100,23 +118,9 @@ function RectangularUniverse(canvasSelector, options) {
       node.y -= options.height;
     }
     node.py = node.y;
-    
+
     return didWrap;
   }
-
-  var nodes = d3.range(options.startingCount)
-    .map(createNode);
-
-  var force = d3.layout.force();
-
-  options.useForceLayout && force
-    .gravity(0)
-    .charge(function (d, i) {
-      return i ? 0 : -1;
-    })
-    .nodes(nodes)
-    .size([options.width, options.height])
-    .start();
 
   this.addOne = function () {
     if (!inView || options.paused)
@@ -124,7 +128,6 @@ function RectangularUniverse(canvasSelector, options) {
 
     if (nodes.length < options.endCount) {
       nodes.push(createNode());
-      options.useForceLayout && force.nodes(nodes).start();
       setTimeout(this.addOne, options.additionDelay);
     } else {
       this.filledCallback && setTimeout(this.filledCallback);
@@ -152,20 +155,13 @@ function RectangularUniverse(canvasSelector, options) {
         asteroid.y *= options.expansionFactor;
       });
 
-      force
-        .size([options.width, options.height])
-        .start();
-
-
       setTimeout(this.expand, options.expansionDelay);
     } else {
       this.expansionCallback && setTimeout(this.expansionCallback);
     }
   }.bind(this);
 
-  var canvas = d3.select(canvasSelector)
-    .attr("width", options.canvasWidth)
-    .attr("height", options.canvasHeight);
+
 
   var isMousedown = false,
     mousePosition = {
@@ -242,7 +238,7 @@ function RectangularUniverse(canvasSelector, options) {
   $(document).on('keydown', function (e) {
     if (!inView || options.paused)
       return;
-      
+
     if (e.keyCode === 83) {
       ship.totalSpeed -= options.thrust;
     }
@@ -284,7 +280,7 @@ function RectangularUniverse(canvasSelector, options) {
   });
 
   var context = canvas.node().getContext("2d");
-  options.useForceLayout ? force.on("tick", tick) : d3.timer(tick.bind(this));
+  d3.timer(tick.bind(this));
 
   function tick(e) {
     if (!inView || options.paused)
@@ -332,17 +328,16 @@ function RectangularUniverse(canvasSelector, options) {
     ship.x += ship.vx;
     ship.y += ship.vy;
     ship.totalDistanceTraveled += ship.totalSpeed;
-    console.log(ship.totalDistanceTraveled);
-    
-    if(this.triggerDistance && ship.totalDistanceTraveled > this.triggerDistance){
+
+    if (this.triggerDistance && ship.totalDistanceTraveled > this.triggerDistance) {
       this.distanceCallback && setTimeout(this.distanceCallback);
     }
-    
+
     var didWrap = wrapAround(ship);
-    if(didWrap){
-        this.wrapCallback && setTimeout(this.wrapCallback)
+    if (didWrap) {
+      this.wrapCallback && setTimeout(this.wrapCallback)
     }
-    
+
     render();
 
   }

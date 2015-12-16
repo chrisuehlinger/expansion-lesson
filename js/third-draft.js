@@ -1,7 +1,7 @@
 Reveal.initialize({
 
   dependencies: [
-        // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+    // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
     {
       src: 'bower_components/reveal.js/lib/js/classList.js',
       condition: function () {
@@ -9,7 +9,7 @@ Reveal.initialize({
       }
     },
 
-        // Interpret Markdown in <section> elements
+    // Interpret Markdown in <section> elements
     {
       src: 'bower_components/reveal.js/plugin/markdown/marked.js',
       condition: function () {
@@ -22,7 +22,7 @@ Reveal.initialize({
         return !!document.querySelector('[data-markdown]');
       }
     }
-    ],
+  ],
 
   // Display controls in the bottom right corner
   controls: true,
@@ -37,7 +37,7 @@ Reveal.initialize({
   history: true,
 
   // Enable keyboard shortcuts for navigation
-//  keyboard: false,
+  //  keyboard: false,
 
   // Enable the slide overview mode
   overview: false,
@@ -108,22 +108,22 @@ Reveal.initialize({
   // - Set to 0 to disable movement along an axis
   parallaxBackgroundHorizontal: null,
   parallaxBackgroundVertical: null,
-  
+
   keyboard: {
     65: null,
     83: null
   },
   width: innerWidth,
   height: innerHeight,
-  margin:0
+  margin: 0
 
 });
 
-function handleSlideEvent(e){
+function handleSlideEvent(e) {
   console.log(e);
-  for(var slide in slideDirectory){
-    if(slide === e.currentSlide.id){
-      slideDirectory[slide].unpause();
+  for (var slide in slideDirectory) {
+    if (slide === e.currentSlide.id) {
+      slideDirectory[slide].init();
     } else {
       slideDirectory[slide].pause();
     }
@@ -165,17 +165,18 @@ var emptyOptions = {
 };
 
 var emptyUniverse = new RectangularUniverse('#emptyUniverse', emptyOptions);
+emptyUniverse.initCallback = function () {
+  emptyUniverse.wrapCallback = function () {
+    this.wrapCallback = null;
+    console.log('Wrapped!');
+  }.bind(emptyUniverse);
 
-emptyUniverse.wrapCallback = function(){
-  this.wrapCallback = null;
-  console.log('Wrapped!');
-}.bind(emptyUniverse);
-
-emptyUniverse.triggerDistance = 1000;
-emptyUniverse.distanceCallback = function(){
-  this.distanceCallback = null;
-  console.log('1000!');
-}.bind(emptyUniverse);
+  emptyUniverse.triggerDistance = 1000;
+  emptyUniverse.distanceCallback = function () {
+    this.distanceCallback = null;
+    console.log('1000!');
+  }.bind(emptyUniverse);
+};
 
 var centeredOptions = {
   speedOfLight: 10,
@@ -243,16 +244,21 @@ var expandingEmptyOptions = {
 
 var expandingEmptyUniverse = new RectangularUniverse('#expandingEmptyUniverse', expandingEmptyOptions);
 
-expandingEmptyUniverse.filledCallback = function(){
-  setTimeout(expandingEmptyUniverse.expand, 5000);
-}
+expandingEmptyUniverse.initCallback = function () {
+  expandingEmptyOptions.maxWidth = innerWidth / 2;
+  expandingEmptyOptions.maxHeight = innerHeight / 2;
 
-expandingEmptyUniverse.expansionCallback = function(){
-  this.expansionCallback = null;
-  expandingEmptyOptions.maxWidth = innerWidth;
-  expandingEmptyOptions.maxHeight = innerHeight;
-  setTimeout(expandingEmptyUniverse.expand, 5000);
-}
+  expandingEmptyUniverse.filledCallback = function () {
+    setTimeout(expandingEmptyUniverse.expand, 5000);
+  }
+
+  expandingEmptyUniverse.expansionCallback = function () {
+    this.expansionCallback = null;
+    expandingEmptyOptions.maxWidth = innerWidth;
+    expandingEmptyOptions.maxHeight = innerHeight;
+    setTimeout(expandingEmptyUniverse.expand, 5000);
+  }
+};
 
 expandingEmptyUniverse.addOne();
 
@@ -322,11 +328,13 @@ var filledOptions = {
 
 var filledUniverse = new RectangularUniverse('#filledUniverse', filledOptions);
 
-filledUniverse.filledCallback = function(){
-  setTimeout(filledUniverse.expand, 5000);
-}
+filledUniverse.initCallback = function () {
+  filledUniverse.filledCallback = function () {
+    setTimeout(filledUniverse.expand, 5000);
+  }
 
-filledUniverse.addOne();
+  filledUniverse.addOne();
+};
 
 var bigBangOptions = {
   speedOfLight: 10,
@@ -355,9 +363,11 @@ var bigBangOptions = {
 
 var bigBangUniverse = new RectangularUniverse('#bigBangUniverse', bigBangOptions);
 
-bigBangUniverse.filledCallback = function(){
-  setTimeout(bigBangUniverse.expand, 0);
-}
+bigBangUniverse.initCallback = function () {
+  bigBangUniverse.filledCallback = function () {
+    setTimeout(bigBangUniverse.expand, 0);
+  }
+};
 
 bigBangUniverse.addOne();
 
@@ -439,11 +449,13 @@ var expandingSphereOptions = {
 
 var expandingSphereUniverse = new SphericalUniverse('#expandingSphereUniverse', expandingSphereOptions);
 
-expandingSphereUniverse.filledCallback = function(){
-  setTimeout(expandingSphereUniverse.expand, 5000);
-};
+expandingSphereUniverse.initCallback = function () {
+  expandingSphereUniverse.filledCallback = function () {
+    setTimeout(expandingSphereUniverse.expand, 5000);
+  };
 
-expandingSphereUniverse.addOne();
+  expandingSphereUniverse.addOne();
+};
 
 var infiniteOptions = {
   speedOfLight: 10,
@@ -473,11 +485,13 @@ var infiniteOptions = {
 
 var infiniteUniverse = new RectangularUniverse('#infiniteUniverse', infiniteOptions);
 
-infiniteUniverse.filledCallback = function(){
-  setTimeout(infiniteUniverse.expand, 5000);
-};
+expandingSphereUniverse.initCallback = function () {
+  infiniteUniverse.filledCallback = function () {
+    setTimeout(infiniteUniverse.expand, 5000);
+  };
 
-infiniteUniverse.addOne();
+  infiniteUniverse.addOne();
+};
 
 var slideDirectory = {
   emptyUniverseSlide: emptyUniverse,

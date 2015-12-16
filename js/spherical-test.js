@@ -51,5 +51,5 @@ var u = new SphericalUniverse(canvasSelector, options);
 u.filledCallback = function(){
   setTimeout(u.expand, 5000);
 }
-
+u.init();
 //u.addOne();

@@ -61,3 +61,5 @@ u.filledCallback = function () {
 }
 
 u.addOne();
+
+u.init();

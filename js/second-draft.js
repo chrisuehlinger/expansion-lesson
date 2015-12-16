@@ -123,7 +123,7 @@ function handleSlideEvent(e){
   console.log(e);
   for(var slide in slideDirectory){
     if(slide === e.currentSlide.id){
-      slideDirectory[slide].unpause();
+      slideDirectory[slide].init();
     } else {
       slideDirectory[slide].pause();
     }
