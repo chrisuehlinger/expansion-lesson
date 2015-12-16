@@ -80,19 +80,27 @@ function RectangularUniverse(canvasSelector, options) {
     .range(['black', 'red', 'orange', 'white']);
 
   function wrapAround(node) {
-    if (node.x < 0)
+    var didWrap = false;
+    
+    if (node.x < 0){
+      didWrap = true;
       node.x = options.width + node.x;
-    else if (node.x > options.width)
+    } else if (node.x > options.width){
+      didWrap = true;
       node.x -= options.width;
-
+    }
     node.px = node.x;
 
-    if (node.y < 0)
+    if (node.y < 0){
+      didWrap = true;
       node.y = options.height + node.y;
-    else if (node.y > options.height)
+    } else if (node.y > options.height) {
+      didWrap = true;
       node.y -= options.height;
-
+    }
     node.py = node.y;
+    
+    return didWrap;
   }
 
   var nodes = d3.range(options.startingCount)
@@ -187,7 +195,6 @@ function RectangularUniverse(canvasSelector, options) {
 
   $(canvasSelector).on('touchstart', function (e) {
     isMousedown = true;
-    console.log(e);
     e.preventDefault();
     mousePosition = {
       x: e.originalEvent.changedTouches[0].pageX,
@@ -209,7 +216,7 @@ function RectangularUniverse(canvasSelector, options) {
   });
 
   function moveTowards(x, y) {
-    console.log(x, y);
+    // console.log(x, y);
     var dx, dy;
     if (options.shipCentered) {
       dx = x - options.canvasWidth / 2;
@@ -234,7 +241,7 @@ function RectangularUniverse(canvasSelector, options) {
   $(document).on('keydown', function (e) {
     if (!inView || options.paused)
       return;
-    console.log(e.keyCode);
+      
     if (e.keyCode === 83) {
       ship.totalSpeed -= options.thrust;
     }
@@ -276,7 +283,7 @@ function RectangularUniverse(canvasSelector, options) {
   });
 
   var context = canvas.node().getContext("2d");
-  options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
+  options.useForceLayout ? force.on("tick", tick) : d3.timer(tick.bind(this));
 
   function tick(e) {
     if (!inView || options.paused)
@@ -324,7 +331,11 @@ function RectangularUniverse(canvasSelector, options) {
     ship.x += ship.vx;
     ship.y += ship.vy;
 
-    wrapAround(ship);
+    var didWrap = wrapAround(ship);
+    if(didWrap){
+        this.wrapCallback && setTimeout(this.wrapCallback)
+    }
+    
     render();
 
   }
