@@ -121,7 +121,7 @@ Reveal.initialize({
 
 var $refreshButton;
 function onRevealReady(e) {
-  $('aside.controls').append('<button class="refresh-button">R</button>');
+  $('aside.controls').append('<button class="fa fa-refresh refresh-button"></button>');
   $refreshButton = $('.refresh-button');
   handleSlideEvent(e);
 }
@@ -188,6 +188,25 @@ emptyUniverse.initCallback = function () {
     console.log('1000!');
   }.bind(emptyUniverse);
 };
+
+$(document).on('keydown', function (e) {
+
+    if (e.keyCode === 83) {
+      $('.key:eq(2)').addClass('pressed');
+    }
+    if (e.keyCode === 87) {
+      $('.key:eq(0)').addClass('pressed');
+    }
+    if (e.keyCode === 65) {
+      $('.key:eq(1)').addClass('pressed');
+    }
+    if (e.keyCode === 68) {
+      $('.key:eq(3)').addClass('pressed');
+    }
+  })
+  .on('keyup', function (e) {
+      $('.key').removeClass('pressed');
+  });
 
 var centeredOptions = {
   speedOfLight: 10,

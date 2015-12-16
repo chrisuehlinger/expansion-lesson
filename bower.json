@@ -13,14 +13,14 @@
     "test",
     "tests"
   ],
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "jquery": "~2.1.4",
     "d3": "~3.5.6",
     "lodash": "~3.10.1",
     "dat-gui": "~0.5.1",
     "reveal.js": "~3.2.0",
-    "stats.js": "*"
+    "stats.js": "*",
+    "font-awesome": "~4.5.0"
   }
 }
