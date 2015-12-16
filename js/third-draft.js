@@ -168,7 +168,13 @@ var emptyUniverse = new RectangularUniverse('#emptyUniverse', emptyOptions);
 
 emptyUniverse.wrapCallback = function(){
   this.wrapCallback = null;
-  alert('Wrapped!');
+  console.log('Wrapped!');
+}.bind(emptyUniverse);
+
+emptyUniverse.triggerDistance = 1000;
+emptyUniverse.distanceCallback = function(){
+  this.distanceCallback = null;
+  console.log('1000!');
 }.bind(emptyUniverse);
 
 var centeredOptions = {
@@ -461,7 +467,8 @@ var infiniteOptions = {
   outlineParticles: false,
   shipCentered: true,
   paused: true,
-  asteroids: []
+  asteroids: [],
+  initialCollisions: 1000
 };
 
 var infiniteUniverse = new RectangularUniverse('#infiniteUniverse', infiniteOptions);

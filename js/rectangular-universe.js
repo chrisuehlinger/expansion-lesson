@@ -61,11 +61,12 @@ function RectangularUniverse(canvasSelector, options) {
     vy: 0,
     direction: 0,
     totalSpeed: 0,
+    totalDistanceTraveled: 0
   };
 
   function createNode() {
     return {
-      collisions: 0,
+      collisions: options.initialCollisions || 0,
       radius: Math.random() * 5 + 15,
       x: Math.random() * options.width,
       y: Math.random() * options.height,
@@ -330,7 +331,13 @@ function RectangularUniverse(canvasSelector, options) {
 
     ship.x += ship.vx;
     ship.y += ship.vy;
-
+    ship.totalDistanceTraveled += ship.totalSpeed;
+    console.log(ship.totalDistanceTraveled);
+    
+    if(this.triggerDistance && ship.totalDistanceTraveled > this.triggerDistance){
+      this.distanceCallback && setTimeout(this.distanceCallback);
+    }
+    
     var didWrap = wrapAround(ship);
     if(didWrap){
         this.wrapCallback && setTimeout(this.wrapCallback)

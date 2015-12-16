@@ -44,7 +44,8 @@ function SphericalUniverse(canvasSelector, options) {
     y: 0,
     radius: 10,
     direction: Math.PI / 2,
-    totalSpeed: 50
+    totalSpeed: 50,
+    totalDistanceTraveled: 0
   };
 
 
@@ -277,7 +278,7 @@ function SphericalUniverse(canvasSelector, options) {
 //    });
 //  }
 
-  options.useForceLayout ? force.on("tick", tick) : d3.timer(tick);
+  options.useForceLayout ? force.on("tick", tick) : d3.timer(tick.bind(this));
 
   function tick() {
     if (!inView || options.paused)
@@ -327,6 +328,11 @@ function SphericalUniverse(canvasSelector, options) {
     ship.direction = ((bearingDegrees + 180) % 360).toRadians();
     ship.x = λ2 * 180 / Math.PI;
     ship.y = φ2 * 180 / Math.PI;
+    ship.totalDistanceTraveled += ship.totalSpeed;
+    
+    if(this.triggerDistance && ship.totalDistanceTraveled > this.triggerDistance){
+      this.distanceCallback && setTimeout(this.distanceCallback);
+    }
 
     wrapAround(ship);
 
