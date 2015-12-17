@@ -11,6 +11,18 @@ aside.controls .refresh-button {
   font-size: 24px;
   opacity: 1; }
 
+.audio-options {
+  position: fixed;
+  z-index: 10;
+  top: 5px;
+  right: 5px; }
+  .audio-options .mute-button {
+    background: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    color: #efefef; }
+
 canvas {
   display: inline-block;
   vertical-align: middle !important; }

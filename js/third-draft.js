@@ -119,6 +119,19 @@ Reveal.initialize({
 
 });
 
+var currentAudio = new Audio();
+
+$('.mute-button').on('click', function (e) {
+  var $icon = $(this).find('i');
+  if ($icon.hasClass('fa-volume-up')) {
+    $icon.removeClass('fa-volume-up').addClass('fa-volume-off');
+    currentAudio.muted = true;
+  } else if ($icon.hasClass('fa-volume-off')) {
+    $icon.removeClass('fa-volume-off').addClass('fa-volume-up');
+    currentAudio.muted = false;
+  }
+})
+
 var $refreshButton;
 function onRevealReady(e) {
   $('aside.controls').append('<button class="fa fa-refresh refresh-button"></button>');
@@ -128,12 +141,15 @@ function onRevealReady(e) {
 
 function handleSlideEvent(e) {
   $refreshButton.off('click');
+  currentAudio.pause();
   for (var slide in slideDirectory) {
     if (slide === e.currentSlide.id) {
       var currentSlide = slideDirectory[slide];
-      currentSlide.init();
+      currentSlide.init && currentSlide.init();
+      currentSlide.start && currentSlide.start();
       $refreshButton.on('click', function (e) {
-        currentSlide.init();
+        currentSlide.init && currentSlide.init();
+        currentSlide.start && currentSlide.start();
       });
     } else {
       slideDirectory[slide].pause();
@@ -143,6 +159,17 @@ function handleSlideEvent(e) {
 
 Reveal.addEventListener('ready', onRevealReady);
 Reveal.addEventListener('slidechanged', handleSlideEvent);
+
+var tutorial = {
+  start: function () {
+    currentAudio.src = 'audio/tutorial.mp3';
+    currentAudio.play();
+  },
+  pause: function () {
+  }
+}
+
+
 
 var emptyOptions = {
   speedOfLight: 10,
@@ -191,21 +218,21 @@ emptyUniverse.initCallback = function () {
 
 $(document).on('keydown', function (e) {
 
-    if (e.keyCode === 83) {
-      $('.key:eq(2)').addClass('pressed');
-    }
-    if (e.keyCode === 87) {
-      $('.key:eq(0)').addClass('pressed');
-    }
-    if (e.keyCode === 65) {
-      $('.key:eq(1)').addClass('pressed');
-    }
-    if (e.keyCode === 68) {
-      $('.key:eq(3)').addClass('pressed');
-    }
-  })
+  if (e.keyCode === 83) {
+    $('.key:eq(2)').addClass('pressed');
+  }
+  if (e.keyCode === 87) {
+    $('.key:eq(0)').addClass('pressed');
+  }
+  if (e.keyCode === 65) {
+    $('.key:eq(1)').addClass('pressed');
+  }
+  if (e.keyCode === 68) {
+    $('.key:eq(3)').addClass('pressed');
+  }
+})
   .on('keyup', function (e) {
-      $('.key').removeClass('pressed');
+    $('.key').removeClass('pressed');
   });
 
 var centeredOptions = {
@@ -524,6 +551,7 @@ expandingSphereUniverse.initCallback = function () {
 };
 
 var slideDirectory = {
+  tutorialSlide: tutorial,
   emptyUniverseSlide: emptyUniverse,
   centeredUniverseSlide: centeredUniverse,
   expandingEmptyUniverseSlide: expandingEmptyUniverse,
