@@ -65,3 +65,85 @@ figure.keyboard-control-tutorial {
     display: none;
   }
 }
+
+@keyframes lefthand {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(225px);
+  }
+}
+
+@keyframes uphand {
+  from {
+    transform: rotate(10deg) translateX(0px);
+  }
+  to {
+    transform: rotate(10deg) translateX(225px);
+  }
+}
+
+@keyframes downhand {
+  from {
+    transform: rotate(-5deg) translateX(225px);
+  }
+  to {
+    transform: rotate(-5deg) translateX(0px);
+  }
+}
+
+@keyframes testparticle {
+  0% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-150px);
+  }
+}
+
+figure.introduction-diagrams {
+  position: relative;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  i {
+    position: absolute;
+    
+    &.edge-hand {
+      color: red;
+      animation: uphand 0.5s linear infinite alternate;
+      
+      &.fa-hand-o-up {
+        top: 295px;
+        left: 150px;
+        animation-name: uphand;
+      }
+      &.fa-hand-o-down {
+        top: 80px;
+        left: 150px;
+        animation-name: downhand;
+      }
+      &.fa-hand-o-left {
+        top: 100px;
+        right: 25px;
+        animation-name: lefthand;
+      }
+    }
+    
+    &.test-particle {
+      font-size: 20px;
+      color: red;
+      top: 175px;
+      left: 300px;
+      
+      &.go {
+        animation: testparticle 10s linear infinite alternate;
+      }
+    }
+  }
+  
+  img {
+    max-width: 600px;
+  }
+}

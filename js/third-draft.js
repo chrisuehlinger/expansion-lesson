@@ -190,12 +190,111 @@ slideDirectory.tutorial = {
   }
 }
 
+var introTimeouts = [];
 slideDirectory.introduction = {
   start: function () {
+    
+    var delay = 2800, 
+      $img = $('.introduction-diagrams img'), 
+      $hands = $('.introduction-diagrams i.edge-hand'),
+      $testParticle = $('.introduction-diagrams i.test-particle');
+      
+    $hands.stop(true,true).hide();
+    $img.stop(true,true).hide();
+    $testParticle.stop(true,true).hide();
+    
+    introTimeouts.forEach(clearTimeout);
+    introTimeouts = [];
+    
+    show0();
+    
+    function show0(){
+      $img.eq(0).fadeIn(delay,hide0);
+    }
+    
+    function hide0(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(0).fadeOut(delay, show1);}, delay));
+    }
+    
+    function show1(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(1).fadeIn(delay,hide1);}));
+    }
+    
+    function hide1(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(1).fadeOut(delay, show2);}));
+    }
+    
+    function show2(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(2).fadeIn(delay,hide2);}));
+    }
+    
+    function hide2(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(2).fadeOut(delay, show3);}));
+    }
+    
+    function show3(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(3).fadeIn(delay,hide3);}));
+    }
+    
+    function hide3(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(3).fadeOut(delay, show4);}, delay));
+    }
+    
+    function show4(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(4).fadeIn(delay,funnyStuff);}));
+    }
+    
+    function funnyStuff(){
+      $hands.show();
+      introTimeouts.push(setTimeout(hide4, delay));
+    }
+    
+    function hide4(){
+      introTimeouts.push(setTimeout(function(){ $hands.hide(); $img.eq(4).fadeOut(delay, show5);}, delay));
+    }
+    
+    function show5(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(5).fadeIn(delay/4,hide5);}));
+    }
+    
+    function hide5(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(5).fadeOut(delay/4, show6);}, delay/4));
+    }
+    
+    function show6(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(6).fadeIn(delay/2,hide6);}));
+    }
+    
+    function hide6(){
+      introTimeouts.push(setTimeout(function(){ $img.eq(6).fadeOut(delay/2, showQuestion);}, delay/2));
+    }
+    
+    function showQuestion(){
+      introTimeouts.push(setTimeout(function(){
+        $img.eq(3).fadeIn(delay/2,function(){
+          $testParticle.addClass('go').fadeIn(100, function(){
+            introTimeouts.push(setTimeout(function(){
+              $testParticle.fadeOut(delay, function(){
+                $testParticle.removeClass('go');
+              });
+              $img.eq(3).fadeOut(delay);
+            }, 15000));
+          });
+        });
+      }, 12000));
+    }
+    
+    
     currentAudio.src = 'audio/introduction.mp3';
     currentAudio.play();
+    
+    
   },
   pause: function () {
+    $hands.stop(true,true).hide();
+    $img.stop(true,true).hide();
+    $testParticle.stop(true,true).hide();
+    introTimeouts.forEach(clearTimeout);
   }
 }
 
