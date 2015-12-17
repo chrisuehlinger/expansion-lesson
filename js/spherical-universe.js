@@ -42,8 +42,12 @@ function SphericalUniverse(canvasSelector, options) {
   var ship, currentExpansion, canvas = d3.select(canvasSelector)
       .attr("width", options.width)
       .attr("height", options.height);
-    
+  
+  this.timeouts = [];
   this.init = function () {
+    this.timeouts.forEach(clearTimeout);
+    this.timeouts = [];
+    
     ship = {
       x: 90,
       y: 0,
@@ -59,6 +63,7 @@ function SphericalUniverse(canvasSelector, options) {
       .attr("width", options.width)
       .attr("height", options.height);
       
+      this.initCallback && this.initCallback();
       options.paused = false;
   };
   options.paused = true;
@@ -74,29 +79,29 @@ function SphericalUniverse(canvasSelector, options) {
 
   this.addOne = function () {
     if (!inView || options.paused)
-      return setTimeout(this.addOne, options.additionDelay);
+      return this.timeouts.push(setTimeout(this.addOne, options.additionDelay));
 
     if (nodes.length < options.endCount) {
       nodes.push(createNode());
 
-      setTimeout(this.addOne, options.additionDelay);
+      this.timeouts.push(setTimeout(this.addOne, options.additionDelay));
     } else {
-      this.filledCallback && setTimeout(this.filledCallback);
+      this.filledCallback && this.timeouts.push(setTimeout(this.filledCallback));
     }
   }.bind(this);
 
   this.expand = function () {
     if (!inView || options.paused)
-      return setTimeout(this.expand, options.expansionDelay);
+      return this.timeouts.push(setTimeout(this.expand, options.expansionDelay));
 
     if (currentExpansion < options.maxExpansion) {
       currentExpansion *= options.expansionFactor;
       nodes.forEach(function (node) {
         node.radius *= 1 / options.expansionFactor;
       });
-      setTimeout(this.expand, options.expansionDelay);
+      this.timeouts.push(setTimeout(this.expand, options.expansionDelay));
     } else {
-      this.expansionCallback && setTimeout(this.expansionCallback);
+      this.expansionCallback && this.timeouts.push(setTimeout(this.expansionCallback));
     }
   }.bind(this);
 
@@ -154,7 +159,6 @@ function SphericalUniverse(canvasSelector, options) {
 
   $(canvasSelector).on('touchstart', function (e) {
     isMousedown = true;
-    console.log(e);
     e.preventDefault();
     mousePosition = {
       x: e.originalEvent.changedTouches[0].pageX,
@@ -179,7 +183,6 @@ function SphericalUniverse(canvasSelector, options) {
     if (!inView || options.paused)
       return;
 
-    //console.log(e.which);
     if (e.keyCode === 87) {
       ship.totalSpeed *= 1.1;
       if (ship.totalSpeed > options.speedOfLight) {

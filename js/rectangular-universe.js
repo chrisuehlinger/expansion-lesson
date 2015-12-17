@@ -60,7 +60,10 @@ function RectangularUniverse(canvasSelector, options) {
   var initialWidth = options.width,
     initialHeight = options.height,
     initialAsteroids = _.cloneDeep(options.asteroids);
+   
+  this.timeouts = [];
   this.init = function () {
+    this.timeouts.forEach(clearTimeout);
     options.width = initialWidth;
     options.height = initialHeight;
     options.asteroids = _.cloneDeep(initialAsteroids);
@@ -124,19 +127,19 @@ function RectangularUniverse(canvasSelector, options) {
 
   this.addOne = function () {
     if (!inView || options.paused)
-      return setTimeout(this.addOne, options.additionDelay);
+      return this.timeouts.push(setTimeout(this.addOne, options.additionDelay));
 
     if (nodes.length < options.endCount) {
       nodes.push(createNode());
-      setTimeout(this.addOne, options.additionDelay);
+      this.timeouts.push(setTimeout(this.addOne, options.additionDelay));
     } else {
-      this.filledCallback && setTimeout(this.filledCallback);
+      this.filledCallback && this.timeouts.push(setTimeout(this.filledCallback));
     }
   }.bind(this);
 
   this.expand = function () {
     if (!inView || options.paused)
-      return setTimeout(this.expand, options.expansionDelay);
+      return this.timeouts.push(setTimeout(this.expand, options.expansionDelay));
 
     if (options.width < options.maxWidth && options.height < options.maxHeight) {
       options.width *= options.expansionFactor;
@@ -155,9 +158,9 @@ function RectangularUniverse(canvasSelector, options) {
         asteroid.y *= options.expansionFactor;
       });
 
-      setTimeout(this.expand, options.expansionDelay);
+      this.timeouts.push(setTimeout(this.expand, options.expansionDelay));
     } else {
-      this.expansionCallback && setTimeout(this.expansionCallback);
+      this.expansionCallback && this.timeouts.push(setTimeout(this.expansionCallback));
     }
   }.bind(this);
 
@@ -330,12 +333,12 @@ function RectangularUniverse(canvasSelector, options) {
     ship.totalDistanceTraveled += ship.totalSpeed;
 
     if (this.triggerDistance && ship.totalDistanceTraveled > this.triggerDistance) {
-      this.distanceCallback && setTimeout(this.distanceCallback);
+      this.distanceCallback && this.timeouts.push(setTimeout(this.distanceCallback));
     }
 
     var didWrap = wrapAround(ship);
     if (didWrap) {
-      this.wrapCallback && setTimeout(this.wrapCallback)
+      this.wrapCallback && this.timeouts.push(setTimeout(this.wrapCallback))
     }
 
     render();
