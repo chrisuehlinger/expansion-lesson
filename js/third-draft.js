@@ -120,6 +120,24 @@ Reveal.initialize({
 });
 
 var currentAudio = new Audio();
+currentAudio.loop = false;
+var currentAudioQueue = [];
+currentAudio.addEventListener('ended', function(e){
+  if(currentAudioQueue.length){
+    currentAudio.src = currentAudioQueue[0];
+    currentAudio.play();
+    currentAudioQueue = currentAudioQueue.slice(1);
+  }
+});
+
+function queueUp(audioFile){
+    if(currentAudio.ended) {
+      currentAudio.src = audioFile;
+      currentAudio.play();
+    } else {
+      currentAudioQueue.push(audioFile);
+    }
+}
 
 $('.mute-button').on('click', function (e) {
   var $icon = $(this).find('i');
@@ -130,7 +148,7 @@ $('.mute-button').on('click', function (e) {
     $icon.removeClass('fa-volume-off').addClass('fa-volume-up');
     currentAudio.muted = false;
   }
-})
+});
 
 var $refreshButton;
 function onRevealReady(e) {
@@ -142,6 +160,7 @@ function onRevealReady(e) {
 function handleSlideEvent(e) {
   $refreshButton.off('click');
   currentAudio.pause();
+  currentAudioQueue = [];
   for (var slide in slideDirectory) {
     if (slide === e.currentSlide.id) {
       var currentSlide = slideDirectory[slide];
@@ -160,7 +179,9 @@ function handleSlideEvent(e) {
 Reveal.addEventListener('ready', onRevealReady);
 Reveal.addEventListener('slidechanged', handleSlideEvent);
 
-var tutorial = {
+var slideDirectory = {};
+
+slideDirectory.tutorial = {
   start: function () {
     currentAudio.src = 'audio/tutorial.mp3';
     currentAudio.play();
@@ -169,7 +190,23 @@ var tutorial = {
   }
 }
 
+slideDirectory.introduction = {
+  start: function () {
+    currentAudio.src = 'audio/introduction.mp3';
+    currentAudio.play();
+  },
+  pause: function () {
+  }
+}
 
+slideDirectory.shapesOfTheUniverse = {
+  start: function () {
+    currentAudio.src = 'audio/shapeOfTheUniverse.mp3';
+    currentAudio.play();
+  },
+  pause: function () {
+  }
+}
 
 var emptyOptions = {
   speedOfLight: 10,
@@ -206,14 +243,19 @@ var emptyUniverse = new RectangularUniverse('#emptyUniverse', emptyOptions);
 emptyUniverse.initCallback = function () {
   emptyUniverse.wrapCallback = function () {
     this.wrapCallback = null;
-    console.log('Wrapped!');
+    queueUp('audio/100MeterUniverse2.mp3');
   }.bind(emptyUniverse);
+};
 
-  emptyUniverse.triggerDistance = 1000;
-  emptyUniverse.distanceCallback = function () {
-    this.distanceCallback = null;
-    console.log('1000!');
-  }.bind(emptyUniverse);
+slideDirectory.emptyUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/100MeterUniverse1.mp3';
+    currentAudio.play();
+    emptyUniverse.init()
+  },
+  pause: function(){
+    emptyUniverse.pause();
+  }
 };
 
 $(document).on('keydown', function (e) {
@@ -268,6 +310,26 @@ var centeredOptions = {
 
 var centeredUniverse = new RectangularUniverse('#centeredUniverse', centeredOptions);
 
+slideDirectory.centeredUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/uncenteredUniverse1.mp3';
+    currentAudio.play();
+    centeredUniverse.init()
+  },
+  pause: function(){
+    centeredUniverse.pause();
+  }
+};
+
+slideDirectory.firstReview = {
+  start: function () {
+    currentAudio.src = 'audio/uncenteredUniverse2.mp3';
+    currentAudio.play();
+  },
+  pause: function () {
+  }
+}
+
 var expandingEmptyOptions = {
   speedOfLight: 10,
   thrust: 1,
@@ -304,20 +366,26 @@ var expandingEmptyUniverse = new RectangularUniverse('#expandingEmptyUniverse', 
 expandingEmptyUniverse.initCallback = function () {
   expandingEmptyOptions.maxWidth = innerWidth / 2;
   expandingEmptyOptions.maxHeight = innerHeight / 2;
-
-  expandingEmptyUniverse.filledCallback = function () {
-    setTimeout(expandingEmptyUniverse.expand, 5000);
-  }
-
+  
   expandingEmptyUniverse.expansionCallback = function () {
     this.expansionCallback = null;
     expandingEmptyOptions.maxWidth = innerWidth;
     expandingEmptyOptions.maxHeight = innerHeight;
-    setTimeout(expandingEmptyUniverse.expand, 5000);
+    expandingEmptyUniverse.timeouts.push(setTimeout(expandingEmptyUniverse.expand, 9000));
   }
+  expandingEmptyUniverse.timeouts.push(setTimeout(expandingEmptyUniverse.expand, 15000));
 };
 
-expandingEmptyUniverse.addOne();
+slideDirectory.expandingEmptyUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/expandingUniverse.mp3';
+    currentAudio.play();
+    expandingEmptyUniverse.init()
+  },
+  pause: function(){
+    expandingEmptyUniverse.pause();
+  }
+};
 
 var sparseOptions = {
   speedOfLight: 10,
@@ -352,6 +420,17 @@ var sparseOptions = {
 
 var sparseUniverse = new RectangularUniverse('#sparseUniverse', sparseOptions);
 
+slideDirectory.sparseUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/particles.mp3';
+    currentAudio.play();
+    sparseUniverse.timeouts.push(setTimeout(sparseUniverse.init.bind(sparseUniverse), 6000));
+  },
+  pause: function(){
+    sparseUniverse.pause();
+  }
+};
+
 var filledOptions = {
   speedOfLight: 10,
   thrust: 1,
@@ -364,7 +443,7 @@ var filledOptions = {
   startingCount: 50,
   endCount: 300,
   expansionFactor: 1.01,
-  additionDelay: 0,
+  additionDelay: 10,
   expansionWait: 5000,
   expansionDelay: 0,
   cooldownFactor: 0.9,
@@ -387,10 +466,26 @@ var filledUniverse = new RectangularUniverse('#filledUniverse', filledOptions);
 
 filledUniverse.initCallback = function () {
   filledUniverse.filledCallback = function () {
-    setTimeout(filledUniverse.expand, 5000);
+    queueUp('audio/hotExpansion2.mp3');
+    filledUniverse.timeouts.push(setTimeout(filledUniverse.expand, 7000));
   }
+  
+  filledUniverse.expansionCallback = function(){
+    queueUp('audio/hotExpansion3.mp3');
+  }
+  
+  filledUniverse.timeouts.push(setTimeout(filledUniverse.addOne, 1000));
+};
 
-  filledUniverse.addOne();
+slideDirectory.filledUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/hotExpansion1.mp3';
+    currentAudio.play();
+    filledUniverse.init();
+  },
+  pause: function(){
+    filledUniverse.pause();
+  }
 };
 
 var bigBangOptions = {
@@ -421,12 +516,11 @@ var bigBangOptions = {
 var bigBangUniverse = new RectangularUniverse('#bigBangUniverse', bigBangOptions);
 
 bigBangUniverse.initCallback = function () {
-  bigBangUniverse.filledCallback = function () {
-    setTimeout(bigBangUniverse.expand, 0);
-  }
+    bigBangUniverse.expand();
 };
 
-bigBangUniverse.addOne();
+
+slideDirectory.bigBangUniverseSlide = bigBangUniverse;
 
 var globeOptions = {
   speedOfLight: 200,
@@ -454,6 +548,17 @@ var globeOptions = {
 
 var globeUniverse = new SphericalUniverse('#globeUniverse', globeOptions);
 
+slideDirectory.globeUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/globeUniverse.mp3';
+    currentAudio.play();
+    globeUniverse.timeouts.push(setTimeout(globeUniverse.init.bind(globeUniverse), 22000));
+  },
+  pause: function(){
+    globeUniverse.pause();
+  }
+};
+
 var flatCircleOptions = {
   speedOfLight: 200,
   thrust: 5,
@@ -480,18 +585,29 @@ var flatCircleOptions = {
 
 var flatCircleUniverse = new SphericalUniverse('#flatCircleUniverse', flatCircleOptions);
 
+slideDirectory.flatCircleUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/flatCircle.mp3';
+    currentAudio.play();
+    flatCircleUniverse.timeouts.push(setTimeout(flatCircleUniverse.init.bind(flatCircleUniverse), 8000));
+  },
+  pause: function(){
+    flatCircleUniverse.pause();
+  }
+};
+
 var expandingSphereOptions = {
   speedOfLight: 200,
   thrust: 5,
   width: innerWidth,
   height: innerHeight,
-  startingCount: 50,
-  endCount: 100,
+  startingCount: 100,
+  endCount: 150,
   expansionFactor: 1.01,
   additionDelay: 5,
   expansionWait: 5000,
   expansionDelay: 0,
-  maxExpansion: 5,
+  maxExpansion: 7,
   cooldownFactor: 0.9,
   collisionForce: 0.1,
   useForceLayout: false,
@@ -508,10 +624,43 @@ var expandingSphereUniverse = new SphericalUniverse('#expandingSphereUniverse', 
 
 expandingSphereUniverse.initCallback = function () {
   expandingSphereUniverse.filledCallback = function () {
-    setTimeout(expandingSphereUniverse.expand, 5000);
+    expandingSphereUniverse.timeouts.push(setTimeout(expandingSphereUniverse.expand, 5000));
+  };
+  
+  expandingSphereUniverse.expansionCallback = function(){
+    queueUp('audio/expandingCircle2.mp3');
   };
 
-  expandingSphereUniverse.addOne();
+  expandingSphereUniverse.timeouts.push(setTimeout(expandingSphereUniverse.addOne.bind(expandingSphereUniverse), 5000));
+};
+
+slideDirectory.expandingSphereUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/expandingCircle1.mp3';
+    currentAudio.play();
+    expandingSphereUniverse.init();
+  },
+  pause: function(){
+    expandingSphereUniverse.pause();
+  }
+};
+
+slideDirectory.secondReview = {
+  start: function () {
+    currentAudio.src = 'audio/infinite1.mp3';
+    currentAudio.play();
+  },
+  pause: function () {
+  }
+};
+
+slideDirectory.infiniteMath = {
+  start: function () {
+    currentAudio.src = 'audio/infinite2.mp3';
+    currentAudio.play();
+  },
+  pause: function () {
+  }
 };
 
 var infiniteOptions = {
@@ -542,24 +691,35 @@ var infiniteOptions = {
 
 var infiniteUniverse = new RectangularUniverse('#infiniteUniverse', infiniteOptions);
 
-expandingSphereUniverse.initCallback = function () {
-  infiniteUniverse.filledCallback = function () {
-    setTimeout(infiniteUniverse.expand, 5000);
-  };
-
-  infiniteUniverse.addOne();
+infiniteUniverse.initCallback = function () {
+   infiniteUniverse.timeouts.push(setTimeout(infiniteUniverse.expand, 5000));
 };
 
-var slideDirectory = {
-  tutorialSlide: tutorial,
-  emptyUniverseSlide: emptyUniverse,
-  centeredUniverseSlide: centeredUniverse,
-  expandingEmptyUniverseSlide: expandingEmptyUniverse,
-  sparseUniverseSlide: sparseUniverse,
-  filledUniverseSlide: filledUniverse,
-  bigBangUniverseSlide: bigBangUniverse,
-  globeUniverseSlide: globeUniverse,
-  flatCircleUniverseSlide: flatCircleUniverse,
-  expandingSphereUniverseSlide: expandingSphereUniverse,
-  infiniteUniverseSlide: infiniteUniverse
+slideDirectory.infiniteUniverseSlide = {
+  start: function(){
+    currentAudio.src = 'audio/infinite3.mp3';
+    currentAudio.play();
+    infiniteUniverse.init();
+  },
+  pause: function(){
+    infiniteUniverse.pause();
+  }
+};
+
+slideDirectory.corrections = {
+  start: function () {
+    currentAudio.src = 'audio/corrections.mp3';
+    currentAudio.play();
+  },
+  pause: function () {
+  }
+};
+
+slideDirectory.credits = {
+  start: function () {
+    currentAudio.src = 'audio/credits.mp3';
+    currentAudio.play();
+  },
+  pause: function () {
+  }
 };
