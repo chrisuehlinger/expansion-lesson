@@ -291,9 +291,9 @@ slideDirectory.introduction = {
     
   },
   pause: function () {
-    $hands.stop(true,true).hide();
-    $img.stop(true,true).hide();
-    $testParticle.stop(true,true).hide();
+    // $hands.stop(true,true).hide();
+    // $img.stop(true,true).hide();
+    // $testParticle.stop(true,true).hide();
     introTimeouts.forEach(clearTimeout);
   }
 }
