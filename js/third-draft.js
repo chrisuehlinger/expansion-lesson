@@ -442,11 +442,24 @@ slideDirectory.centeredUniverseSlide = {
 };
 
 slideDirectory.firstReview = {
+  timeouts: [],
   start: function () {
+    this.timeouts.forEach(clearTimeout);
+    this.timeouts = [];
+    
+    var $li = $('#firstReview li');
+    $li.hide();
+    
     currentAudio.src = 'audio/uncenteredUniverse2.mp3';
     currentAudio.play();
+    
+    this.timeouts.push(setTimeout(function(){ $li.eq(0).fadeIn(1000); }, 3000));
+    this.timeouts.push(setTimeout(function(){ $li.eq(1).fadeIn(1000); }, 7000));
+    this.timeouts.push(setTimeout(function(){ $li.eq(2).fadeIn(1000); }, 14000));
+    
   },
   pause: function () {
+    this.timeouts.forEach(clearTimeout);
   }
 }
 
