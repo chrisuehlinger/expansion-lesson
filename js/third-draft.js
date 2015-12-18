@@ -299,11 +299,32 @@ slideDirectory.introduction = {
 }
 
 slideDirectory.shapesOfTheUniverse = {
+  timeouts: [],
   start: function () {
+    this.timeouts.forEach(clearTimeout);
+    this.timeouts = [];
+    
     currentAudio.src = 'audio/shapeOfTheUniverse.mp3';
     currentAudio.play();
+    
+    var $img = $('.possible-shapes img');
+    $img.removeClass('pulse');
+    
+    this.timeouts.push(setTimeout(function(){ $img.eq(0).addClass('pulse');}, 5000));
+    this.timeouts.push(setTimeout(function(){ $img.eq(1).addClass('pulse');}, 6000));
+    this.timeouts.push(setTimeout(function(){ $img.eq(2).addClass('pulse');}, 7000));
+    
+    this.timeouts.push(setTimeout(function(){ $img.removeClass('pulse');}, 9000));
+    
+    this.timeouts.push(setTimeout(function(){ $img.eq(0).addClass('pulse');}, 10000));
+    this.timeouts.push(setTimeout(function(){ $img.eq(1).addClass('pulse');}, 15000));
+    this.timeouts.push(setTimeout(function(){ $img.eq(2).addClass('pulse');}, 19000));
+    
   },
   pause: function () {
+    var $img = $('.possible-shapes img');
+    $img.removeClass('pulse');
+    this.timeouts.forEach(clearTimeout);
   }
 }
 

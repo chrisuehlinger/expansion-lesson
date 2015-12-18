@@ -147,3 +147,31 @@ figure.introduction-diagrams {
     max-width: 600px;
   }
 }
+
+@keyframes shapeimgpulse {
+  0%, 100% {
+    box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0.75);
+  }
+  50% {
+    box-shadow: 0px 0px 15px 5px rgba(255, 255, 255, 0.75);
+  }
+}
+
+figure.possible-shapes {
+  display: flex !important;
+  justify-content: space-around;
+  align-items: center;
+  .shape-container {
+    text-align: center;
+    img {
+      background: #fff;
+      border-radius: 5px;
+      max-height: 250px;
+      max-width: 400px;
+      
+      &.pulse {
+        animation: shapeimgpulse 2.0s linear;
+      } 
+    }
+  }
+}
