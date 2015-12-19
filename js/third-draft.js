@@ -863,11 +863,26 @@ slideDirectory.infiniteUniverseSlide = {
 };
 
 slideDirectory.corrections = {
+  timeouts: [],
   start: function () {
+    this.timeouts.forEach(clearTimeout);
+    this.timeouts = [];
+    
+    var $li = $('#corrections li');
+    $li.hide();
+    
     currentAudio.src = 'audio/corrections.mp3';
     currentAudio.play();
+    
+    this.timeouts.push(setTimeout(function(){ $li.eq(0).fadeIn(1000); }, 11000));
+    this.timeouts.push(setTimeout(function(){ $li.eq(1).fadeIn(1000); }, 17000));
+    this.timeouts.push(setTimeout(function(){ $li.eq(2).fadeIn(1000); }, 31000));
+    this.timeouts.push(setTimeout(function(){ $li.eq(3).fadeIn(1000); }, 45000));
+    this.timeouts.push(setTimeout(function(){ $li.eq(4).fadeIn(1000); }, 55000));
+    
   },
   pause: function () {
+    this.timeouts.forEach(clearTimeout);
   }
 };
 

@@ -129,5 +129,5 @@ figure.possible-shapes {
       figure.possible-shapes .shape-container img.pulse {
         animation: shapeimgpulse 2.0s linear; }
 
-#secondReview ul {
+#secondReview ul, #corrections ul {
   width: 800px; }
