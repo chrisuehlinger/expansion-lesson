@@ -128,3 +128,6 @@ figure.possible-shapes {
       max-width: 400px; }
       figure.possible-shapes .shape-container img.pulse {
         animation: shapeimgpulse 2.0s linear; }
+
+#secondReview ul {
+  width: 800px; }

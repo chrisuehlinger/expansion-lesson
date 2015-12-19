@@ -696,7 +696,7 @@ var flatCircleOptions = {
   speedOfLight: 200,
   thrust: 5,
   width: innerWidth,
-  height: innerHeight,
+  height: innerHeight * 3/4,
   startingCount: 0,
   endCount: 100,
   expansionFactor: 1.01,
@@ -720,9 +720,19 @@ var flatCircleUniverse = new SphericalUniverse('#flatCircleUniverse', flatCircle
 
 slideDirectory.flatCircleUniverseSlide = {
   start: function(){
+    var $link = $('#flatCircleUniverseSlide a');
+    $link.hide();
+    
     currentAudio.src = 'audio/flatCircle.mp3';
     currentAudio.play();
+    
     flatCircleUniverse.timeouts.push(setTimeout(flatCircleUniverse.init.bind(flatCircleUniverse), 8000));
+    
+    flatCircleUniverse.initCallback = function(){
+      flatCircleUniverse.timeouts.push(setTimeout(function(){ $link.fadeIn(1000); }, 25000));
+    }
+    
+    
   },
   pause: function(){
     flatCircleUniverse.pause();
@@ -779,11 +789,24 @@ slideDirectory.expandingSphereUniverseSlide = {
 };
 
 slideDirectory.secondReview = {
+  timeouts: [],
   start: function () {
+    this.timeouts.forEach(clearTimeout);
+    this.timeouts = [];
+    
+    var $li = $('#secondReview li');
+    $li.hide();
+    
     currentAudio.src = 'audio/infinite1.mp3';
     currentAudio.play();
+    
+    this.timeouts.push(setTimeout(function(){ $li.eq(0).fadeIn(1000); }, 25000));
+    this.timeouts.push(setTimeout(function(){ $li.eq(1).fadeIn(1000); }, 29000));
+    this.timeouts.push(setTimeout(function(){ $li.eq(2).fadeIn(1000); }, 33000));
+    
   },
   pause: function () {
+    this.timeouts.forEach(clearTimeout);
   }
 };
 
