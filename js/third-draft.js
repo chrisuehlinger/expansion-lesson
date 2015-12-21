@@ -877,12 +877,12 @@ slideDirectory.infiniteMath = {
     
     queueUp('audio/infinite2.mp3');
     
-    this.timeouts.push(setTimeout(function () { $equations.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 3000));
-    this.timeouts.push(setTimeout(function () { $equations.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 6000));
-    this.timeouts.push(setTimeout(function () { $equations.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 9000));
-    this.timeouts.push(setTimeout(function () { $equations.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 12000));
-    this.timeouts.push(setTimeout(function () { $equations.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 15000));
-    this.timeouts.push(setTimeout(function () { $link.fadeIn(1000); }, 20000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 25000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 35000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 45000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 50000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 55000));
+    this.timeouts.push(setTimeout(function () { $link.fadeIn(1000); }, 70000));
     
   },
   pause: function () {
