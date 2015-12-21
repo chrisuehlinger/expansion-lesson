@@ -210,3 +210,12 @@ figure.possible-shapes {
     width: 800px;
   }
 }
+
+.debug-dot {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  background: red;
+  z-index: 1000;
+}

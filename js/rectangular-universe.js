@@ -60,10 +60,11 @@ function RectangularUniverse(canvasSelector, options) {
   var initialWidth = options.width,
     initialHeight = options.height,
     initialAsteroids = _.cloneDeep(options.asteroids);
-   
+
   this.timeouts = [];
   this.init = function () {
     this.timeouts.forEach(clearTimeout);
+    setTimeout(getOffsets);
     options.width = initialWidth;
     options.height = initialHeight;
     options.asteroids = _.cloneDeep(initialAsteroids);
@@ -167,11 +168,13 @@ function RectangularUniverse(canvasSelector, options) {
 
 
   var isMousedown = false,
+    isTouching = false,
     mousePosition = {
       x: 0,
       y: 0
     };
   $(canvasSelector).on('mousedown', function (e) {
+    // if(!isTouching){
     isMousedown = true;
     mousePosition = {
       x: e.offsetX,
@@ -189,28 +192,45 @@ function RectangularUniverse(canvasSelector, options) {
         $(this).off('mousemove mouseup');
         isMousedown = false;
       });
-
+    // }
   });
 
 
   $(canvasSelector).on('touchstart', function (e) {
     isMousedown = true;
+    isTouching = true;
     e.preventDefault();
+    console.log($(canvasSelector)[0].pageY, e.originalEvent.changedTouches[0].pageY, e.originalEvent.changedTouches[0].pageY - $(canvasSelector)[0].pageY);
+
+    var totalOffsetY = 0;
+    var curElement = $(canvasSelector)[0];
+    do {
+      totalOffsetY += curElement.offsetTop;
+    } while (curElement = curElement.offsetParent)
+
     mousePosition = {
-      x: e.originalEvent.changedTouches[0].pageX,
-      y: e.originalEvent.changedTouches[0].pageY - canvasTop
+      x: e.originalEvent.changedTouches[0].pageX - canvasLeft,
+      y: e.originalEvent.changedTouches[0].pageY - totalOffsetY
     };
     $(this)
       .on('touchmove', function (e) {
+        var totalOffsetY = 0;
+        var curElement = $(canvasSelector)[0];
+        do {
+          totalOffsetY += curElement.offsetTop;
+        } while (curElement = curElement.offsetParent)
+
         mousePosition = {
-          x: e.originalEvent.changedTouches[0].pageX,
-          y: e.originalEvent.changedTouches[0].pageY - canvasTop
+          x: e.originalEvent.changedTouches[0].pageX - canvasLeft,
+          y: e.originalEvent.changedTouches[0].pageY - totalOffsetY
         };
 
       })
       .on('touchend touchcancel', function (e) {
         $(this).off('touchmove touchend touchcancel');
         isMousedown = false;
+
+        setTimeout(function () { isTouching = false; }, 100);
       });
 
   });
@@ -264,14 +284,20 @@ function RectangularUniverse(canvasSelector, options) {
     options.paused = false;
   }
 
-  var canvasTop, canvasBottom, inView = false;
-  setTimeout(function () {
+  var canvasTop, canvasBottom, canvasLeft, inView = false;
+  setTimeout(getOffsets);
+  function getOffsets() {
     var windowTop = $(window).scrollTop(),
       windowBottom = windowTop + $(window).height();
 
-    canvasTop = $(canvasSelector).offset().top;
+    var curElement = $(canvasSelector)[0];
+    canvasLeft = canvasTop = 0;
+    do {
+      canvasLeft += curElement.offsetLeft;
+      canvasTop += curElement.offsetTop;
+    } while (curElement = curElement.offsetParent)
     canvasBottom = canvasTop + options.canvasHeight;
-
+    
     inView = canvasTop < windowBottom && canvasBottom > windowTop;
     $(window).scroll(function (event) {
       var windowTop = $(window).scrollTop(),
@@ -280,7 +306,7 @@ function RectangularUniverse(canvasSelector, options) {
 
       inView = canvasTop < windowBottom && canvasBottom > windowTop;
     });
-  });
+  };
 
   var context = canvas.node().getContext("2d");
   d3.timer(tick.bind(this));
