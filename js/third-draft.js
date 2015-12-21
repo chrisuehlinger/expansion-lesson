@@ -660,11 +660,11 @@ var bigBangOptions = {
   canvasHeight: innerHeight,
   width: 2,
   height: 2,
-  maxWidth: 2 * innerWidth,
-  maxHeight: 2 * innerHeight,
+  maxWidth: innerWidth / 2,
+  maxHeight: innerHeight / 2,
   startingCount: 300,
   endCount: 300,
-  expansionFactor: 1.1,
+  expansionFactor: 1.3,
   additionDelay: 0,
   expansionWait: 5000,
   expansionDelay: 0,
@@ -684,8 +684,29 @@ bigBangUniverse.initCallback = function () {
   bigBangUniverse.expand();
 };
 
+slideDirectory.bigBangUniverseSlide = {
+  start: function () {
+    queueUp('audio/bigBang.mp3');
+    bigBangOptions.maxWidth = innerWidth / 2;
+    bigBangOptions.maxHeight = innerHeight / 2;
+    bigBangOptions.expansionFactor = 1.1;
+    
+    
 
-slideDirectory.bigBangUniverseSlide = bigBangUniverse;
+    bigBangUniverse.expansionCallback = function(){
+      bigBangUniverse.expansionCallback = null;
+      bigBangOptions.maxWidth = innerWidth * 2;
+      bigBangOptions.maxHeight = innerHeight * 2;
+      bigBangOptions.expansionFactor = 1.01;
+      bigBangUniverse.expand();
+    }
+    
+    bigBangUniverse.timeouts.push(setTimeout(bigBangUniverse.init.bind(bigBangUniverse), 7000));
+  },
+  pause: function () {
+    bigBangUniverse.pause();
+  }
+};
 
 var globeOptions = {
   speedOfLight: 200,
