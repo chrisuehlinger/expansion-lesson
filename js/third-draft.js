@@ -142,16 +142,30 @@ function queueUp(audioFile) {
   }
 }
 
-$('.mute-button').on('click', function (e) {
-  var $icon = $(this).find('i');
-  if ($icon.hasClass('fa-volume-up')) {
-    $icon.removeClass('fa-volume-up').addClass('fa-volume-off');
-    currentAudio.muted = true;
-  } else if ($icon.hasClass('fa-volume-off')) {
-    $icon.removeClass('fa-volume-off').addClass('fa-volume-up');
-    currentAudio.muted = false;
-  }
-});
+var $muteSwitch = $('.mute-button');
+
+// Check if we can control the volume
+var oldVolume = currentAudio.volume;
+if(oldVolume === 0){
+  currentAudio.volume += 0.00001;
+}else {
+  currentAudio.volume -= 0.00001;
+}
+
+var canChangeVolume = (oldVolume !== currentAudio.volume);
+if(canChangeVolume)
+  $muteSwitch.on('click', function (e) {
+    var $icon = $(this).find('i');
+    if ($icon.hasClass('fa-volume-up')) {
+      $icon.removeClass('fa-volume-up').addClass('fa-volume-off');
+      currentAudio.muted = true;
+    } else if ($icon.hasClass('fa-volume-off')) {
+      $icon.removeClass('fa-volume-off').addClass('fa-volume-up');
+      currentAudio.muted = false;
+    }
+  });
+else
+  $muteSwitch.hide();
 
 var $refreshButton, $nextControl;
 function onRevealReady(e) {
