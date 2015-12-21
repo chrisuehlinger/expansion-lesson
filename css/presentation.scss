@@ -43,6 +43,7 @@
 canvas {
   display: inline-block;
   vertical-align: middle !important;
+  // box-shadow: 0px 0px 10px 5px rgba(50,50,50,0.85);
 }
 
 figure.keyboard-control-tutorial {
@@ -211,11 +212,15 @@ figure.possible-shapes {
   }
 }
 
-.debug-dot {
-  position: fixed;
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-  background: red;
-  z-index: 1000;
+.infinite-math {
+  .math-row {
+    text-align: center;
+    margin: 30px auto;
+    div {
+      font-size: 48px;
+      display: inline-block;
+      margin: 0 30px;
+    }
+  }
+  
 }

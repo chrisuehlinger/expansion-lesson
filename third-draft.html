@@ -30,7 +30,8 @@
         <p>This lesson can be controlled using a few different input methods:</p>
         <ul>
           <li><strong>Keyboard</strong> - Press the right and left arrow keys to go forward and backward, press the "R" key to
-            refresh.</li>
+            refresh.
+          </li>
           <li><strong>Click/Touch</strong> - Use the controls in the lower right corner to go forward, go backward and refresh</li>
         </ul>
       </section>
@@ -146,7 +147,20 @@
 
       <section id="infiniteMath">
         <h2>The Math of Infinite</h2>
-        <p>Insert Math Here.</p>
+        <figure class="infinite-math">
+          <div class="math-row">
+            <div>\( \frac{\infty kg}{100 m^2} = \infty \frac{kg}{m^2} \)</div>
+            <div>\( \frac{100 kg}{\infty m^2} = 0 \frac{kg}{m^2} \)</div>
+          </div>
+          <div class="math-row">
+            <div>\( \frac{\infty kg}{\infty m^2} = ? \frac{kg}{m^2} \)</div>
+          </div>
+          <div class="math-row">
+            <div>\( \frac{\infty kg}{\infty m^2} = \infty \frac{kg}{m^2} \)</div>
+            <div>\( \frac{\infty kg}{\infty m^2} = 0.00001 \frac{kg}{m^2} \)</div>
+          </div>
+        </figure>
+        <a href="https://www.youtube.com/watch?v=Uj3_KqkI9Zo">Hotel Infinity Video</a>
       </section>
 
       <section id="infiniteUniverseSlide">
@@ -200,6 +214,9 @@
         }, 1000 / 60);
       }
     }, 100);
+  </script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
   </script>
 </body>
 

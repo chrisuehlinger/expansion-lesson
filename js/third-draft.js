@@ -21,7 +21,9 @@ Reveal.initialize({
       condition: function () {
         return !!document.querySelector('[data-markdown]');
       }
-    }
+    },
+    // MathJax
+    { src: 'bower_components/reveal.js/plugin/math/math.js', async: true }
   ],
 
   // Display controls in the bottom right corner
@@ -128,7 +130,7 @@ currentAudio.addEventListener('ended', function (e) {
     currentAudio.src = currentAudioQueue[0];
     currentAudio.play();
     currentAudioQueue = currentAudioQueue.slice(1);
-  } else if(readyToAdvance) {
+  } else if (readyToAdvance) {
     $nextControl.addClass('ready-to-advance');
   }
 });
@@ -146,14 +148,14 @@ var $muteSwitch = $('.mute-button');
 
 // Check if we can control the volume
 var oldVolume = currentAudio.volume;
-if(oldVolume === 0){
+if (oldVolume === 0) {
   currentAudio.volume += 0.00001;
-}else {
+} else {
   currentAudio.volume -= 0.00001;
 }
 
 var canChangeVolume = (oldVolume !== currentAudio.volume);
-if(canChangeVolume)
+if (canChangeVolume)
   $muteSwitch.on('click', function (e) {
     var $icon = $(this).find('i');
     if ($icon.hasClass('fa-volume-up')) {
@@ -170,10 +172,10 @@ else
 var $refreshButton, $nextControl;
 function onRevealReady(e) {
   $nextControl = $('.navigate-right');
-  
+
   $('aside.controls').append('<button class="fa fa-refresh refresh-button"></button>');
   $refreshButton = $('.refresh-button');
-  
+
   handleSlideEvent(e);
 }
 
@@ -509,19 +511,19 @@ var expandingEmptyOptions = {
     vx: 0,
     vy: 0,
     direction: 0
-  },{
-    x: 3.5 * innerWidth / 16,
-    y: innerHeight / 8,
-    vx: 0,
-    vy: 0,
-    direction: 0
-  },{
-    x: 1.5 * innerWidth / 16,
-    y: 1.5*innerHeight / 8,
-    vx: 0,
-    vy: 0,
-    direction: 0
-  }]
+  }, {
+      x: 3.5 * innerWidth / 16,
+      y: innerHeight / 8,
+      vx: 0,
+      vy: 0,
+      direction: 0
+    }, {
+      x: 1.5 * innerWidth / 16,
+      y: 1.5 * innerHeight / 8,
+      vx: 0,
+      vy: 0,
+      direction: 0
+    }]
 };
 
 var expandingEmptyUniverse = new RectangularUniverse('#expandingEmptyUniverse', expandingEmptyOptions);
@@ -634,7 +636,7 @@ filledUniverse.initCallback = function () {
   filledUniverse.expansionCallback = function () {
     queueUp('audio/hotExpansion3.mp3');
     readyToAdvance = true;
-    
+
   }
 
   filledUniverse.timeouts.push(setTimeout(filledUniverse.addOne, 1000));
@@ -843,10 +845,27 @@ slideDirectory.secondReview = {
 };
 
 slideDirectory.infiniteMath = {
+  timeouts: [],
   start: function () {
+    this.timeouts.forEach(clearTimeout);
+    this.timeouts = [];
+    
+    var $equations = $('.math-row div'), $link = $('#infiniteMath a');
+    $link.hide();
+    $equations.css("visibility", "hidden");
+    
     queueUp('audio/infinite2.mp3');
+    
+    this.timeouts.push(setTimeout(function () { $equations.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 3000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 6000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 9000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 12000));
+    this.timeouts.push(setTimeout(function () { $equations.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 15000));
+    this.timeouts.push(setTimeout(function () { $link.fadeIn(1000); }, 20000));
+    
   },
   pause: function () {
+    this.timeouts.forEach(clearTimeout);
   }
 };
 
