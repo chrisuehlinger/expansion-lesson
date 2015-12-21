@@ -490,8 +490,20 @@ var expandingEmptyOptions = {
   shipCentered: true,
   paused: true,
   asteroids: [{
-    x: innerWidth / 16,
+    x: 0.75 * innerWidth / 16,
+    y: 0.75 * innerHeight / 8,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  },{
+    x: 3.5 * innerWidth / 16,
     y: innerHeight / 8,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  },{
+    x: 1.5 * innerWidth / 16,
+    y: 1.5*innerHeight / 8,
     vx: 0,
     vy: 0,
     direction: 0
