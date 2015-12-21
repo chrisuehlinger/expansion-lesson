@@ -21,6 +21,8 @@
     "dat-gui": "~0.5.1",
     "reveal.js": "~3.2.0",
     "stats.js": "*",
-    "font-awesome": "~4.5.0"
+    "font-awesome": "~4.5.0",
+    "d3-geo-projection": "~0.2.15",
+    "topojson": "~1.6.19"
   }
 }
