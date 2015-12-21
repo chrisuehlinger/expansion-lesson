@@ -122,21 +122,24 @@ Reveal.initialize({
 var currentAudio = new Audio();
 currentAudio.loop = false;
 var currentAudioQueue = [];
-currentAudio.addEventListener('ended', function(e){
-  if(currentAudioQueue.length){
+var readyToAdvance = true;
+currentAudio.addEventListener('ended', function (e) {
+  if (currentAudioQueue.length) {
     currentAudio.src = currentAudioQueue[0];
     currentAudio.play();
     currentAudioQueue = currentAudioQueue.slice(1);
+  } else if(readyToAdvance) {
+    $nextControl.addClass('ready-to-advance');
   }
 });
 
-function queueUp(audioFile){
-    if(currentAudio.ended) {
-      currentAudio.src = audioFile;
-      currentAudio.play();
-    } else {
-      currentAudioQueue.push(audioFile);
-    }
+function queueUp(audioFile) {
+  if (currentAudio.paused || currentAudio.ended) {
+    currentAudio.src = audioFile;
+    currentAudio.play();
+  } else {
+    currentAudioQueue.push(audioFile);
+  }
 }
 
 $('.mute-button').on('click', function (e) {
@@ -150,17 +153,22 @@ $('.mute-button').on('click', function (e) {
   }
 });
 
-var $refreshButton;
+var $refreshButton, $nextControl;
 function onRevealReady(e) {
+  $nextControl = $('.navigate-right');
+  
   $('aside.controls').append('<button class="fa fa-refresh refresh-button"></button>');
   $refreshButton = $('.refresh-button');
+  
   handleSlideEvent(e);
 }
 
 function handleSlideEvent(e) {
+  $nextControl.removeClass('ready-to-advance');
   $refreshButton.off('click');
   currentAudio.pause();
   currentAudioQueue = [];
+  readyToAdvance = true;
   for (var slide in slideDirectory) {
     if (slide === e.currentSlide.id) {
       var currentSlide = slideDirectory[slide];
@@ -193,88 +201,88 @@ slideDirectory.tutorial = {
 var introTimeouts = [];
 slideDirectory.introduction = {
   start: function () {
-    
-    var delay = 2800, 
-      $img = $('.introduction-diagrams img'), 
+
+    var delay = 2800,
+      $img = $('.introduction-diagrams img'),
       $hands = $('.introduction-diagrams i.edge-hand'),
       $testParticle = $('.introduction-diagrams i.test-particle');
-      
-    $hands.stop(true,true).hide();
-    $img.stop(true,true).hide();
-    $testParticle.stop(true,true).hide();
-    
+
+    $hands.stop(true, true).hide();
+    $img.stop(true, true).hide();
+    $testParticle.stop(true, true).hide();
+
     introTimeouts.forEach(clearTimeout);
     introTimeouts = [];
-    
+
     show0();
-    
-    function show0(){
-      $img.eq(0).fadeIn(delay,hide0);
+
+    function show0() {
+      $img.eq(0).fadeIn(delay, hide0);
     }
-    
-    function hide0(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(0).fadeOut(delay, show1);}, delay));
+
+    function hide0() {
+      introTimeouts.push(setTimeout(function () { $img.eq(0).fadeOut(delay, show1); }, delay));
     }
-    
-    function show1(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(1).fadeIn(delay,hide1);}));
+
+    function show1() {
+      introTimeouts.push(setTimeout(function () { $img.eq(1).fadeIn(delay, hide1); }));
     }
-    
-    function hide1(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(1).fadeOut(delay, show2);}));
+
+    function hide1() {
+      introTimeouts.push(setTimeout(function () { $img.eq(1).fadeOut(delay, show2); }));
     }
-    
-    function show2(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(2).fadeIn(delay,hide2);}));
+
+    function show2() {
+      introTimeouts.push(setTimeout(function () { $img.eq(2).fadeIn(delay, hide2); }));
     }
-    
-    function hide2(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(2).fadeOut(delay, show3);}));
+
+    function hide2() {
+      introTimeouts.push(setTimeout(function () { $img.eq(2).fadeOut(delay, show3); }));
     }
-    
-    function show3(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(3).fadeIn(delay,hide3);}));
+
+    function show3() {
+      introTimeouts.push(setTimeout(function () { $img.eq(3).fadeIn(delay, hide3); }));
     }
-    
-    function hide3(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(3).fadeOut(delay, show4);}, delay));
+
+    function hide3() {
+      introTimeouts.push(setTimeout(function () { $img.eq(3).fadeOut(delay, show4); }, delay));
     }
-    
-    function show4(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(4).fadeIn(delay,funnyStuff);}));
+
+    function show4() {
+      introTimeouts.push(setTimeout(function () { $img.eq(4).fadeIn(delay, funnyStuff); }));
     }
-    
-    function funnyStuff(){
+
+    function funnyStuff() {
       $hands.show();
       introTimeouts.push(setTimeout(hide4, delay));
     }
-    
-    function hide4(){
-      introTimeouts.push(setTimeout(function(){ $hands.hide(); $img.eq(4).fadeOut(delay, show5);}, delay));
+
+    function hide4() {
+      introTimeouts.push(setTimeout(function () { $hands.hide(); $img.eq(4).fadeOut(delay, show5); }, delay));
     }
-    
-    function show5(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(5).fadeIn(delay/4,hide5);}));
+
+    function show5() {
+      introTimeouts.push(setTimeout(function () { $img.eq(5).fadeIn(delay / 4, hide5); }));
     }
-    
-    function hide5(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(5).fadeOut(delay/4, show6);}, delay/4));
+
+    function hide5() {
+      introTimeouts.push(setTimeout(function () { $img.eq(5).fadeOut(delay / 4, show6); }, delay / 4));
     }
-    
-    function show6(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(6).fadeIn(delay/2,hide6);}));
+
+    function show6() {
+      introTimeouts.push(setTimeout(function () { $img.eq(6).fadeIn(delay / 2, hide6); }));
     }
-    
-    function hide6(){
-      introTimeouts.push(setTimeout(function(){ $img.eq(6).fadeOut(delay/2, showQuestion);}, delay/2));
+
+    function hide6() {
+      introTimeouts.push(setTimeout(function () { $img.eq(6).fadeOut(delay / 2, showQuestion); }, delay / 2));
     }
-    
-    function showQuestion(){
-      introTimeouts.push(setTimeout(function(){
-        $img.eq(3).fadeIn(delay/2,function(){
-          $testParticle.addClass('go').fadeIn(100, function(){
-            introTimeouts.push(setTimeout(function(){
-              $testParticle.fadeOut(delay, function(){
+
+    function showQuestion() {
+      introTimeouts.push(setTimeout(function () {
+        $img.eq(3).fadeIn(delay / 2, function () {
+          $testParticle.addClass('go').fadeIn(100, function () {
+            introTimeouts.push(setTimeout(function () {
+              $testParticle.fadeOut(delay, function () {
                 $testParticle.removeClass('go');
               });
               $img.eq(3).fadeOut(delay);
@@ -283,12 +291,10 @@ slideDirectory.introduction = {
         });
       }, 12000));
     }
-    
-    
-    currentAudio.src = 'audio/introduction.mp3';
-    currentAudio.play();
-    
-    
+
+
+    queueUp('audio/introduction.mp3');
+
   },
   pause: function () {
     // $hands.stop(true,true).hide();
@@ -303,23 +309,22 @@ slideDirectory.shapesOfTheUniverse = {
   start: function () {
     this.timeouts.forEach(clearTimeout);
     this.timeouts = [];
-    
-    currentAudio.src = 'audio/shapeOfTheUniverse.mp3';
-    currentAudio.play();
-    
+
+    queueUp('audio/shapeOfTheUniverse.mp3');
+
     var $img = $('.possible-shapes img');
     $img.removeClass('pulse');
-    
-    this.timeouts.push(setTimeout(function(){ $img.eq(0).addClass('pulse');}, 5000));
-    this.timeouts.push(setTimeout(function(){ $img.eq(1).addClass('pulse');}, 6000));
-    this.timeouts.push(setTimeout(function(){ $img.eq(2).addClass('pulse');}, 7000));
-    
-    this.timeouts.push(setTimeout(function(){ $img.removeClass('pulse');}, 9000));
-    
-    this.timeouts.push(setTimeout(function(){ $img.eq(0).addClass('pulse');}, 10000));
-    this.timeouts.push(setTimeout(function(){ $img.eq(1).addClass('pulse');}, 15000));
-    this.timeouts.push(setTimeout(function(){ $img.eq(2).addClass('pulse');}, 19000));
-    
+
+    this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 5000));
+    this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 6000));
+    this.timeouts.push(setTimeout(function () { $img.eq(2).addClass('pulse'); }, 7000));
+
+    this.timeouts.push(setTimeout(function () { $img.removeClass('pulse'); }, 9000));
+
+    this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 10000));
+    this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 15000));
+    this.timeouts.push(setTimeout(function () { $img.eq(2).addClass('pulse'); }, 19000));
+
   },
   pause: function () {
     var $img = $('.possible-shapes img');
@@ -364,16 +369,17 @@ emptyUniverse.initCallback = function () {
   emptyUniverse.wrapCallback = function () {
     this.wrapCallback = null;
     queueUp('audio/100MeterUniverse2.mp3');
+    readyToAdvance = true;
   }.bind(emptyUniverse);
 };
 
 slideDirectory.emptyUniverseSlide = {
-  start: function(){
-    currentAudio.src = 'audio/100MeterUniverse1.mp3';
-    currentAudio.play();
+  start: function () {
+    queueUp('audio/100MeterUniverse1.mp3');
+    readyToAdvance = false;
     emptyUniverse.init()
   },
-  pause: function(){
+  pause: function () {
     emptyUniverse.pause();
   }
 };
@@ -431,12 +437,11 @@ var centeredOptions = {
 var centeredUniverse = new RectangularUniverse('#centeredUniverse', centeredOptions);
 
 slideDirectory.centeredUniverseSlide = {
-  start: function(){
-    currentAudio.src = 'audio/uncenteredUniverse1.mp3';
-    currentAudio.play();
+  start: function () {
+    queueUp('audio/uncenteredUniverse1.mp3');
     centeredUniverse.init()
   },
-  pause: function(){
+  pause: function () {
     centeredUniverse.pause();
   }
 };
@@ -446,17 +451,16 @@ slideDirectory.firstReview = {
   start: function () {
     this.timeouts.forEach(clearTimeout);
     this.timeouts = [];
-    
+
     var $li = $('#firstReview li');
     $li.hide();
-    
-    currentAudio.src = 'audio/uncenteredUniverse2.mp3';
-    currentAudio.play();
-    
-    this.timeouts.push(setTimeout(function(){ $li.eq(0).fadeIn(1000); }, 3000));
-    this.timeouts.push(setTimeout(function(){ $li.eq(1).fadeIn(1000); }, 7000));
-    this.timeouts.push(setTimeout(function(){ $li.eq(2).fadeIn(1000); }, 14000));
-    
+
+    queueUp('audio/uncenteredUniverse2.mp3');
+
+    this.timeouts.push(setTimeout(function () { $li.eq(0).fadeIn(1000); }, 3000));
+    this.timeouts.push(setTimeout(function () { $li.eq(1).fadeIn(1000); }, 7000));
+    this.timeouts.push(setTimeout(function () { $li.eq(2).fadeIn(1000); }, 14000));
+
   },
   pause: function () {
     this.timeouts.forEach(clearTimeout);
@@ -499,7 +503,7 @@ var expandingEmptyUniverse = new RectangularUniverse('#expandingEmptyUniverse', 
 expandingEmptyUniverse.initCallback = function () {
   expandingEmptyOptions.maxWidth = innerWidth / 2;
   expandingEmptyOptions.maxHeight = innerHeight / 2;
-  
+
   expandingEmptyUniverse.expansionCallback = function () {
     this.expansionCallback = null;
     expandingEmptyOptions.maxWidth = innerWidth;
@@ -510,12 +514,11 @@ expandingEmptyUniverse.initCallback = function () {
 };
 
 slideDirectory.expandingEmptyUniverseSlide = {
-  start: function(){
-    currentAudio.src = 'audio/expandingUniverse.mp3';
-    currentAudio.play();
+  start: function () {
+    queueUp('audio/expandingUniverse.mp3');
     expandingEmptyUniverse.init()
   },
-  pause: function(){
+  pause: function () {
     expandingEmptyUniverse.pause();
   }
 };
@@ -554,12 +557,11 @@ var sparseOptions = {
 var sparseUniverse = new RectangularUniverse('#sparseUniverse', sparseOptions);
 
 slideDirectory.sparseUniverseSlide = {
-  start: function(){
-    currentAudio.src = 'audio/particles.mp3';
-    currentAudio.play();
+  start: function () {
+    queueUp('audio/particles.mp3');
     sparseUniverse.timeouts.push(setTimeout(sparseUniverse.init.bind(sparseUniverse), 6000));
   },
-  pause: function(){
+  pause: function () {
     sparseUniverse.pause();
   }
 };
@@ -602,21 +604,23 @@ filledUniverse.initCallback = function () {
     queueUp('audio/hotExpansion2.mp3');
     filledUniverse.timeouts.push(setTimeout(filledUniverse.expand, 7000));
   }
-  
-  filledUniverse.expansionCallback = function(){
+
+  filledUniverse.expansionCallback = function () {
     queueUp('audio/hotExpansion3.mp3');
+    readyToAdvance = true;
+    
   }
-  
+
   filledUniverse.timeouts.push(setTimeout(filledUniverse.addOne, 1000));
 };
 
 slideDirectory.filledUniverseSlide = {
-  start: function(){
-    currentAudio.src = 'audio/hotExpansion1.mp3';
-    currentAudio.play();
+  start: function () {
+    queueUp('audio/hotExpansion1.mp3');
+    readyToAdvance = false;
     filledUniverse.init();
   },
-  pause: function(){
+  pause: function () {
     filledUniverse.pause();
   }
 };
@@ -649,7 +653,7 @@ var bigBangOptions = {
 var bigBangUniverse = new RectangularUniverse('#bigBangUniverse', bigBangOptions);
 
 bigBangUniverse.initCallback = function () {
-    bigBangUniverse.expand();
+  bigBangUniverse.expand();
 };
 
 
@@ -682,12 +686,11 @@ var globeOptions = {
 var globeUniverse = new SphericalUniverse('#globeUniverse', globeOptions);
 
 slideDirectory.globeUniverseSlide = {
-  start: function(){
-    currentAudio.src = 'audio/globeUniverse.mp3';
-    currentAudio.play();
+  start: function () {
+    queueUp('audio/globeUniverse.mp3');
     globeUniverse.timeouts.push(setTimeout(globeUniverse.init.bind(globeUniverse), 22000));
   },
-  pause: function(){
+  pause: function () {
     globeUniverse.pause();
   }
 };
@@ -696,7 +699,7 @@ var flatCircleOptions = {
   speedOfLight: 200,
   thrust: 5,
   width: innerWidth,
-  height: innerHeight * 3/4,
+  height: innerHeight * 3 / 4,
   startingCount: 0,
   endCount: 100,
   expansionFactor: 1.01,
@@ -719,22 +722,21 @@ var flatCircleOptions = {
 var flatCircleUniverse = new SphericalUniverse('#flatCircleUniverse', flatCircleOptions);
 
 slideDirectory.flatCircleUniverseSlide = {
-  start: function(){
+  start: function () {
     var $link = $('#flatCircleUniverseSlide a');
     $link.hide();
-    
-    currentAudio.src = 'audio/flatCircle.mp3';
-    currentAudio.play();
-    
+
+    queueUp('audio/flatCircle.mp3');
+
     flatCircleUniverse.timeouts.push(setTimeout(flatCircleUniverse.init.bind(flatCircleUniverse), 8000));
-    
-    flatCircleUniverse.initCallback = function(){
-      flatCircleUniverse.timeouts.push(setTimeout(function(){ $link.fadeIn(1000); }, 25000));
+
+    flatCircleUniverse.initCallback = function () {
+      flatCircleUniverse.timeouts.push(setTimeout(function () { $link.fadeIn(1000); }, 25000));
     }
-    
-    
+
+
   },
-  pause: function(){
+  pause: function () {
     flatCircleUniverse.pause();
   }
 };
@@ -769,21 +771,22 @@ expandingSphereUniverse.initCallback = function () {
   expandingSphereUniverse.filledCallback = function () {
     expandingSphereUniverse.timeouts.push(setTimeout(expandingSphereUniverse.expand, 5000));
   };
-  
-  expandingSphereUniverse.expansionCallback = function(){
+
+  expandingSphereUniverse.expansionCallback = function () {
     queueUp('audio/expandingCircle2.mp3');
+    readyToAdvance = true;
   };
 
   expandingSphereUniverse.timeouts.push(setTimeout(expandingSphereUniverse.addOne.bind(expandingSphereUniverse), 5000));
 };
 
 slideDirectory.expandingSphereUniverseSlide = {
-  start: function(){
-    currentAudio.src = 'audio/expandingCircle1.mp3';
-    currentAudio.play();
+  start: function () {
+    queueUp('audio/expandingCircle1.mp3');
+    readyToAdvance = false;
     expandingSphereUniverse.init();
   },
-  pause: function(){
+  pause: function () {
     expandingSphereUniverse.pause();
   }
 };
@@ -793,17 +796,20 @@ slideDirectory.secondReview = {
   start: function () {
     this.timeouts.forEach(clearTimeout);
     this.timeouts = [];
-    
-    var $li = $('#secondReview li');
+
+    var $li = $('#secondReview li'), $img = $('#secondReview img');
     $li.hide();
-    
-    currentAudio.src = 'audio/infinite1.mp3';
-    currentAudio.play();
-    
-    this.timeouts.push(setTimeout(function(){ $li.eq(0).fadeIn(1000); }, 25000));
-    this.timeouts.push(setTimeout(function(){ $li.eq(1).fadeIn(1000); }, 29000));
-    this.timeouts.push(setTimeout(function(){ $li.eq(2).fadeIn(1000); }, 33000));
-    
+    $img.removeClass('pulse');
+
+    queueUp('audio/infinite1.mp3');
+
+    this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 2000));
+    this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 4000));
+
+    this.timeouts.push(setTimeout(function () { $li.eq(0).fadeIn(1000); }, 25000));
+    this.timeouts.push(setTimeout(function () { $li.eq(1).fadeIn(1000); }, 29000));
+    this.timeouts.push(setTimeout(function () { $li.eq(2).fadeIn(1000); }, 33000));
+
   },
   pause: function () {
     this.timeouts.forEach(clearTimeout);
@@ -812,8 +818,7 @@ slideDirectory.secondReview = {
 
 slideDirectory.infiniteMath = {
   start: function () {
-    currentAudio.src = 'audio/infinite2.mp3';
-    currentAudio.play();
+    queueUp('audio/infinite2.mp3');
   },
   pause: function () {
   }
@@ -848,16 +853,15 @@ var infiniteOptions = {
 var infiniteUniverse = new RectangularUniverse('#infiniteUniverse', infiniteOptions);
 
 infiniteUniverse.initCallback = function () {
-   infiniteUniverse.timeouts.push(setTimeout(infiniteUniverse.expand, 5000));
+  infiniteUniverse.timeouts.push(setTimeout(infiniteUniverse.expand, 5000));
 };
 
 slideDirectory.infiniteUniverseSlide = {
-  start: function(){
-    currentAudio.src = 'audio/infinite3.mp3';
-    currentAudio.play();
+  start: function () {
+    queueUp('audio/infinite3.mp3');
     infiniteUniverse.init();
   },
-  pause: function(){
+  pause: function () {
     infiniteUniverse.pause();
   }
 };
@@ -867,19 +871,18 @@ slideDirectory.corrections = {
   start: function () {
     this.timeouts.forEach(clearTimeout);
     this.timeouts = [];
-    
+
     var $li = $('#corrections li');
     $li.hide();
-    
-    currentAudio.src = 'audio/corrections.mp3';
-    currentAudio.play();
-    
-    this.timeouts.push(setTimeout(function(){ $li.eq(0).fadeIn(1000); }, 11000));
-    this.timeouts.push(setTimeout(function(){ $li.eq(1).fadeIn(1000); }, 17000));
-    this.timeouts.push(setTimeout(function(){ $li.eq(2).fadeIn(1000); }, 31000));
-    this.timeouts.push(setTimeout(function(){ $li.eq(3).fadeIn(1000); }, 45000));
-    this.timeouts.push(setTimeout(function(){ $li.eq(4).fadeIn(1000); }, 55000));
-    
+
+    queueUp('audio/corrections.mp3');
+
+    this.timeouts.push(setTimeout(function () { $li.eq(0).fadeIn(1000); }, 11000));
+    this.timeouts.push(setTimeout(function () { $li.eq(1).fadeIn(1000); }, 17000));
+    this.timeouts.push(setTimeout(function () { $li.eq(2).fadeIn(1000); }, 31000));
+    this.timeouts.push(setTimeout(function () { $li.eq(3).fadeIn(1000); }, 45000));
+    this.timeouts.push(setTimeout(function () { $li.eq(4).fadeIn(1000); }, 55000));
+
   },
   pause: function () {
     this.timeouts.forEach(clearTimeout);
@@ -888,8 +891,7 @@ slideDirectory.corrections = {
 
 slideDirectory.credits = {
   start: function () {
-    currentAudio.src = 'audio/credits.mp3';
-    currentAudio.play();
+    queueUp('audio/credits.mp3');
   },
   pause: function () {
   }

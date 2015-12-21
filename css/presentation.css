@@ -2,7 +2,11 @@
 .reveal .slides > section > section {
   padding: 0; }
 
-aside.controls .refresh-button {
+@keyframes arrowblink {
+  to {
+    border-left-color: lime; } }
+
+.reveal aside.controls .refresh-button {
   top: 30px;
   left: 32px;
   color: #42affa;
@@ -10,6 +14,9 @@ aside.controls .refresh-button {
   height: auto;
   font-size: 24px;
   opacity: 1; }
+
+.reveal aside.controls .navigate-right.ready-to-advance {
+  animation: arrowblink 0.5s linear alternate infinite; }
 
 .audio-options {
   position: fixed;
@@ -122,12 +129,23 @@ figure.possible-shapes {
   figure.possible-shapes .shape-container {
     text-align: center; }
     figure.possible-shapes .shape-container img {
+      display: block;
       background: #fff;
       border-radius: 5px;
       max-height: 250px;
-      max-width: 400px; }
+      max-width: 400px;
+      margin: 0 auto; }
       figure.possible-shapes .shape-container img.pulse {
         animation: shapeimgpulse 2.0s linear; }
+  figure.possible-shapes.out-there {
+    position: absolute;
+    top: -100px;
+    left: 20px;
+    right: 20px;
+    justify-content: space-between; }
+    figure.possible-shapes.out-there .shape-container img {
+      max-height: 200px;
+      max-width: 300px; }
 
 #secondReview ul, #corrections ul {
   width: 800px; }

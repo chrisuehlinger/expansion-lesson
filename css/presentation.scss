@@ -3,14 +3,26 @@
   padding: 0;
 }
 
-aside.controls .refresh-button {
-  top: 30px;
-  left: 32px;
-  color: #42affa;
-  width: auto;
-  height: auto;
-  font-size: 24px;
-  opacity: 1;
+@keyframes arrowblink {
+  to {
+    border-left-color: lime;
+  }
+}
+
+.reveal aside.controls {
+  .refresh-button {
+    top: 30px;
+    left: 32px;
+    color: #42affa;
+    width: auto;
+    height: auto;
+    font-size: 24px;
+    opacity: 1;
+  }
+  
+  .navigate-right.ready-to-advance {
+      animation: arrowblink 0.5s linear alternate infinite;
+  }
 }
 
 .audio-options {
@@ -164,14 +176,31 @@ figure.possible-shapes {
   .shape-container {
     text-align: center;
     img {
+      display: block;
       background: #fff;
       border-radius: 5px;
       max-height: 250px;
       max-width: 400px;
+      margin: 0 auto;
       
       &.pulse {
         animation: shapeimgpulse 2.0s linear;
       } 
+    }
+  }
+  
+  &.out-there {
+    position: absolute;
+    top: -100px;
+    left: 20px;
+    right: 20px;
+    justify-content: space-between;
+    
+    .shape-container {
+      img {
+        max-height: 200px;
+        max-width: 300px;
+      }
     }
   }
 }
