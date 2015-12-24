@@ -162,17 +162,17 @@ function RectangularUniverse(canvasSelector, options) {
       y: 0
     };
   $(canvasSelector).on('mousedown', function (e) {
-    // if(!isTouching){
     isMousedown = true;
+    console.log(e);
     mousePosition = {
-      x: e.offsetX,
-      y: e.offsetY
+      x: (e.offsetX || e.pageX - $(e.target).offset().left),
+      y: (e.offsetY || e.pageY - $(e.target).offset().top)
     };
     $(this)
       .on('mousemove', function (e) {
         mousePosition = {
-          x: e.offsetX,
-          y: e.offsetY
+          x: (e.offsetX || e.pageX - $(e.target).offset().left),
+          y: (e.offsetY || e.pageY - $(e.target).offset().top)
         };
 
       })
@@ -180,7 +180,6 @@ function RectangularUniverse(canvasSelector, options) {
         $(this).off('mousemove mouseup');
         isMousedown = false;
       });
-    // }
   });
 
 

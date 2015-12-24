@@ -126,14 +126,14 @@ function SphericalUniverse(canvasSelector, options) {
   $(canvasSelector).on('mousedown', function (e) {
     isMousedown = true;
     mousePosition = {
-      x: e.offsetX,
-      y: e.offsetY
+      x: (e.offsetX || e.pageX - $(e.target).offset().left),
+      y: (e.offsetY || e.pageY - $(e.target).offset().top)
     };
     $(this)
       .on('mousemove', function (e) {
         mousePosition = {
-          x: e.offsetX,
-          y: e.offsetY
+          x: (e.offsetX || e.pageX - $(e.target).offset().left),
+          y: (e.offsetY || e.pageY - $(e.target).offset().top)
         };
 
       })
