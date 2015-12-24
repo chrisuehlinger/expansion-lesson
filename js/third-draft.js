@@ -469,13 +469,13 @@ slideDirectory.firstReview = {
     this.timeouts = [];
 
     var $li = $('#firstReview li');
-    $li.hide();
+    $li.css("visibility", "hidden");
 
     queueUp('audio/uncenteredUniverse2.mp3');
 
-    this.timeouts.push(setTimeout(function () { $li.eq(0).fadeIn(1000); }, 3000));
-    this.timeouts.push(setTimeout(function () { $li.eq(1).fadeIn(1000); }, 7000));
-    this.timeouts.push(setTimeout(function () { $li.eq(2).fadeIn(1000); }, 14000));
+    this.timeouts.push(setTimeout(function () { $li.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 3000));
+    this.timeouts.push(setTimeout(function () { $li.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 7000));
+    this.timeouts.push(setTimeout(function () { $li.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 14000));
 
   },
   pause: function () {
@@ -847,7 +847,7 @@ slideDirectory.secondReview = {
     this.timeouts = [];
 
     var $li = $('#secondReview li'), $img = $('#secondReview img');
-    $li.hide();
+    $li.css("visibility", "hidden");
     $img.removeClass('pulse');
 
     queueUp('audio/infinite1.mp3');
@@ -855,9 +855,9 @@ slideDirectory.secondReview = {
     this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 2000));
     this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 4000));
 
-    this.timeouts.push(setTimeout(function () { $li.eq(0).fadeIn(1000); }, 25000));
-    this.timeouts.push(setTimeout(function () { $li.eq(1).fadeIn(1000); }, 29000));
-    this.timeouts.push(setTimeout(function () { $li.eq(2).fadeIn(1000); }, 33000));
+    this.timeouts.push(setTimeout(function () { $li.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 25000));
+    this.timeouts.push(setTimeout(function () { $li.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 29000));
+    this.timeouts.push(setTimeout(function () { $li.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 33000));
 
   },
   pause: function () {
@@ -939,15 +939,15 @@ slideDirectory.corrections = {
     this.timeouts = [];
 
     var $li = $('#corrections li');
-    $li.hide();
+    $li.css("visibility", "hidden");
 
     queueUp('audio/corrections.mp3');
 
-    this.timeouts.push(setTimeout(function () { $li.eq(0).fadeIn(1000); }, 11000));
-    this.timeouts.push(setTimeout(function () { $li.eq(1).fadeIn(1000); }, 17000));
-    this.timeouts.push(setTimeout(function () { $li.eq(2).fadeIn(1000); }, 31000));
-    this.timeouts.push(setTimeout(function () { $li.eq(3).fadeIn(1000); }, 45000));
-    this.timeouts.push(setTimeout(function () { $li.eq(4).fadeIn(1000); }, 55000));
+    this.timeouts.push(setTimeout(function () { $li.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 11000));
+    this.timeouts.push(setTimeout(function () { $li.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 17000));
+    this.timeouts.push(setTimeout(function () { $li.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 31000));
+    this.timeouts.push(setTimeout(function () { $li.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 45000));
+    this.timeouts.push(setTimeout(function () { $li.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 55000));
 
   },
   pause: function () {
