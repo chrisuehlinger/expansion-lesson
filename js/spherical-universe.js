@@ -28,14 +28,14 @@ function SphericalUniverse(canvasSelector, options) {
   }
 
   var ship, currentExpansion, canvas = d3.select(canvasSelector)
-      .attr("width", options.width)
-      .attr("height", options.height);
-  
+    .attr("width", options.width)
+    .attr("height", options.height);
+
   this.timeouts = [];
   this.init = function () {
     this.timeouts.forEach(clearTimeout);
     this.timeouts = [];
-    
+
     ship = {
       x: 90,
       y: 0,
@@ -44,18 +44,18 @@ function SphericalUniverse(canvasSelector, options) {
       totalSpeed: 50,
       totalDistanceTraveled: 0
     };
-    
+
     currentExpansion = 1;
-    
+
     canvas
       .attr("width", options.width)
       .attr("height", options.height);
-      
-      this.initCallback && this.initCallback();
-      options.paused = false;
+
+    this.initCallback && this.initCallback();
+    options.paused = false;
   };
   options.paused = true;
-  
+
   var opacity = 0.99;
   var temperature = d3.scale
     .linear()
@@ -94,7 +94,7 @@ function SphericalUniverse(canvasSelector, options) {
   }.bind(this);
 
   var projection, currentProjectionScale;
-  
+
   var c = canvas.node().getContext("2d");
 
   var path = d3.geo.path()
@@ -434,25 +434,13 @@ function SphericalUniverse(canvasSelector, options) {
     }
 
     if (options.renderGraticules) {
-      // Latitudes
+      var g = d3.geo.graticule();
+      g.step([15,15]);
       c.strokeStyle = '#fff';
-      circle.origin([0, -90]);
-      for (j = 10; j <= 170; j += 20) {
-        circle.angle(j);
-        c.beginPath();
-        path(circle());
-        c.stroke();
-      }
-
-      //Longtitudes
-      circle.angle(90);
-      for (j = 0; j <= 180; j += 15) {
-        c.strokeStyle = j === 90 ? '#0f0' : '#fff';
-        circle.origin([j, 0]);
-        c.beginPath();
-        path(circle());
-        c.stroke();
-      }
+      c.beginPath();
+      path(g.outline());
+      path(g());
+      c.stroke();
     }
 
     //    circle.origin([ship.x, ship.y]);
