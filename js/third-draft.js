@@ -221,11 +221,13 @@ slideDirectory.introduction = {
     var delay = 2800,
       $img = $('.introduction-diagrams img'),
       $hands = $('.introduction-diagrams i.edge-hand'),
-      $testParticle = $('.introduction-diagrams i.test-particle');
+      $testParticle = $('.introduction-diagrams i.test-particle'),
+      $games = $('.game-logos img');
 
     $hands.stop(true, true).hide();
     $img.stop(true, true).hide();
     $testParticle.stop(true, true).hide();
+    $games.stop(true, true).hide();
 
     introTimeouts.forEach(clearTimeout);
     introTimeouts = [];
@@ -301,11 +303,23 @@ slideDirectory.introduction = {
               $testParticle.fadeOut(delay, function () {
                 $testParticle.removeClass('go');
               });
-              $img.eq(3).fadeOut(delay);
+              $img.eq(3).fadeOut(delay, show7);
             }, 15000));
           });
         });
       }, 12000));
+    }
+
+    function show7() {
+      introTimeouts.push(setTimeout(function () { $games.eq(0).fadeIn(delay, show8); }, 10000));
+    }
+
+    function show8() {
+      introTimeouts.push(setTimeout(function () { $games.eq(1).fadeIn(delay, show9); }));
+    }
+
+    function show9() {
+      introTimeouts.push(setTimeout(function () { $games.eq(2).fadeIn(delay); $games.eq(3).fadeIn(delay); }));
     }
 
 

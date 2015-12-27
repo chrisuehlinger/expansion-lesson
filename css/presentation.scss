@@ -43,7 +43,9 @@
 canvas {
   display: inline-block;
   vertical-align: middle !important;
-  // box-shadow: 0px 0px 10px 5px rgba(50,50,50,0.85);
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 figure.keyboard-control-tutorial {
@@ -158,6 +160,41 @@ figure.introduction-diagrams {
   
   img {
     max-width: 600px;
+  }
+}
+
+figure.game-logos {
+  position: relative;
+  border: 1px solid white;
+  height: 700px;
+  img {
+    position: absolute;
+    
+     &.asteroids-arcade {
+       max-width: 500px;
+       top: 20px;
+       left: 30px;
+     }
+    
+     &.pacman {
+       max-width: 400px;
+       top: 100px;
+       left: 450px;
+     }
+    
+     &.portal-physics {
+       max-width: 600px;
+       background: #efefef;
+       top: 250px;
+       left: 750px;
+     }
+    
+     &.portal-logo {
+       max-width: 400px;
+       background: #efefef;
+       top: 150px;
+       right: 20px;
+     }
   }
 }
 
