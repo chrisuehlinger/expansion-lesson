@@ -1,0 +1,60 @@
+body {
+	margin: 0;
+}
+
+figure {
+	box-sizing: border-box;
+	// border: 10px solid black;
+	margin: 0;
+	width: 1024px;
+	height: 768px;
+	position: relative;
+	overflow: hidden;
+	* {
+		position: absolute;
+	}
+}
+
+.up-ship {
+	top: 50px;
+	left: 473px;
+}
+
+.fa-long-arrow-up {
+	color: green;
+	left: 500px;
+	
+	&.up-arrow-top {
+		top: -50px;
+	}
+	
+	&.up-arrow-bottom {
+		bottom: -25px;
+	}
+}
+
+.side-ship {
+	transform: rotate(90deg);
+	right: 100px;
+	top: 373px;
+}
+
+.fa-long-arrow-right {
+	color: red;
+	top: 400px;
+	
+	&.right-arrow-right {
+		right: -50px;
+	}
+	
+	&.right-arrow-left {
+		left: -25px;
+	}
+}
+
+@media print {
+	@page {
+		size: 524px 768px;
+		margin: 0;
+	}
+}
