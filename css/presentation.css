@@ -178,6 +178,9 @@ figure.possible-shapes {
       max-height: 200px;
       max-width: 300px; }
 
+figure.folded-photos {
+  height: 700px; }
+
 #secondReview ul, #corrections ul {
   width: 800px; }
 

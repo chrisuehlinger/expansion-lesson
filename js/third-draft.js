@@ -344,7 +344,7 @@ slideDirectory.introduction = {
     // $testParticle.stop(true,true).hide();
     introTimeouts.forEach(clearTimeout);
   }
-}
+};
 
 slideDirectory.shapesOfTheUniverse = {
   timeouts: [],
@@ -741,6 +741,48 @@ slideDirectory.bigBangUniverseSlide = {
   },
   pause: function () {
     bigBangUniverse.pause();
+  }
+};
+
+var foldedTimeouts = [];
+slideDirectory.foldedUniverseSlide = {
+  start: function () {
+
+    var delay = 2800,
+      $img = $('.folded-photos img');
+
+    $img.stop(true, true).hide();
+
+    foldedTimeouts.forEach(clearTimeout);
+    foldedTimeouts = [];
+
+    whenAudioLoads(show0);
+
+    function show0() {
+      $img.eq(0).fadeIn(delay, hide0);
+    }
+
+    function hide0() {
+      foldedTimeouts.push(setTimeout(function () { $img.eq(0).fadeOut(delay, show1); }, delay));
+    }
+
+    function show1() {
+      foldedTimeouts.push(setTimeout(function () { $img.eq(1).fadeIn(delay, hide1); }));
+    }
+
+    function hide1() {
+      foldedTimeouts.push(setTimeout(function () { $img.eq(1).fadeOut(delay, show2); }));
+    }
+
+    function show2() {
+      foldedTimeouts.push(setTimeout(function () { $img.eq(2).fadeIn(delay); }));
+    }
+
+    queueUp('audio/introduction.mp3');
+
+  },
+  pause: function () {
+    foldedTimeouts.forEach(clearTimeout);
   }
 };
 
