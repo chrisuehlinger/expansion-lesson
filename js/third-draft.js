@@ -199,6 +199,7 @@ function handleSlideEvent(e) {
       currentSlide.init && currentSlide.init();
       currentSlide.start && currentSlide.start();
       $refreshButton.on('click', function (e) {
+        currentAudio.pause();
         currentSlide.init && currentSlide.init();
         currentSlide.start && currentSlide.start();
       });
