@@ -716,7 +716,7 @@ bigBangUniverse.initCallback = function () {
 
 slideDirectory.bigBangUniverseSlide = {
   start: function () {
-    $('#bigBangUniverse').hide();
+    $('#bigBangUniverse').css('visibility', 'hidden');
     bigBangOptions.maxWidth = innerWidth / 2;
     bigBangOptions.maxHeight = innerHeight / 2;
     bigBangOptions.expansionFactor = 1.1;
@@ -731,7 +731,7 @@ slideDirectory.bigBangUniverseSlide = {
 
     whenAudioLoads(function () {
       bigBangUniverse.timeouts.push(setTimeout(function () {
-        $('#bigBangUniverse').show();
+        $('#bigBangUniverse').css('visibility', 'visible');
         bigBangUniverse.init()
       }, 7000));
     });
@@ -770,13 +770,13 @@ var globeUniverse = new SphericalUniverse('#globeUniverse', globeOptions);
 
 slideDirectory.globeUniverseSlide = {
   start: function () {
-    $('#globeUniverse').hide();
+    $('#globeUniverse').css('visibility', 'hidden');
 
     whenAudioLoads(function () {
       globeUniverse.timeouts.push(setTimeout(function () {
-        $('#globeUniverse').show();
+        $('#globeUniverse').css('visibility', 'visible');
         globeUniverse.init()
-      }, 22000));
+      }, 500));//22000));
     });
     queueUp('audio/globeUniverse.mp3');
   },
@@ -815,7 +815,7 @@ slideDirectory.flatCircleUniverseSlide = {
   start: function () {
     var $link = $('#flatCircleUniverseSlide a');
     $link.hide();
-    $('#flatCircleUniverse').hide();
+    $('#flatCircleUniverse').css('visibility', 'hidden');
 
 
     flatCircleUniverse.initCallback = function () {
@@ -824,7 +824,7 @@ slideDirectory.flatCircleUniverseSlide = {
 
     whenAudioLoads(function () {
       flatCircleUniverse.timeouts.push(setTimeout(function () {
-        $('#flatCircleUniverse').show();
+        $('#flatCircleUniverse').css('visibility', 'visible');
         flatCircleUniverse.init();
       }, 8000));
     });
