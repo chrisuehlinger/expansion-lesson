@@ -187,7 +187,6 @@ function RectangularUniverse(canvasSelector, options) {
     isMousedown = true;
     isTouching = true;
     e.preventDefault();
-    console.log($(canvasSelector)[0].pageY, e.originalEvent.changedTouches[0].pageY, e.originalEvent.changedTouches[0].pageY - $(canvasSelector)[0].pageY);
 
     var totalOffsetY = 0;
     var curElement = $(canvasSelector)[0];
@@ -196,8 +195,8 @@ function RectangularUniverse(canvasSelector, options) {
     } while (curElement = curElement.offsetParent)
 
     mousePosition = {
-      x: e.originalEvent.changedTouches[0].pageX - canvasLeft,
-      y: e.originalEvent.changedTouches[0].pageY - totalOffsetY
+      x: e.originalEvent.changedTouches[0].pageX - $(e.target).offset().left,
+      y: e.originalEvent.changedTouches[0].pageY - $(e.target).offset().top
     };
     $(this)
       .on('touchmove', function (e) {
@@ -208,8 +207,8 @@ function RectangularUniverse(canvasSelector, options) {
         } while (curElement = curElement.offsetParent)
 
         mousePosition = {
-          x: e.originalEvent.changedTouches[0].pageX - canvasLeft,
-          y: e.originalEvent.changedTouches[0].pageY - totalOffsetY
+          x: e.originalEvent.changedTouches[0].pageX - $(e.target).offset().left,
+          y: e.originalEvent.changedTouches[0].pageY - $(e.target).offset().top
         };
 
       })
