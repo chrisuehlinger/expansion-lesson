@@ -776,7 +776,7 @@ slideDirectory.globeUniverseSlide = {
       globeUniverse.timeouts.push(setTimeout(function () {
         $('#globeUniverse').css('visibility', 'visible');
         globeUniverse.init()
-      }, 500));//22000));
+      }, 22000));
     });
     queueUp('audio/globeUniverse.mp3');
   },

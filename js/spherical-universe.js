@@ -236,7 +236,7 @@ function SphericalUniverse(canvasSelector, options) {
     }
   }
 
-  var globe, land, countries, borders;
+  var globe = { type: "Sphere" }, land, countries, borders;
   //queue()
   //  .defer(d3.json, "data/world-110m.json")
   //  .defer(d3.tsv, "data/world-country-names.tsv")
@@ -357,6 +357,7 @@ function SphericalUniverse(canvasSelector, options) {
 
   //d3.timer(render);
 
+  var circle = d3.geo.circle();
   function render() {
     if (!inView || options.paused)
       return;
@@ -396,7 +397,7 @@ function SphericalUniverse(canvasSelector, options) {
 
     c.save();
     c.fillStyle = "black";
-    c.fillRect(0, 0, options.width, options.height);
+    // c.fillRect(0, 0, options.width, options.height);
     if (options.projection === 'Azimuthal Equidistant' || options.projection === 'Globe') {
       c.translate(options.width / 2, options.height / 2);
       c.rotate(-ship.direction);
@@ -406,9 +407,8 @@ function SphericalUniverse(canvasSelector, options) {
     options.projection !== 'Mercator' && projection.rotate([-ship.x, -ship.y]);
 
     path.projection(projection);
-    var circle = d3.geo.circle();
-    //  c.save();
-    //    c.globalAlpha = 0.5;
+    c.strokeStyle = "#fff", c.fillStyle = "#000", c.lineWidth = 2, c.beginPath(), path(globe), c.stroke(), c.fill();
+    c.lineWidth = 1;
     for (var j = nodes.length - 1; j >= 0; --j) {
       var d = nodes[j];
       if (d.collisions > 1) {
@@ -424,9 +424,9 @@ function SphericalUniverse(canvasSelector, options) {
         options.outlineParticles && c.stroke();
       }
     }
-    //  c.restore();
 
-
+    
+    
     if (options.renderPlanet && countries) {
       c.fillStyle = "#bbb", c.beginPath(), path(land), c.fill();
       c.strokeStyle = "#fff", c.lineWidth = .5, c.beginPath(), path(borders), c.stroke();
@@ -437,8 +437,10 @@ function SphericalUniverse(canvasSelector, options) {
       var g = d3.geo.graticule();
       g.step([15,15]);
       c.strokeStyle = '#fff';
+      c.fillStyle = '#000';
       c.beginPath();
-      path(g.outline());
+      // path(g.outline());
+      // c.fill();
       path(g());
       c.stroke();
     }
