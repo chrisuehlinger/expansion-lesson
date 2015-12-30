@@ -533,13 +533,14 @@ var expandingEmptyOptions = {
   outlineParticles: false,
   shipCentered: true,
   paused: true,
-  asteroids: [{
-    x: 0.75 * innerWidth / 16,
-    y: 0.75 * innerHeight / 8,
-    vx: 0,
-    vy: 0,
-    direction: 0
-  }, {
+  asteroids: [
+    {
+      x: 0.75 * innerWidth / 16,
+      y: 0.75 * innerHeight / 8,
+      vx: 0,
+      vy: 0,
+      direction: 0
+    }, {
       x: 3.5 * innerWidth / 16,
       y: innerHeight / 8,
       vx: 0,
@@ -551,7 +552,8 @@ var expandingEmptyOptions = {
       vx: 0,
       vy: 0,
       direction: 0
-    }]
+    }
+  ]
 };
 
 var expandingEmptyUniverse = new RectangularUniverse('#expandingEmptyUniverse', expandingEmptyOptions);

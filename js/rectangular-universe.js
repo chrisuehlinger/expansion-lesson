@@ -483,6 +483,7 @@ function RectangularUniverse(canvasSelector, options) {
         asteroidHasLoaded && context.drawImage(asteroidImg, x, y);
         context.fill();
         context.restore();
+        
       }
       renderAsteroid(asteroidX, asteroidY, 0);
 
@@ -520,7 +521,7 @@ function RectangularUniverse(canvasSelector, options) {
       }
 
     });
-
+    
     if (options.shipCentered) {
       renderShip(options.width / 2, options.height / 2, ship.direction);
     } else {
@@ -562,10 +563,10 @@ function RectangularUniverse(canvasSelector, options) {
 
     context.restore();
     //  context.translate((innerWidth-options.width)/2,(innerHeight - options.height)/2);
-    context.clearRect(0, 0, (options.canvasWidth - options.width) / 2, options.canvasHeight);
-    context.clearRect((options.canvasWidth + options.width) / 2, 0, options.canvasWidth, options.canvasHeight);
-    context.clearRect(0, 0, options.canvasWidth, (options.canvasHeight - options.height) / 2);
-    context.clearRect(0, (options.canvasHeight + options.height) / 2, options.canvasWidth, options.canvasHeight);
+    context.clearRect(0, 0, options.canvasWidth, (options.canvasHeight - options.height) / 2); // Top
+    context.clearRect(0, (options.canvasHeight + options.height) / 2, options.canvasWidth, options.canvasHeight); // Bottom
+    context.clearRect(0, 0, (options.canvasWidth - options.width) / 2, options.canvasHeight); // Left
+    context.clearRect((options.canvasWidth + options.width) / 2, 0, options.canvasWidth, options.canvasHeight); // Right
 
     context.strokeStyle = "white";
     context.strokeRect(
