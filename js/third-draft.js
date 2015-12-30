@@ -145,7 +145,7 @@ function queueUp(audioFile) {
 }
 
 
-var audioLoadFunction = function(){ };
+var audioLoadFunction = function () { };
 function whenAudioLoads(callback) {
   audioLoadFunction = function (e) {
     currentAudio.removeEventListener('canplay', audioLoadFunction);
@@ -716,6 +716,7 @@ bigBangUniverse.initCallback = function () {
 
 slideDirectory.bigBangUniverseSlide = {
   start: function () {
+    $('#bigBangUniverse').hide();
     bigBangOptions.maxWidth = innerWidth / 2;
     bigBangOptions.maxHeight = innerHeight / 2;
     bigBangOptions.expansionFactor = 1.1;
@@ -729,7 +730,10 @@ slideDirectory.bigBangUniverseSlide = {
     }
 
     whenAudioLoads(function () {
-      bigBangUniverse.timeouts.push(setTimeout(bigBangUniverse.init.bind(bigBangUniverse), 7000));
+      bigBangUniverse.timeouts.push(setTimeout(function () {
+        $('#bigBangUniverse').show();
+        bigBangUniverse.init()
+      }, 7000));
     });
     queueUp('audio/bigBang.mp3');
   },
@@ -766,8 +770,13 @@ var globeUniverse = new SphericalUniverse('#globeUniverse', globeOptions);
 
 slideDirectory.globeUniverseSlide = {
   start: function () {
+    $('#globeUniverse').hide();
+
     whenAudioLoads(function () {
-      globeUniverse.timeouts.push(setTimeout(globeUniverse.init.bind(globeUniverse), 22000));
+      globeUniverse.timeouts.push(setTimeout(function () {
+        $('#globeUniverse').show();
+        globeUniverse.init()
+      }, 22000));
     });
     queueUp('audio/globeUniverse.mp3');
   },
@@ -806,7 +815,7 @@ slideDirectory.flatCircleUniverseSlide = {
   start: function () {
     var $link = $('#flatCircleUniverseSlide a');
     $link.hide();
-
+    $('#flatCircleUniverse').hide();
 
 
     flatCircleUniverse.initCallback = function () {
@@ -814,7 +823,10 @@ slideDirectory.flatCircleUniverseSlide = {
     }
 
     whenAudioLoads(function () {
-      flatCircleUniverse.timeouts.push(setTimeout(flatCircleUniverse.init.bind(flatCircleUniverse), 8000));
+      flatCircleUniverse.timeouts.push(setTimeout(function () {
+        $('#flatCircleUniverse').show();
+        flatCircleUniverse.init();
+      }, 8000));
     });
 
     queueUp('audio/flatCircle.mp3');
