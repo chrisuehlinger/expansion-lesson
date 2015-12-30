@@ -144,11 +144,14 @@ function queueUp(audioFile) {
   }
 }
 
+
+var audioLoadFunction = function(){ };
 function whenAudioLoads(callback) {
-  currentAudio.addEventListener('canplay', function (e) {
-    currentAudio.removeEventListener('canplay');
+  audioLoadFunction = function (e) {
+    currentAudio.removeEventListener('canplay', audioLoadFunction);
     callback();
-  });
+  };
+  currentAudio.addEventListener('canplay', audioLoadFunction);
 }
 
 var $muteSwitch = $('.mute-button');
@@ -191,7 +194,7 @@ function handleSlideEvent(e) {
   $refreshButton.off('click');
   currentAudio.pause();
   currentAudioQueue = [];
-  currentAudio.removeEventListener('canplay');
+  currentAudio.removeEventListener('canplay', audioLoadFunction);
   readyToAdvance = true;
   for (var slide in slideDirectory) {
     if (slide === e.currentSlide.id) {
