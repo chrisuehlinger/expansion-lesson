@@ -40,7 +40,7 @@ function SphericalUniverse(canvasSelector, options) {
       x: 90,
       y: 0,
       radius: 10,
-      direction: Math.PI / 2,
+      direction: Math.PI / 2.01,
       totalSpeed: 50,
       totalDistanceTraveled: 0
     };
@@ -435,9 +435,9 @@ function SphericalUniverse(canvasSelector, options) {
 
     if (options.renderGraticules) {
       var g = d3.geo.graticule();
-      g.step([15,15]);
+      g.step([10,10]);
       c.strokeStyle = '#fff';
-      c.fillStyle = '#000';
+      // c.fillStyle = '#000';
       c.beginPath();
       // path(g.outline());
       // c.fill();

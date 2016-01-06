@@ -10,14 +10,6 @@
 }
 
 .reveal {
-  
-  h1 {
-    font-size: 1.75em;
-  }
-  
-  h2 {
-    font-size: 1em;
-  }
 
   aside.controls {
     .refresh-button {
@@ -62,6 +54,16 @@ canvas {
     position: absolute;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
+  }
+}
+
+#titleSlide {
+  h1 {
+    font-size: 1.75em;
+  }
+  
+  h2 {
+    font-size: 1em;
   }
 }
 
@@ -279,5 +281,57 @@ figure.folded-photos {
       margin: 0 30px;
     }
   }
+}
+
+#credits {
+  // transform: scale(0.9);
+  // transform-origin: center 0px;
   
+  h2 {
+    font-size: 0.75em;
+    margin: 0px auto;
+  }
+  
+  h3 {
+    font-size: 0.75em;
+    margin: 20px auto 0px;
+  }
+  
+  .credits-column {
+    // display: inline-block;
+    // width: 40%;
+    // vertical-align: top;
+  }
+
+  .reviewer-credits {
+    margin-top: 10px;
+    font-size: 0.5em;
+  }
+  
+  .image-credits {
+    figure {
+      display: inline-block;
+      margin: 0 10px;
+      img {
+        max-width: 80px;
+        margin: 10px auto 0px;
+      }
+      figcaption {
+        font-size: 0.4em;
+      }
+    }
+  }
+  
+  .icon-credits {
+    figure {
+      margin: 0 20px;
+      img {
+        max-width: 100px;
+        max-height: 100px;
+      }
+      figcaption {
+        font-size: 0.5em;
+      }
+    }
+  }
 }

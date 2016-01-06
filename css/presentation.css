@@ -6,12 +6,6 @@
   to {
     border-left-color: lime; } }
 
-.reveal h1 {
-  font-size: 1.75em; }
-
-.reveal h2 {
-  font-size: 1em; }
-
 .reveal aside.controls .refresh-button {
   top: 30px;
   left: 32px;
@@ -46,6 +40,12 @@ canvas {
     position: absolute;
     left: 50%;
     transform: translate3d(-50%, 0, 0); }
+
+#titleSlide h1 {
+  font-size: 1.75em; }
+
+#titleSlide h2 {
+  font-size: 1em; }
 
 figure.keyboard-control-tutorial {
   display: inline-block;
@@ -197,3 +197,32 @@ figure.folded-photos {
     font-size: 48px;
     display: inline-block;
     margin: 0 30px; }
+
+#credits h2 {
+  font-size: 0.75em;
+  margin: 0px auto; }
+
+#credits h3 {
+  font-size: 0.75em;
+  margin: 20px auto 0px; }
+
+#credits .reviewer-credits {
+  margin-top: 10px;
+  font-size: 0.5em; }
+
+#credits .image-credits figure {
+  display: inline-block;
+  margin: 0 10px; }
+  #credits .image-credits figure img {
+    max-width: 80px;
+    margin: 10px auto 0px; }
+  #credits .image-credits figure figcaption {
+    font-size: 0.4em; }
+
+#credits .icon-credits figure {
+  margin: 0 20px; }
+  #credits .icon-credits figure img {
+    max-width: 100px;
+    max-height: 100px; }
+  #credits .icon-credits figure figcaption {
+    font-size: 0.5em; }

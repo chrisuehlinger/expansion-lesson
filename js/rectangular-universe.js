@@ -273,6 +273,10 @@ function RectangularUniverse(canvasSelector, options) {
   var canvasTop, canvasBottom, canvasLeft, inView = false;
   setTimeout(getOffsets);
   function getOffsets() {
+    if(options.alwaysInView){
+      inView = true;
+      return;
+    }
     var windowTop = $(window).scrollTop(),
       windowBottom = windowTop + $(window).height();
 

@@ -241,12 +241,13 @@ var introRectangularOptions = {
   outlineParticles: true,
   shipCentered: true,
   paused: true,
+  alwaysInView: true,
   ship: {
     x: 300 / 2,
     y: 300 / 2,
     vx: 0,
     vy: 0,
-    direction: -Math.PI/2,
+    direction: Math.PI/2,
     totalSpeed: 6,
     totalDistanceTraveled: 0
   },
@@ -280,7 +281,7 @@ var introSphericalOptions = {
   outlineParticles: false,
   renderGraticules: true,
   renderPlanet: false,
-  projection: 'Azimuthal Equidistant',
+  projection: 'Globe',
   shipCentered: true,
   paused: true,
   startingExpansion: 0.75
@@ -290,7 +291,7 @@ var introSphericalUniverse = new SphericalUniverse('#introSphericalUniverse', in
 
 slideDirectory.titleSlide = {
   start: function () {
-    introRectangularUniverse.init();
+    setTimeout(function(){introRectangularUniverse.init();}, 500)
     introSphericalUniverse.init();
   },
   pause: function () {
@@ -1133,7 +1134,24 @@ slideDirectory.corrections = {
 };
 
 slideDirectory.credits = {
+  timeouts:[],
   start: function () {
+    this.timeouts.forEach(clearTimeout);
+    this.timeouts = [];
+
+    var $credits = $('#credits h2, .icon-credits figure, .reviewer-credits, .image-credits:not(.icon-credits)');
+    $credits.css("visibility", "hidden");
+    
+    whenAudioLoads(function () {
+      this.timeouts.push(setTimeout(function () { $credits.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 1000));
+      this.timeouts.push(setTimeout(function () { $credits.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 7000));
+      this.timeouts.push(setTimeout(function () { $credits.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 11000));
+      this.timeouts.push(setTimeout(function () { $credits.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 15000));
+      this.timeouts.push(setTimeout(function () { $credits.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 20000));
+    }.bind(this))
+    
+    
+    
     queueUp('audio/credits.mp3');
   },
   pause: function () {
