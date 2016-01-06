@@ -3,23 +3,287 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Expansion</title>
+  <title>Donuts and Funhouse Mirrors - An Interactive Lesson about the shape of the Universe</title>
   <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <!-- Place favicon.ico in the root directory -->
-<!--  <link rel="stylesheet" href="css/style.css">-->
+  <link rel=stylesheet href="bower_components/reveal.js/css/reveal.css" />
+  <link rel=stylesheet href="bower_components/reveal.js/css/theme/black.css" />
+  <link rel=stylesheet href="bower_components/font-awesome/css/font-awesome.min.css" />
+  <link rel=stylesheet href="css/presentation.css" />
 </head>
 
 <body>
-  <h1>Expansion</h1>
-  <p>Here are the demos so far:</p>
-  <ul>
-    <li><a href="./rectangular-universe.html">Rectangular Universe</a></li>
-    <li><a href="./spherical-universe.html">Spherical Universe</a></li>
-    <li><a href="./first-draft.html">First Draft</a></li>
-    <li><a href="./second-draft.html">Second Draft</a></li>
-    <li><a href="./third-draft.html">Third Draft</a></li>
-  </ul>
+  <div class="audio-options">
+    <button class="mute-button"><i class="fa fa-volume-up fa-2x"></i></button>
+  </div>
+  <div class="reveal">
+    <div class="slides">
+      <section id="titleSlide">
+        <h1>Donuts and Funhouse Mirrors</h1>
+        <h2>An Interactive Lesson about the shape of the Universe</h2>
+        <figure class="demo-canvases">
+          <canvas id="introRectangularUniverse"></canvas>
+          <canvas id="introSphericalUniverse"></canvas>
+        </figure>
+      </section>
+      <section id="tutorial">
+        <h2>Tutorial</h2>
+        <p>This lesson can be controlled using a few different input methods:</p>
+        <ul>
+          <li><strong>Keyboard</strong> - Press the right and left arrow keys to go forward and backward, press the "R" key to
+            refresh.
+          </li>
+          <li><strong>Click/Touch</strong> - Use the controls in the lower right corner to go forward, go backward and refresh</li>
+        </ul>
+      </section>
+      <section id="introduction">
+        <figure class="introduction-diagrams">
+          <img data-src="img/illustration1.png">
+          <img data-src="img/illustration2.jpg">
+          <img data-src="img/illustration3.jpg">
+          <img data-src="img/illustration4.png">
+          <img data-src="img/illustration5.jpg">
+          <img data-src="img/microwavedish.jpg">
+          <img data-src="img/illustration6.jpg">
+          <i style="display: none;" class="fa fa-hand-o-up edge-hand"></i>
+          <i style="display: none;" class="fa fa-hand-o-down edge-hand"></i>
+          <i style="display: none;" class="fa fa-hand-o-left edge-hand"></i>
+          <i style="display: none;" class="fa fa-certificate test-particle"></i>
+        </figure>
+        <figure class="game-logos">
+          <img class="asteroids-arcade" data-src="img/asteroids-arcade.png">
+          <img class="pacman" data-src="img/pacman.jpg">
+          <img class="portal-physics" data-src="img/portal-physics.svg">
+          <img class="portal-logo" data-src="img/portal-logo.png">
+        </figure>
+      </section>
+
+      <section id="shapesOfTheUniverse">
+        <h2>The Shape Of The Universe</h2>
+        <figure class="possible-shapes">
+          <div class="shape-container">
+            <img class="pulse" data-src="img/closed.png">
+            <caption>Closed Universe</caption>
+          </div>
+          <div class="shape-container">
+            <img data-src="img/flat.png">
+            <caption>Flat Universe</caption>
+          </div>
+          <div class="shape-container">
+            <img data-src="img/open.png">
+            <caption>Open Universe</caption>
+          </div>
+        </figure>
+      </section>
+
+      <section id="emptyUniverseSlide">
+        <figure class="keyboard-control-tutorial">
+          <div>
+            <div class="key"><span class="label">W</span><i class="fa fa-arrow-up fa-lg"></i></div>
+          </div>
+          <div>
+            <div class="key"><span class="label">A</span><i class="fa fa-rotate-left fa-lg"></i></div>
+            <div class="key"><span class="label">S</span><i class="fa fa-arrow-down fa-lg"></i></div>
+            <div class="key"><span class="label">D</span><i class="fa fa-rotate-right fa-lg"></i></div>
+          </div>
+        </figure>
+        <canvas data-prevent-swipe id="emptyUniverse"></canvas>
+      </section>
+
+      <section id="centeredUniverseSlide">
+        <canvas data-prevent-swipe id="centeredUniverse"></canvas>
+      </section>
+
+      <section id="firstReview">
+        <h2>Review</h2>
+        <ul>
+          <li>Our tiny universe has 100m<sup>2</sup> of space.</li>
+          <li>There is no edge.</li>
+          <li>There is no center.</li>
+        </ul>
+      </section>
+
+      <section id="expandingEmptyUniverseSlide">
+        <canvas data-prevent-swipe id="expandingEmptyUniverse" class="fullscreen"></canvas>
+      </section>
+
+      <section id="sparseUniverseSlide">
+        <canvas data-prevent-swipe id="sparseUniverse" class="fullscreen"></canvas>
+      </section>
+
+      <section id="filledUniverseSlide">
+        <canvas data-prevent-swipe id="filledUniverse" class="fullscreen"></canvas>
+      </section>
+
+      <section id="bigBangUniverseSlide">
+        <canvas data-prevent-swipe id="bigBangUniverse" class="fullscreen"></canvas>
+      </section>
+
+      <section id="foldedUniverseSlide">
+        <figure class="folded-photos">
+          <img data-src="img/asteroids-arcade.png">
+          <img data-src="img/pacman.jpg">
+          <img data-src="img/portal-physics.svg">
+        </figure>
+      </section>
+
+      <section id="globeUniverseSlide">
+        <canvas data-prevent-swipe id="globeUniverse" class="fullscreen"></canvas>
+      </section>
+
+      <section id="flatCircleUniverseSlide">
+        <canvas data-prevent-swipe id="flatCircleUniverse" class="fullscreen"></canvas>
+        <a target="_blank" href="https://youtu.be/zRP82omMX0g?t=31s">Vsauce video about being inside a spherical mirror.</a>
+      </section>
+
+      <section id="expandingSphereUniverseSlide">
+        <canvas data-prevent-swipe id="expandingSphereUniverse" class="fullscreen"></canvas>
+      </section>
+
+      <section id="secondReview">
+        <h2>Review</h2>
+        <figure class="possible-shapes out-there">
+          <div class="shape-container">
+            <img class="pulse" data-src="img/closed.png">
+            <caption>Closed Universe</caption>
+          </div>
+          <div class="shape-container">
+            <img data-src="img/flat.png">
+            <caption>Flat Universe</caption>
+          </div>
+        </figure>
+        <p>Things that are still true:</p>
+        <ul>
+          <li>Our universe has no edge and no center.</li>
+          <li>Expansion has no direction and is measured in multiples, not distance/time.</li>
+          <li>The universe started from a point of infinite density.</li>
+        </ul>
+      </section>
+
+      <section id="infiniteMath">
+        <h2>The Math of Infinity</h2>
+        <figure class="infinite-math">
+          <div class="math-row">
+            <div>\( \frac{\infty kg}{100 m^2} = \infty \frac{kg}{m^2} \)</div>
+            <div>\( \frac{100 kg}{\infty m^2} = 0 \frac{kg}{m^2} \)</div>
+          </div>
+          <div class="math-row">
+            <div>\( \frac{\infty kg}{\infty m^2} = ? \frac{kg}{m^2} \)</div>
+          </div>
+          <div class="math-row">
+            <div>\( \frac{\infty kg}{\infty m^2} = \infty \frac{kg}{m^2} \)</div>
+            <div>\( \frac{\infty kg}{\infty m^2} = 0.00001 \frac{kg}{m^2} \)</div>
+          </div>
+        </figure>
+        <a target="_blank" href="https://www.youtube.com/watch?v=Uj3_KqkI9Zo">Hotel Infinity Video</a>
+      </section>
+
+      <section id="infiniteUniverseSlide">
+        <canvas data-prevent-swipe id="infiniteUniverse" class="fullscreen"></canvas>
+      </section>
+
+      <section id="corrections">
+        <h2>Corrections</h2>
+        <ul>
+          <li>Time scale:
+            <ul>
+              <li><a href="https://www.youtube.com/watch?v=8gZnABZUNak" target="_blank">The first couple seconds</a></li>
+              <li><a href="https://www.youtube.com/watch?v=3tCMd1ytvWg" target="_blank">Cooling took ~300,000 years</a></li>
+            </ul>
+          </li>
+          <li><a href="https://en.wikipedia.org/wiki/Ideal_gas_law" target="_blank">Ideal Gas Law</a></li>
+          <li>Gravity</li>
+        </ul>
+      </section>
+
+      <section id="credits">
+        <h2>Support this on Patreon!</h2>
+          <div class="image-credits icon-credits">
+            <figure>
+              <img data-src="img/ship-color.svg" alt="Space Ship Icon">
+              <figcaption>Geanie Paek</figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/asteroid.svg" alt="Asteroid Icon">
+              <figcaption><a href="http://behance.net/ValentinaE" target="_blank">Egorova Valentina</a></figcaption>
+            </figure>
+          </div>
+          <div class="reviewer-credits">
+            Reviewed by <a href="http://maxgoldste.in/">Max Goldstein</a>.
+          </div>
+          <div class="image-credits">
+          <h3>Other Creative Commons/Public Domain Images</h3>
+            <figure>
+              <img data-src="img/illustration1.png" alt="History of the Universe">
+              <figcaption><a href="https://zh.wikipedia.org/wiki/User:Yinweichen" target="_blank">Yinweichen</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/illustration2.jpg" alt="Dawn of Time">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:Cosmic_History_020622_b.jpg" target="_blank">NASA</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/illustration3.jpg" alt="Dark Energy">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:Dark_Energy.jpg" target="_blank">Ann Feild (STScI)</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/illustration4.png" alt="Expanding Universe">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:Universe_expansion2.png" target="_blank">Gnixon</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/illustration5.jpg" alt="Big Bang Expansion">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:CMB_Timeline300_no_WMAP.jpg" target="_blank">NASA</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/illustration6.jpg" alt="Accelerating Expansion of the Universe">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:Lambda-Cold_Dark_Matter,_Accelerated_Expansion_of_the_Universe,_Big_Bang-Inflation.jpg"
+                target="_blank">Coldcreation</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/shape-unedited.jpg" alt="Shape of the Universe">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:End_of_universe.jpg" target="_blank">NASA</a></figcaption>
+            </figure>
+
+            <figure>
+              <img data-src="img/pacman.jpg" alt="Pacman screenshot">
+              <figcaption><a href="https://www.flickr.com/photos/methodshop/4865516413" target="_blank">methodshop</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/asteroids-arcade.png" alt="Asteroids Arcade game">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:Tobii_EyeAsteroids_eye_control_arcade_game.png" target="_blank">Tobii Technology</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/portal-physics.svg" alt="Portal Physics">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:Portal_physics.svg" target="_blank">Dammit</a></figcaption>
+            </figure>
+            <figure>
+              <img data-src="img/portal-logo.png" alt="Portal Logo">
+              <figcaption><a href="https://commons.wikimedia.org/wiki/File:Portal_logo.png" target="_blank">Valve</a></figcaption>
+            </figure>
+          </div>
+
+      </section>
+    </div>
+  </div>
+
+  <script src="bower_components/lodash/lodash.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <!--<script src="bower_components/dat-gui/build/dat.gui.js"></script>-->
+  <!--<script src="bower_components/stats.js/build/stats.min.js"></script>-->
+  <script src="bower_components/headjs/dist/1.0.0/head.js"></script>
+  <script src="bower_components/reveal.js/js/reveal.js"></script>
+  <script src="bower_components/d3/d3.js"></script>
+  <!--<script src="bower_components/topojson/topojson.js"></script>-->
+  <script src="bower_components/d3-geo-projection/d3.geo.projection.js"></script>
+  <script src="js/svg-loading.js"></script>
+  <script src="js/rectangular-universe.js"></script>
+  <script src="js/spherical-universe.js"></script>
+  <script src="js/third-draft.js"></script>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+  </script>
 </body>
 
 </html>
