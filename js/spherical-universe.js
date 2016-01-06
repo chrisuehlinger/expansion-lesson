@@ -45,7 +45,7 @@ function SphericalUniverse(canvasSelector, options) {
       totalDistanceTraveled: 0
     };
 
-    currentExpansion = 1;
+    currentExpansion = options.startingExpansion || 1;
 
     canvas
       .attr("width", options.width)

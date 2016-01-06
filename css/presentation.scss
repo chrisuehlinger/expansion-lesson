@@ -9,19 +9,30 @@
   }
 }
 
-.reveal aside.controls {
-  .refresh-button {
-    top: 30px;
-    left: 32px;
-    color: #42affa;
-    width: auto;
-    height: auto;
-    font-size: 24px;
-    opacity: 1;
+.reveal {
+  
+  h1 {
+    font-size: 1.75em;
   }
   
-  .navigate-right.ready-to-advance {
-      animation: arrowblink 0.5s linear alternate infinite;
+  h2 {
+    font-size: 1em;
+  }
+
+  aside.controls {
+    .refresh-button {
+      top: 30px;
+      left: 32px;
+      color: #42affa;
+      width: auto;
+      height: auto;
+      font-size: 24px;
+      opacity: 1;
+    }
+    
+    .navigate-right.ready-to-advance {
+        animation: arrowblink 0.5s linear alternate infinite;
+    }
   }
 }
 

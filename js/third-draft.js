@@ -217,6 +217,88 @@ Reveal.addEventListener('slidechanged', handleSlideEvent);
 
 var slideDirectory = {};
 
+
+
+var introRectangularOptions = {
+  speedOfLight: 5,
+  thrust: 1,
+  canvasWidth: 300,
+  canvasHeight: 300,
+  width: 300,
+  height: 300,
+  maxWidth: 300,
+  maxHeight: 300,
+  startingCount: 50,
+  endCount: 0,
+  expansionFactor: 1.01,
+  additionDelay: 50,
+  expansionWait: 5000,
+  expansionDelay: 0,
+  cooldownFactor: 0.9,
+  collisionForce: 0.1,
+  useForceLayout: false,
+  useCollisions: true,
+  outlineParticles: true,
+  shipCentered: true,
+  paused: true,
+  ship: {
+    x: 300 / 2,
+    y: 300 / 2,
+    vx: 0,
+    vy: 0,
+    direction: -Math.PI/2,
+    totalSpeed: 6,
+    totalDistanceTraveled: 0
+  },
+  asteroids:[] /*[{
+    x: 100,
+    y: 200,
+    vx: 0,
+    vy: 0,
+    direction: 0
+  }]*/
+};
+
+var introRectangularUniverse = new RectangularUniverse('#introRectangularUniverse', introRectangularOptions);
+
+var introSphericalOptions = {
+  speedOfLight: 50,
+  thrust: 5,
+  width: 400,
+  height: 400,
+  startingCount: 0,
+  endCount: 100,
+  expansionFactor: 1.01,
+  additionDelay: 5,
+  expansionWait: 5000,
+  expansionDelay: 0,
+  maxExpansion: 5,
+  cooldownFactor: 0.9,
+  collisionForce: 0.1,
+  useForceLayout: false,
+  useCollisions: true,
+  outlineParticles: false,
+  renderGraticules: true,
+  renderPlanet: false,
+  projection: 'Azimuthal Equidistant',
+  shipCentered: true,
+  paused: true,
+  startingExpansion: 0.75
+};
+
+var introSphericalUniverse = new SphericalUniverse('#introSphericalUniverse', introSphericalOptions);
+
+slideDirectory.titleSlide = {
+  start: function () {
+    introRectangularUniverse.init();
+    introSphericalUniverse.init();
+  },
+  pause: function () {
+    introRectangularUniverse.pause();
+    introSphericalUniverse.pause();
+  }
+};
+
 slideDirectory.tutorial = {
   start: function () {
     currentAudio.src = 'audio/tutorial.mp3';

@@ -6,6 +6,12 @@
   to {
     border-left-color: lime; } }
 
+.reveal h1 {
+  font-size: 1.75em; }
+
+.reveal h2 {
+  font-size: 1em; }
+
 .reveal aside.controls .refresh-button {
   top: 30px;
   left: 32px;

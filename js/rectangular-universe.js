@@ -56,7 +56,7 @@ function RectangularUniverse(canvasSelector, options) {
     options.width = initialWidth;
     options.height = initialHeight;
     options.asteroids = _.cloneDeep(initialAsteroids);
-    ship = {
+    ship = options.ship || {
       x: options.width / 2,
       y: options.height / 2,
       vx: 0,
