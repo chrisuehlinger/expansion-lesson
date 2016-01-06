@@ -846,19 +846,27 @@ slideDirectory.foldedUniverseSlide = {
     }
 
     function hide0() {
-      foldedTimeouts.push(setTimeout(function () { $img.eq(0).fadeOut(delay, show1); }, delay));
+      foldedTimeouts.push(setTimeout(function () { $img.eq(0).fadeOut(delay, show1); }, 1000));
     }
 
     function show1() {
-      foldedTimeouts.push(setTimeout(function () { $img.eq(1).fadeIn(delay, hide1); }));
+      foldedTimeouts.push(setTimeout(function () { $img.eq(1).fadeIn(delay, hide1); }, 1000));
     }
 
     function hide1() {
-      foldedTimeouts.push(setTimeout(function () { $img.eq(1).fadeOut(delay, show2); }));
+      foldedTimeouts.push(setTimeout(function () { $img.eq(1).fadeOut(delay, show2); }, 1000));
     }
 
     function show2() {
-      foldedTimeouts.push(setTimeout(function () { $img.eq(2).fadeIn(delay); }));
+      foldedTimeouts.push(setTimeout(function () { $img.eq(2).fadeIn(delay, hide2); }, 1000));
+    }
+
+    function hide2() {
+      foldedTimeouts.push(setTimeout(function () { $img.eq(2).fadeOut(delay, show3); }, 1000));
+    }
+
+    function show3() {
+      foldedTimeouts.push(setTimeout(function () { $img.eq(3).fadeIn(delay); }, 1000));
     }
 
     queueUp('audio/introduction.mp3');
