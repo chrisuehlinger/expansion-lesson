@@ -42,10 +42,16 @@ canvas {
     transform: translate3d(-50%, 0, 0); }
 
 #titleSlide h1 {
-  font-size: 1.75em; }
+  font-size: 1.75em;
+  margin: 0; }
 
 #titleSlide h2 {
-  font-size: 1em; }
+  font-size: 1em;
+  margin: 0; }
+
+#titleSlide h3 {
+  font-size: 0.8em;
+  margin: 0; }
 
 figure.keyboard-control-tutorial {
   display: inline-block;

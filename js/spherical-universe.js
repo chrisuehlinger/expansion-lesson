@@ -435,7 +435,7 @@ function SphericalUniverse(canvasSelector, options) {
 
     if (options.renderGraticules) {
       var g = d3.geo.graticule();
-      g.step([10,10]);
+      g.step([15,15]);
       c.strokeStyle = '#fff';
       // c.fillStyle = '#000';
       c.beginPath();

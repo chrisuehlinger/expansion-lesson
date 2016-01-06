@@ -313,7 +313,7 @@ var introTimeouts = [];
 slideDirectory.introduction = {
   start: function () {
 
-    var delay = 2800,
+    var delay = 3200,
       $img = $('.introduction-diagrams img'),
       $hands = $('.introduction-diagrams i.edge-hand'),
       $testParticle = $('.introduction-diagrams i.test-particle'),
@@ -402,19 +402,19 @@ slideDirectory.introduction = {
             }, 15000));
           });
         });
-      }, 12000));
+      }, 10000));
     }
 
     function show7() {
-      introTimeouts.push(setTimeout(function () { $games.eq(0).fadeIn(delay, show8); }, 10000));
+      introTimeouts.push(setTimeout(function () { $games.eq(0).fadeIn(delay/4, show8); }, 22000));
     }
 
     function show8() {
-      introTimeouts.push(setTimeout(function () { $games.eq(1).fadeIn(delay, show9); }));
+      introTimeouts.push(setTimeout(function () { $games.eq(1).fadeIn(delay/4, show9); }));
     }
 
     function show9() {
-      introTimeouts.push(setTimeout(function () { $games.eq(2).fadeIn(delay); $games.eq(3).fadeIn(delay); }));
+      introTimeouts.push(setTimeout(function () { $games.eq(2).fadeIn(delay/4); $games.eq(3).fadeIn(delay/4); }));
     }
 
 
@@ -439,15 +439,20 @@ slideDirectory.shapesOfTheUniverse = {
     $img.removeClass('pulse');
 
     whenAudioLoads(function () {
-      this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 5000));
-      this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 6000));
-      this.timeouts.push(setTimeout(function () { $img.eq(2).addClass('pulse'); }, 7000));
+      this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 4500));
+      this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 5500));
+      this.timeouts.push(setTimeout(function () { $img.eq(2).addClass('pulse'); }, 6500));
 
-      this.timeouts.push(setTimeout(function () { $img.removeClass('pulse'); }, 9000));
+      this.timeouts.push(setTimeout(function () { $img.removeClass('pulse'); }, 8400));
 
-      this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 10000));
-      this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 15000));
-      this.timeouts.push(setTimeout(function () { $img.eq(2).addClass('pulse'); }, 19000));
+      this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 8500));
+      this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); $img.eq(2).addClass('pulse'); }, 12000));
+      
+      this.timeouts.push(setTimeout(function () { $img.removeClass('pulse'); }, 15000));
+      
+      this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 25500));
+      this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 30000));
+    //   this.timeouts.push(setTimeout(function () {  }, 19000));
     }.bind(this));
 
     queueUp('audio/shapeOfTheUniverse.mp3');
@@ -585,7 +590,7 @@ slideDirectory.firstReview = {
       this.timeouts.push(setTimeout(function () { $li.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 3000));
       this.timeouts.push(setTimeout(function () { $li.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 7000));
       this.timeouts.push(setTimeout(function () { $li.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 14000));
-    });
+    }.bind(this));
 
     queueUp('audio/uncenteredUniverse2.mp3');
   },
@@ -700,7 +705,7 @@ var sparseUniverse = new RectangularUniverse('#sparseUniverse', sparseOptions);
 slideDirectory.sparseUniverseSlide = {
   start: function () {
     whenAudioLoads(function () {
-      sparseUniverse.timeouts.push(setTimeout(sparseUniverse.init.bind(sparseUniverse), 6000));
+      sparseUniverse.timeouts.push(setTimeout(sparseUniverse.init.bind(sparseUniverse), 5000));
     });
     queueUp('audio/particles.mp3');
   },
@@ -839,7 +844,9 @@ slideDirectory.foldedUniverseSlide = {
     foldedTimeouts.forEach(clearTimeout);
     foldedTimeouts = [];
 
-    whenAudioLoads(show0);
+    whenAudioLoads(function(){
+        foldedTimeouts.push(setTimeout(show0, 15000))
+    });
 
     function show0() {
       $img.eq(0).fadeIn(delay, hide0);
@@ -869,7 +876,7 @@ slideDirectory.foldedUniverseSlide = {
       foldedTimeouts.push(setTimeout(function () { $img.eq(3).fadeIn(delay); }, 1000));
     }
 
-    queueUp('audio/introduction.mp3');
+    queueUp('audio/foldedUniverse.mp3');
 
   },
   pause: function () {
@@ -905,14 +912,7 @@ var globeUniverse = new SphericalUniverse('#globeUniverse', globeOptions);
 
 slideDirectory.globeUniverseSlide = {
   start: function () {
-    $('#globeUniverse').css('visibility', 'hidden');
-
-    whenAudioLoads(function () {
-      globeUniverse.timeouts.push(setTimeout(function () {
-        $('#globeUniverse').css('visibility', 'visible');
-        globeUniverse.init()
-      }, 22000));
-    });
+    globeUniverse.init();
     queueUp('audio/globeUniverse.mp3');
   },
   pause: function () {
@@ -923,8 +923,8 @@ slideDirectory.globeUniverseSlide = {
 var flatCircleOptions = {
   speedOfLight: 200,
   thrust: 5,
-  width: innerWidth,
-  height: innerHeight * 3 / 4,
+  width: 600,
+  height: 600,
   startingCount: 0,
   endCount: 100,
   expansionFactor: 1.01,
@@ -1035,7 +1035,7 @@ slideDirectory.secondReview = {
       this.timeouts.push(setTimeout(function () { $img.eq(0).addClass('pulse'); }, 2000));
       this.timeouts.push(setTimeout(function () { $img.eq(1).addClass('pulse'); }, 4000));
 
-      this.timeouts.push(setTimeout(function () { $li.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 25000));
+      this.timeouts.push(setTimeout(function () { $li.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 24000));
       this.timeouts.push(setTimeout(function () { $li.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 29000));
       this.timeouts.push(setTimeout(function () { $li.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 33000));
     }.bind(this));
@@ -1058,11 +1058,11 @@ slideDirectory.infiniteMath = {
     $equations.css("visibility", "hidden");
 
     whenAudioLoads(function () {
-      this.timeouts.push(setTimeout(function () { $equations.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 25000));
-      this.timeouts.push(setTimeout(function () { $equations.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 35000));
-      this.timeouts.push(setTimeout(function () { $equations.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 45000));
-      this.timeouts.push(setTimeout(function () { $equations.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 50000));
-      this.timeouts.push(setTimeout(function () { $equations.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 55000));
+      this.timeouts.push(setTimeout(function () { $equations.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 19000));
+      this.timeouts.push(setTimeout(function () { $equations.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 25000));
+      this.timeouts.push(setTimeout(function () { $equations.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 35000));
+      this.timeouts.push(setTimeout(function () { $equations.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 43000));
+      this.timeouts.push(setTimeout(function () { $equations.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 45000));
       this.timeouts.push(setTimeout(function () { $link.fadeIn(1000); }, 70000));
     }.bind(this));
     queueUp('audio/infinite2.mp3');
@@ -1127,10 +1127,7 @@ slideDirectory.corrections = {
 
     whenAudioLoads(function () {
       this.timeouts.push(setTimeout(function () { $li.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 11000));
-      this.timeouts.push(setTimeout(function () { $li.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 17000));
-      this.timeouts.push(setTimeout(function () { $li.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 31000));
-      this.timeouts.push(setTimeout(function () { $li.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 45000));
-      this.timeouts.push(setTimeout(function () { $li.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 55000));
+      this.timeouts.push(setTimeout(function () { $li.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 31000));
     }.bind(this));
 
     queueUp('audio/corrections.mp3');
@@ -1151,10 +1148,10 @@ slideDirectory.credits = {
     $credits.css("visibility", "hidden");
     
     whenAudioLoads(function () {
-      this.timeouts.push(setTimeout(function () { $credits.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 1000));
-      this.timeouts.push(setTimeout(function () { $credits.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 7000));
-      this.timeouts.push(setTimeout(function () { $credits.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 11000));
-      this.timeouts.push(setTimeout(function () { $credits.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 15000));
+      this.timeouts.push(setTimeout(function () { $credits.eq(0).hide().css("visibility", "visible").fadeIn(1000); }, 5000));
+      this.timeouts.push(setTimeout(function () { $credits.eq(1).hide().css("visibility", "visible").fadeIn(1000); }, 10000));
+      this.timeouts.push(setTimeout(function () { $credits.eq(2).hide().css("visibility", "visible").fadeIn(1000); }, 13000));
+      this.timeouts.push(setTimeout(function () { $credits.eq(3).hide().css("visibility", "visible").fadeIn(1000); }, 17000));
       this.timeouts.push(setTimeout(function () { $credits.eq(4).hide().css("visibility", "visible").fadeIn(1000); }, 20000));
     }.bind(this))
     
